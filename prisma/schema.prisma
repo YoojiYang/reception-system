@@ -1,0 +1,127 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Room {
+  id      Int      @id @default(autoincrement())
+  name    String   @unique
+  company                 String?
+  scheduledArrival        DateTime?
+  reserveAdultsCount      Int      @default(0)
+  reserveChildrenCount    Int      @default(0)
+  arrivals  Arrival[]
+  meal      Meal?
+  taxis     VipTaxi[]
+  inCharges ArrivalInCharge[]
+}
+
+model InCharge {
+  id       Int       @id @default(autoincrement())
+  name     String
+  arrivals ArrivalInCharge[]
+}
+
+model ArrivalInCharge {
+  roomId     Int
+  inChargeId Int
+  inCharge   InCharge   @relation(fields: [inChargeId], references: [id])
+  room       Room       @relation(fields: [roomId], references: [id])
+
+  @@id([roomId, inChargeId])
+}
+
+model Arrival {
+  id                      Int      @id @default(autoincrement())
+  adultsCount             Int      @default(0)
+  childrenCount           Int      @default(0)
+  changedAdultsCount      Int      @default(0)
+  changedChildrenCount    Int      @default(0)
+  arrivalTime             DateTime?
+  room                    Room     @relation(fields: [roomId], references: [id])
+  roomId                  Int      
+}
+
+enum PaymentStatus {
+  Completed
+  NotCompleted
+  NotRequired
+}
+
+enum PremiumMenuStatus {
+  Available
+  NotAvailable
+  Unconfirmed
+}
+
+model Meal {
+  id             Int               @id @default(autoincrement())
+  startTime      DateTime?
+  hasStarted     Boolean           @default(false)
+  hasPremiumMenu PremiumMenuStatus @default(Unconfirmed)
+  paymentMethod  String?
+  isPaid         PaymentStatus     @default(NotRequired)
+  hasLostItem    Boolean           @default(false)
+  room           Room              @relation(fields: [roomId], references: [id])
+  roomId         Int               @unique
+}
+
+enum needOrNotStatus {
+  Need
+  Not
+  Unconfirmed
+}
+
+model Taxi {
+  id              Int      @id @default(autoincrement())
+  peopleCount     Int      @default(2)
+  carCount        Int      @default(1)
+  reservationTime String?
+  taxiCompany     String?
+  isCompleted     Boolean  @default(false)
+  isCancel        Boolean  @default(false)
+  vipTaxi         VipTaxi?
+  generalTaxi     GeneralTaxi?
+}
+
+model VipTaxi {
+  id      Int   @id @default(autoincrement())
+  taxiId  Int   @unique
+  taxi    Taxi  @relation(fields: [taxiId], references: [id])
+  needOrNot  needOrNotStatus @default(Unconfirmed)
+  room    Room  @relation(fields: [roomId], references: [id])
+  roomId  Int
+}
+
+model GeneralTaxi {
+  id         Int  @id @default(autoincrement())
+  taxiId     Int  @unique
+  taxi       Taxi @relation(fields: [taxiId], references: [id])
+  section    Int  @default(122)
+  column     Int  @default(1)
+  index      Int  @default(1)
+  hotPotatos HotPotatos[]
+}
+
+enum sexStatus {
+  Men
+  Women
+  Unconfirmed
+}
+
+model HotPotatos {
+  id          Int         @id @default(autoincrement())
+  name        String
+  sex         sexStatus   @default(Unconfirmed)
+  detail      String
+  createdAt   DateTime    @default(now())
+  generalTaxi GeneralTaxi @relation(fields: [generalTaxiId], references: [id])
+  generalTaxiId Int
+}

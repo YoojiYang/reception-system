@@ -18,9 +18,8 @@ export function Arrived({ rooms, roomArrivalCounts }: NotArrivedProps) {
           .sort((a: RoomType, b: RoomType) => a.id - b.id)
           .map((room: RoomType) => (
             
-            <div className="flex justify-center">
+            <div key={room.id} className="flex justify-center">
               <div
-              key={room.id}
               style={{ width:'240px' }}
               className='h-30 mt-4 items-center p-4 border bg-blue-50 rounded-lg drop-shadow-md'
               >

@@ -6,7 +6,7 @@ import { RoomType } from "../types";
 import NotArrived from "./components/NotArrived";
 import Arrived from "./components/Arrived";
 
-export function Arrival() {
+function Arrival() {
   const [rooms, setRooms] = useState<RoomType[]>([])
   const [roomArrivalCounts, setRoomArrivalCounts] = useState<Record<number, number>>({});
 

@@ -8,7 +8,7 @@ import { ArrivalType, RoomType } from "../types";
 import ReserveIndex from "../reception/components/ReserveIndex";
 import CustomButton from "../utils/components/CustomButton";
 
-export function Reception() {
+function Desk() {
   const [arrivals, setArrivals] = useState<ArrivalType[]>([]);
   const [accepting, setAccepting] = useState<boolean>(false);
   const [countChange, setCountChange] = useState<boolean>(false);
@@ -74,4 +74,4 @@ export function Reception() {
   )
 }
 
-export default Reception
+export default Desk

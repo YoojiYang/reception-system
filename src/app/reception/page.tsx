@@ -4,7 +4,7 @@ import { useState } from 'react';
 import ReserveList from './components/ReserveList';
 import EditReserveList from './components/EditReserveList';
 
-export function Reception() {
+function Reception() {
   const [editing, setEditing] = useState<boolean>(false); // 編集画面かどうかを判断するためのstate
 
   return (

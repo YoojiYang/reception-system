@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { fetchAllRooms, fetchArrivalsForRoom } from "../utils/utils";
-import { RoomType } from "../types";
+import { RoomType } from "../types/types";
 import NotArrived from "./components/NotArrived";
 import Arrived from "./components/Arrived";
 

@@ -1,4 +1,4 @@
-import { NotArrivedProps, RoomType } from "@/app/types";
+import { NotArrivedProps, RoomType } from "@/app/types/types";
 
 export function NotArrived({ rooms, roomArrivalCounts }: NotArrivedProps) {
 

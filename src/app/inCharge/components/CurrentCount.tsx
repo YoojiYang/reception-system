@@ -1,4 +1,4 @@
-import { CurrentCountProps } from "@/app/types";
+import { CurrentCountProps } from "@/app/types/types";
 import e from "express";
 import { useState } from "react";
 

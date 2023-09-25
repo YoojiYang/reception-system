@@ -47,3 +47,4 @@ export type CurrentCountProps = {
   currentRoom: RoomType | undefined;
   roomArrivalData: Record<number, { adultsTotal: number; childrenTotal: number; }>;
 };
+

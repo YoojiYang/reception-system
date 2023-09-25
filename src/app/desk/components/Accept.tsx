@@ -2,7 +2,7 @@
 
 import DecrementButton from "@/app/utils/components/DecrementButton";
 import { fetchAllArrivals, fetchAllRooms, postArrival } from "../../utils/utils"
-import { AcceptProps, RoomType } from "@/app/types";
+import { AcceptProps, RoomType } from "@/app/types/types";
 import IncrementButton from "@/app/utils/components/IncrementButton";
 import e from "express";
 import { useEffect, useState } from "react";

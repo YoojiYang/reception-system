@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import Accept from "./components/Accept";
 import CountChange from "./components/CountChange";
 import { fetchAllArrivals, formatTimeToJTV } from "../utils/utils";
-import { ArrivalType, RoomType } from "../types";
+import { ArrivalType, RoomType } from "../types/types";
 import ReserveIndex from "../reception/components/ReserveIndex";
 import CustomButton from "../utils/components/CustomButton";
 

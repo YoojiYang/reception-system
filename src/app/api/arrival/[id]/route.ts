@@ -1,15 +1,27 @@
 import { Response } from 'express';
 import { NextResponse } from 'next/server';
-import { main } from '../../room/route';
 import prisma from '../../../../../prisma';
+import { main } from '@/app/utils/utils';
 
 // 各部屋情報の取得
 export const GET = async (req: Request, res: NextResponse) => {
   try {
-    const id: number = parseInt(req.url.split("/arrival/")[1]);
+    const roomId: number = parseInt(req.url.split("/arrival/")[1]);
     await main();
-    const arrival = await prisma.arrival.findFirst({ where: { id }});
-    return NextResponse.json({ message: "Success", arrival }, { status: 200 });
+    const arrival = await prisma.arrival.findMany({ where: { roomId }});
+
+    const totalAdultsCount = arrival.reduce((acc, cur) => acc + cur.adultsCount, 0);
+    const totalChildrenCount = arrival.reduce((acc, cur) => acc + cur.childrenCount, 0);
+    const totalCount = totalAdultsCount + totalChildrenCount;
+
+    return NextResponse.json({
+      message: "Success",
+      arrival,
+      totalAdultsCount,
+      totalChildrenCount,
+      totalCount,
+    }, { status: 200 });
+
   } catch (error) {
     return NextResponse.json({ message: "Error", error }, { status: 500 });
   } finally {
@@ -27,8 +39,6 @@ export const PUT = async (req: Request, res: NextResponse) => {
     const {
       adultsCount, 
       childrenCount,
-      changedAdultsCount,
-      changedChildrenCount,
       arrivalTime,
     } = requestBody;
     
@@ -37,8 +47,6 @@ export const PUT = async (req: Request, res: NextResponse) => {
       data: {
         adultsCount,
         childrenCount,
-        changedAdultsCount,
-        changedChildrenCount,
         arrivalTime,
       },
       where: { id },

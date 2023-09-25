@@ -1,19 +1,10 @@
+import { main } from '@/app/utils/utils';
 import { PrismaClient } from '@prisma/client';
 import { Response } from 'express';
 import { NextResponse } from 'next/server';
 // import prisma from '../../../../prisma';
 
 const prisma = new PrismaClient();
-
-export async function main() {
-  try {
-    await prisma.$connect();
-  } catch (error) {
-    console.error(error);
-    throw new Error("DB接続に失敗しました");
-  }
-};
-
 // 全部屋の情報の取得
 export const GET = async (req: Request, res: NextResponse) => {
   try {

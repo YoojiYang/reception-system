@@ -1,7 +1,7 @@
 // import { Response } from 'express';
 import { NextResponse } from 'next/server';
-import { main } from '../../room/route';
 import prisma from '../../../../../prisma';
+import { main } from '@/app/utils/utils';
 
 // 各部屋情報の取得
 export const GET = async (req: Request, res: NextResponse) => {
@@ -34,6 +34,8 @@ export const PUT = async (req: Request, res: NextResponse) => {
       company,
       reserveAdultsCount,
       reserveChildrenCount,
+      changedAdultsCount,
+      changedChildrenCount,
       scheduledArrival,
     } = await req.json();
     
@@ -44,6 +46,8 @@ export const PUT = async (req: Request, res: NextResponse) => {
         company,
         reserveAdultsCount,
         reserveChildrenCount,
+        changedAdultsCount,
+        changedChildrenCount,
         scheduledArrival,
       },
       where: { id },

@@ -17,19 +17,21 @@ model Room {
   scheduledArrival        DateTime?
   reserveAdultsCount      Int      @default(0)
   reserveChildrenCount    Int      @default(0)
+  changedAdultsCount      Int      @default(0)
+  changedChildrenCount    Int      @default(0)
   arrivals  Arrival[]
   meal      Meal?
   taxis     VipTaxi[]
-  inCharges ArrivalInCharge[]
+  inCharges RoomInCharge[]
 }
 
 model InCharge {
   id       Int       @id @default(autoincrement())
   name     String
-  arrivals ArrivalInCharge[]
+  arrivals RoomInCharge[]
 }
 
-model ArrivalInCharge {
+model RoomInCharge {
   roomId     Int
   inChargeId Int
   inCharge   InCharge   @relation(fields: [inChargeId], references: [id])
@@ -42,9 +44,7 @@ model Arrival {
   id                      Int      @id @default(autoincrement())
   adultsCount             Int      @default(0)
   childrenCount           Int      @default(0)
-  changedAdultsCount      Int      @default(0)
-  changedChildrenCount    Int      @default(0)
-  arrivalTime             DateTime?
+  arrivalTime             DateTime @default(now())
   room                    Room     @relation(fields: [roomId], references: [id])
   roomId                  Int      
 }

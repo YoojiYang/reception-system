@@ -5,3 +5,7 @@ declare global {
     }
   }
 }
+
+declare var globalThis: typeof globalThis & {
+  prisma: any;
+};

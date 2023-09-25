@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
-import { RoomType, EditReserveListProps } from '../../types/types';
+import { RoomType, EditReserveListProps } from '../../../../types/types';
 import ReserveIndex from './ReserveIndex';
 import { formatTime, fetchAllRooms } from '../../utils/utils';
 import CustomButton from "@/app/utils/components/CustomButton";

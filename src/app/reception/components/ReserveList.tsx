@@ -1,7 +1,7 @@
 "use strict";
 
 import { useEffect, useMemo, useState } from 'react';
-import { RoomType, ReserveListProps } from '../../types/types';
+import { RoomType, ReserveListProps } from '../../../../types/types';
 import { fetchAllRooms, formatTime } from '../../utils/utils';
 import CustomButton from '@/app/utils/components/CustomButton';
 

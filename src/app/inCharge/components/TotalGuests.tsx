@@ -1,4 +1,4 @@
-import { CurrentCountProps } from "@/app/types/types";
+import { CurrentCountProps } from "../../../../types/types";
 
 export function TotalGuests({ currentRoom, roomArrivalData }: CurrentCountProps) {
   return (

@@ -48,3 +48,11 @@ export type CurrentCountProps = {
   roomArrivalData: Record<number, { adultsTotal: number; childrenTotal: number; }>;
 };
 
+export type RoomsContextType = {
+  rooms: RoomType[];
+  setRooms: React.Dispatch<React.SetStateAction<RoomType[]>>;
+};
+
+export type RoomsProviderProps = {
+  children: React.ReactNode;
+};

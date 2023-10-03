@@ -1,5 +1,5 @@
-import { useMemo } from "react";
 import prisma from "../../../prisma";
+import { API_URL } from "./config";
 
 
 export function formatTimeToJTV(isoDateString: Date) {
@@ -30,7 +30,7 @@ export async function main() {
 
 
 export async function fetchAllRooms() {
-  const res = await fetch('http://localhost:3000/api/room', {
+  const res = await fetch(`${API_URL}/room`, {
     cache: 'no-store',
   });
 
@@ -40,7 +40,7 @@ export async function fetchAllRooms() {
 }
 
 export async function fetchAllArrivals() {
-  const res = await fetch('http://localhost:3000/api/arrival', {
+  const res = await fetch(`${API_URL}/arrival`, {
     cache: 'no-store',
   });
 
@@ -50,7 +50,7 @@ export async function fetchAllArrivals() {
 }
 
 export async function fetchAllInCharges() {
-  const res = await fetch('http://localhost:3000/api/inCharge', {
+  const res = await fetch(`${API_URL}/inCharge`, {
     cache: 'no-store',
   });
 
@@ -60,13 +60,13 @@ export async function fetchAllInCharges() {
 }
 
 export async function fetchArrivalsForRoom(roomId: number) {
-  const response = await fetch(`http://localhost:3000/api/arrival/${roomId}`);
+  const response = await fetch(`${API_URL}/arrival/${roomId}`);
   const data = await response.json();
   return data;
 }
 
 export async function postArrival(roomId: number, adultsCount: number, childrenCount: number) {
-  const res = await fetch('http://localhost:3000/api/arrival', {
+  const res = await fetch(`${API_URL}/arrival`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -77,3 +77,4 @@ export async function postArrival(roomId: number, adultsCount: number, childrenC
   
   return json.arrival;
 }
+

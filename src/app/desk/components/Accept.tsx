@@ -1,30 +1,18 @@
 "use client";
 
 import DecrementButton from "@/app/utils/components/DecrementButton";
-import { fetchAllArrivals, fetchAllRooms, postArrival } from "../../utils/utils"
+import { fetchAllArrivals, postArrival } from "../../utils/utils"
 import { AcceptProps, RoomType } from "../../../../types/types";
 import IncrementButton from "@/app/utils/components/IncrementButton";
-import e from "express";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import CustomButton from "@/app/utils/components/CustomButton";
+import { useRooms } from "@/app/RoomsContext";
 
 export function Accept({ setAccepting, setArrivals }: AcceptProps) {
-  const [rooms, setRooms] = useState<RoomType[]>([]);
+  const { rooms, setRooms } = useRooms();
   const [selectedRoomId, setSelectedRoomId] = useState<number>(0);
   const [localAdultsCount, setLocalAdultsCount] = useState<number>(0);
   const [localChildrenCount, setLocalChildrenCount] = useState<number>(0);
-
-  useEffect(() => {
-    async function loadRooms() {
-      try {
-        const fetchedRooms = await fetchAllRooms();
-        setRooms(fetchedRooms);
-      } catch (error) {
-        console.error(error);
-      }
-    }
-    loadRooms();
-  }, []);
 
   const handleRoomChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const roomId = parseInt(e.target.value);

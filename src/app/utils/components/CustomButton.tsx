@@ -10,9 +10,9 @@ interface CustomButtonProps {
 const CustomButton: React.FC<CustomButtonProps> = ({ text, onClick, type = "button", className }) => {
   return (
     <button 
-      type={type}
-      onClick={onClick}
-      className={ `bg-blue-500 hover:bg-blue-700 text-white font-bold rounded-full z-20 ${className}` }
+      type={ type }
+      onClick={ onClick }
+      className={ `bg-blue-500 hover:bg-blue-700 text-white font-bold rounded-full z-2 ${ className }` }
     >
       {text}
     </button>

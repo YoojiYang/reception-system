@@ -94,7 +94,7 @@ model Taxi {
 model VipTaxi {
   id      Int   @id @default(autoincrement())
   taxiId  Int   @unique
-  taxi    Taxi  @relation(fields: [taxiId], references: [id])
+  taxi    Taxi  @relation(fields: [taxiId], references: [id], onDelete: Cascade)
   needOrNot  needOrNotStatus @default(Unconfirmed)
   room    Room  @relation(fields: [roomId], references: [id])
   roomId  Int
@@ -103,7 +103,7 @@ model VipTaxi {
 model GeneralTaxi {
   id         Int  @id @default(autoincrement())
   taxiId     Int  @unique
-  taxi       Taxi @relation(fields: [taxiId], references: [id])
+  taxi       Taxi @relation(fields: [taxiId], references: [id], onDelete: Cascade)
   section    Int  @default(122)
   column     Int  @default(1)
   index      Int  @default(1)

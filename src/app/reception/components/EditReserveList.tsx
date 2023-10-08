@@ -1,12 +1,10 @@
 import { useState, useEffect, useCallback, useMemo, use } from "react";
 import { RoomType, EditReserveListProps, InChargeType } from '../../../../types/types';
 import ReserveIndex from './ReserveIndex';
-import { formatTime } from '../../utils/utils';
+import { formatTime, handleEditReserveList } from '../../utils/utils';
 import CustomButton from "@/app/utils/components/CustomButton";
 import { fetchRooms, useRooms } from "@/app/RoomsContext";
 import { API_URL } from "@/app/utils/config";
-import e from "express";
-
 
 const EditReserveList = ({ setEditing }: EditReserveListProps) => {
   const { rooms, setRooms } = useRooms();
@@ -31,25 +29,19 @@ const EditReserveList = ({ setEditing }: EditReserveListProps) => {
     }));
   }, []);
 
-  // 
-  const handleRegister = async () => {
-    try {
-      const res = await fetch(`${API_URL}/room`, {
-        method: 'PUT',
-        body: JSON.stringify(editedRooms),
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-      const responseData = await res.json();
-      if (!res.ok) {
-        throw new Error(responseData.message || "Failed to update rooms.");
+  const handleRegister = () => {
+    handleEditReserveList(
+      editedRooms, 
+      rooms, 
+      API_URL, 
+      (response) => {
+        fetchRooms(setRooms);
+      }, 
+      (error) => {
+        console.error(error);
       }
-      setEditing(false);
-      fetchRooms(setRooms);
-    } catch (error) {
-      console.error(error);
-    }
+      );
+    setEditing(false);
   };
 
   const sortedRooms = useMemo(() => {

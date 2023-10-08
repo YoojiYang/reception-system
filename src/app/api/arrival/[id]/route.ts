@@ -30,7 +30,7 @@ export const GET = async (req: Request, res: NextResponse) => {
 };
 
 
-// 各部屋情報の更新
+// 到着情報の更新
 export const PUT = async (req: Request, res: NextResponse) => {
   try {
     const id: number = parseInt(req.url.split("/arrival/")[1]);

@@ -1,4 +1,4 @@
-'use client'
+'use client';
 
 import { Dispatch, SetStateAction, createContext, useContext, useEffect, useState } from "react";
 import { RoomType, RoomsContextType, RoomsProviderProps } from "../../types/types";
@@ -17,14 +17,14 @@ export const fetchRooms = async (setRooms: Dispatch<SetStateAction<RoomType[]>>)
 
 export const RoomsProvider: React.FC<RoomsProviderProps> = ({ children }) => {
   const [rooms, setRooms] = useState<RoomType[]>([]);
-  
+  const [lastUpdated, setLastUpdated] = useState<number>(Date.now());
   
   useEffect(() => {
     fetchRooms(setRooms);
   }, []);
 
   return (
-    <RoomsContext.Provider value={{ rooms, setRooms }}>
+    <RoomsContext.Provider value={{ rooms, setRooms, lastUpdated, setLastUpdated }}>
       { children }
     </RoomsContext.Provider>
   );

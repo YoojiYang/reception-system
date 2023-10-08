@@ -1,11 +1,10 @@
 "use strict";
 
-import { useEffect, useMemo } from 'react';
+import { useMemo } from 'react';
 import { RoomType, ReserveListProps } from '../../../../types/types';
 import { formatTime } from '../../utils/utils';
 import CustomButton from '@/app/utils/components/CustomButton';
 import { useRooms } from '@/app/RoomsContext';
-import { API_URL } from '@/app/utils/config';
 
 export function ReserveList({ setEditing }: ReserveListProps) {
   const { rooms, setRooms } = useRooms();

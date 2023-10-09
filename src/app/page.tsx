@@ -22,7 +22,7 @@ export default function Home() {
   async function fetchAllData(route: string) {
     console.log(API_URL);
     // const res = await fetch(`${API_URL}api/${route}`, {
-    const res = await fetch(`https://reception-system.vercel.app/rooms`, {
+    const res = await fetch(`https://reception-system.vercel.app/api/rooms`, {
       cache: 'no-store',
     });
   

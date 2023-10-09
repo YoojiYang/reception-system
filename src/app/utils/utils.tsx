@@ -37,7 +37,7 @@ export async function main() {
 
 // 全情報の取得
 export async function fetchAllArrivals() {
-  const res = await fetch(`${API_URL}/api/arrival`, {
+  const res = await fetch(`${API_URL}api/arrival`, {
     cache: 'no-store',
   });
 
@@ -47,7 +47,7 @@ export async function fetchAllArrivals() {
 }
 
 export async function fetchAllGeneralTaxis() {
-  const res = await fetch(`${API_URL}/api/generaltaxi`, {
+  const res = await fetch(`${API_URL}api/generaltaxi`, {
     cache: 'no-store',
   });
 
@@ -57,7 +57,7 @@ export async function fetchAllGeneralTaxis() {
 }
 
 export async function fetchAllData(route: string) {
-  const res = await fetch(`${API_URL}/api/${route}`, {
+  const res = await fetch(`${API_URL}api/${route}`, {
     cache: 'no-store',
   });
 
@@ -68,7 +68,7 @@ export async function fetchAllData(route: string) {
 }
 
 export async function fetchAllInCharges() {
-  const res = await fetch(`${API_URL}/api/inCharge`, {
+  const res = await fetch(`${API_URL}api/inCharge`, {
     cache: 'no-store',
   });
 
@@ -80,14 +80,14 @@ export async function fetchAllInCharges() {
 // 個別情報の取得
 
 export async function fetchArrivalsForRoom(roomId: number) {
-  const response = await fetch(`${API_URL}/api/arrival/${roomId}`);
+  const response = await fetch(`${API_URL}api/arrival/${roomId}`);
   const data = await response.json();
   return data;
 }
 
 // 新規登録
 export async function postArrival(roomId: number, adultsCount: number, childrenCount: number) {
-  const res = await fetch(`${API_URL}/api/arrival`, {
+  const res = await fetch(`${API_URL}api/arrival`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -103,7 +103,7 @@ export async function postGeneralTaxi(data: GeneralTaxiData) {
 
   const { section, column, index, peopleCount, carCount } = data;
 
-  const res = await fetch(`${API_URL}/api/generaltaxi`, {
+  const res = await fetch(`${API_URL}api/generaltaxi`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -116,7 +116,7 @@ export async function postGeneralTaxi(data: GeneralTaxiData) {
 }
 
 export async function postData(route: string, data: Record<string, any>) {
-  const res = await fetch(`${API_URL}/api/${route}`, {
+  const res = await fetch(`${API_URL}api/${route}`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -178,7 +178,7 @@ export async function handleEditReserveList(
   }
 
   try {
-    const res = await fetch(`${API_URL}/api/room`, {
+    const res = await fetch(`${API_URL}api/room`, {
       method: 'PUT',
       body: JSON.stringify(changes),
       headers: {
@@ -217,7 +217,7 @@ export async function handleReserveCountChangeUpdate(
   };
 
   try {
-    const res = await fetch(`${API_URL}/api/room/${selectedRoom.id}`, {
+    const res = await fetch(`${API_URL}api/room/${selectedRoom.id}`, {
       method: 'PUT',
       body: JSON.stringify(updatedRoom),
       headers: {
@@ -241,7 +241,7 @@ export async function updateGeneralTaxi(
   const { section, column, index, peopleCount, carCount } = data;
 
   try {
-    const res = await fetch(`${API_URL}/api/generaltaxi/${editingTaxiId}`, {
+    const res = await fetch(`${API_URL}api/generaltaxi/${editingTaxiId}`, {
       method: 'PUT',
       body: JSON.stringify({ section, column, index, peopleCount, carCount }),
       headers: {
@@ -275,7 +275,7 @@ export async function updateTaxi(
   editingTaxiId: number,
 ) {
   try {
-    const res = await fetch(`${API_URL}/api/${route}/${editingTaxiId}`, {
+    const res = await fetch(`${API_URL}api/${route}/${editingTaxiId}`, {
       method: 'PUT',
       body: JSON.stringify(data),
       headers: {
@@ -301,7 +301,7 @@ export async function updateTaxi(
 
 export const deleteGeneralTaxi = async (id: number) => {
   try {
-    const res = await fetch(`${API_URL}/api/generaltaxi/${id}`, {
+    const res = await fetch(`${API_URL}api/generaltaxi/${id}`, {
       method: 'DELETE',
     });
     const responseData = await res.json();
@@ -320,7 +320,7 @@ export async function deleteVipTaxi (
   id: number,
   ) {
   try {
-    const res = await fetch(`${API_URL}/api/${route}/${id}`, {
+    const res = await fetch(`${API_URL}api/${route}/${id}`, {
       method: 'DELETE',
     });
     const responseData = await res.json();

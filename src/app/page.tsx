@@ -20,17 +20,27 @@ export default function Home() {
   };
 
   async function fetchAllData(route: string) {
-    console.log(API_URL);
-    // const res = await fetch(`${API_URL}api/${route}`, {
-    const res = await fetch(`https://reception-system.vercel.app/api/rooms`, {
-      cache: 'no-store',
-    });
+    // console.log(`Fetching data from: ${API_URL}api/${route}`);
+    try {
+      // const res = await fetch(`${API_URL}api/${route}`, {
+      const res = await fetch(`https://reception-system.vercel.app/api/rooms`, {
+        cache: 'no-store',
+      });
   
-    const json = await res.json()
+      // レスポンスステータスの確認
+      console.log(`Response status: ${res.status} ${res.statusText}`);
   
-    console.log(json[route]);
-
-    return json[route];
+      const json = await res.json();
+  
+      // レスポンスボディ全体の確認
+      console.log('Response body:', json);
+  
+      console.log(json[route]);
+  
+      return json[route];
+    } catch (error) {
+      console.error('Error during fetch:', error);
+    }
   }
   
   

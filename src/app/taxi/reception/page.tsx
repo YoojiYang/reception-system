@@ -4,7 +4,7 @@ import { useState } from "react";
 import GeneralTaxi from "./components/GeneralTaxi";
 import CustomButton from "@/app/utils/components/CustomButton";
 import VipTaxi from "./components/VipTaxi";
-import { GeneralTaxiData, GeneralTaxiType } from "../../../../types/types";
+import { GeneralTaxiData, GeneralTaxiType, VipTaxiType } from "../../../../types/types";
 import Modal from "@/app/utils/components/Modal";
 import TaxiReservation from "./components/TaxiReservation";
 import { postGeneralTaxi } from "@/app/utils/utils";
@@ -13,6 +13,7 @@ import { postGeneralTaxi } from "@/app/utils/utils";
 function TaxiReception() {
   const [editing, setEditing] = useState<boolean>(false);
   const [generalTaxis, setGeneralTaxis] = useState<GeneralTaxiType[]>([]);
+  const [vipTaxis, setVipTaxis] = useState<VipTaxiType[]>([]);
 
   return (
     <div className='mx-8'>
@@ -23,7 +24,7 @@ function TaxiReception() {
         <CustomButton text={ "追加" } onClick={ () => { setEditing(true) }} className={ "py-4 px-8 text-xl" } />
       </div>
       <GeneralTaxi generalTaxis={ generalTaxis } setGeneralTaxis={ setGeneralTaxis } />
-      <VipTaxi />
+      <VipTaxi vipTaxis={ vipTaxis } setVipTaxis={ setVipTaxis } />
       { editing && (
         <div>
           <Modal isVisible={ editing } onClose={ () => setEditing(false) }>

@@ -7,6 +7,9 @@ import EditReserveCount from "./components/EditReserveCount";
 import { fetchRooms, useRooms } from "../RoomsContext";
 import { useArrival } from "../ArrivalContext";
 import Modal from "../utils/components/Modal";
+import VipTaxiReserve from "./components/VipTaxiReserve";
+import EditArrivalInfo from "./components/EditArrivalInfo";
+import { VipTaxiType } from "../../../types/types";
 
 function InCharge() {
   const { rooms, setRooms, lastUpdated } = useRooms();
@@ -14,6 +17,7 @@ function InCharge() {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [currentRoomId, setCurrentRoomId] = useState<number | null>(null);
   const [arrivalCounts, setArrivalCounts] = useState<Record<number, { adultsTotal: number, childrenTotal: number }>>({});
+  const [vipTaxis, setVipTaxis] = useState<VipTaxiType[]>([]);
 
   const currentRoom = rooms.find(room => room.id === currentRoomId) || rooms[0];
 
@@ -50,7 +54,6 @@ function InCharge() {
         <div>
           <div className="flex flex-col">
             {rooms
-              .filter(room => room.id <= 114)
               .sort((a, b) => a.id - b.id)
               .map(room => (
                 <button 
@@ -62,23 +65,6 @@ function InCharge() {
                 </button>
             ))}
           </div>
-        </div>
-        <div>
-          <div className="flex flex-col">
-            {rooms
-              .filter(room => room.id >= 201)
-              .sort((a, b) => a.id - b.id)
-              .map(room => (
-                <button 
-                  key={ room.id } 
-                  onClick={() => { handleSetIdModalOpen(room.id, setCurrentRoomId, setIsModalOpen) }}
-                  className="mt-4 h-12 text-2xl"
-                >
-                  { room.name }
-                </button>
-            ))}
-          </div>
-
         </div>
       </div>
 
@@ -93,8 +79,9 @@ function InCharge() {
             <h3 className="w-1/8">＞</h3>
             <button onClick={ closeModal }>閉じる</button>
           </div>
-          <EditInCharge currentRoom={ currentRoom } closeModal={ closeModal } arrivalCounts={ arrivalCounts } setModalOpen={ setIsModalOpen }/>
-          <EditReserveCount currentRoom={ currentRoom } closeModal={ closeModal } arrivalCounts={ arrivalCounts } setModalOpen={ setIsModalOpen }/>
+          <EditArrivalInfo currentRoom={ currentRoom } closeModal={ closeModal } arrivalCounts={ arrivalCounts } setModalOpen={ setIsModalOpen }/>
+          <EditReserveCount currentRoom={ currentRoom } setModalOpen={ setIsModalOpen }/>
+          <VipTaxiReserve currentRoom={ currentRoom } vipTaxis={ vipTaxis } setVipTaxis={ setVipTaxis} />
         </Modal>
       )}
     </div>

@@ -1,6 +1,8 @@
+import exp from "constants";
 import prisma from "../../../prisma";
 import { GeneralTaxiData, GeneralTaxiType, RoomType } from "../../../types/types";
 import { API_URL } from "./config";
+import { Dispatch, SetStateAction } from "react";
 
 
 export function formatTimeToJTV(isoDateString: Date) {
@@ -20,6 +22,10 @@ export function formatTime(isoDateString: Date) {
     return `${hours}:${minutes}`;
 }
 
+// ＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
+// API関連
+// ＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
+
 export async function main() {
   try {
     await prisma.$connect();
@@ -29,7 +35,7 @@ export async function main() {
   }
 };
 
-
+// 全情報の取得
 export async function fetchAllRooms() {
   const res = await fetch(`${API_URL}/room`, {
     cache: 'no-store',
@@ -60,6 +66,17 @@ export async function fetchAllGeneralTaxis() {
   return json.generalTaxis;
 }
 
+export async function fetchAllData(route: string) {
+  const res = await fetch(`${API_URL}/${route}`, {
+    cache: 'no-store',
+  });
+
+  const json = await res.json()
+
+  console.log(json[route]);
+  return json[route];
+}
+
 export async function fetchAllInCharges() {
   const res = await fetch(`${API_URL}/inCharge`, {
     cache: 'no-store',
@@ -70,12 +87,15 @@ export async function fetchAllInCharges() {
   return json.inCharges;
 }
 
+// 個別情報の取得
+
 export async function fetchArrivalsForRoom(roomId: number) {
   const response = await fetch(`${API_URL}/arrival/${roomId}`);
   const data = await response.json();
   return data;
 }
 
+// 新規登録
 export async function postArrival(roomId: number, adultsCount: number, childrenCount: number) {
   const res = await fetch(`${API_URL}/arrival`, {
     method: 'POST',
@@ -89,6 +109,36 @@ export async function postArrival(roomId: number, adultsCount: number, childrenC
   return json.arrival;
 }
 
+export async function postGeneralTaxi(data: GeneralTaxiData) {
+
+  const { section, column, index, peopleCount, carCount } = data;
+
+  const res = await fetch(`${API_URL}/generaltaxi`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ section, column, index, peopleCount, carCount }),
+  });  
+  const json = await res.json()
+  
+  return json.generalTaxi;
+}
+
+export async function postData(route: string, data: Record<string, any>) {
+  const res = await fetch(`${API_URL}/${route}`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(data),
+  });  
+  const json = await res.json()
+  
+  return json[1];
+}
+
+// 情報の更新
 export function deepEqual(obj1: any, obj2: any): boolean {
   if (obj1 === obj2) return true;
 
@@ -194,22 +244,6 @@ export async function handleReserveCountChangeUpdate(
   }
 }
 
-export async function postGeneralTaxi(data: GeneralTaxiData) {
-  console.log(data);
-  const { section, column, index, peopleCount, carCount } = data;
-
-  const res = await fetch(`${API_URL}/generaltaxi`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ section, column, index, peopleCount, carCount }),
-  });  
-  const json = await res.json()
-  
-  return json.generalTaxi;
-}
-
 export async function updateGeneralTaxi(
   data: GeneralTaxiData,
   editingTaxiId: number,
@@ -237,15 +271,43 @@ export async function updateGeneralTaxi(
 }
 
 
-export function handleSetIdModalOpen (
-  id: number,
-  setCurrentId: (id: number) => void,
-  setIsModalOpen: (isOpen: boolean) => void
-  ) {
-  setCurrentId(id);
-  setIsModalOpen(true);
-};
 
+export async function updateTaxi(
+  route: string,
+  data: {
+    peopleCount: number,
+    carCount: number,
+    section?: string,
+    column?: string,
+    index?: string,
+    reservationTime?: string,
+  },
+  editingTaxiId: number,
+) {
+  try {
+    const res = await fetch(`${API_URL}/${route}/${editingTaxiId}`, {
+      method: 'PUT',
+      body: JSON.stringify(data),
+      headers: {
+        'Content-Type': 'application/json'
+      },
+    });
+
+    const responseData = await res.json();
+
+    if (!res.ok) {
+      throw new Error(responseData.message || "Failed to update taxi .");
+    }
+
+  } catch (error) {
+    console.log("Error updating taxi;", error);
+  }
+}
+
+
+
+
+// DELETEメソッド
 
 export const deleteGeneralTaxi = async (id: number) => {
   try {
@@ -262,3 +324,58 @@ export const deleteGeneralTaxi = async (id: number) => {
     throw error;
   }
 };
+
+export async function deleteVipTaxi (
+  route: string,
+  id: number,
+  ) {
+  try {
+    const res = await fetch(`${API_URL}/${route}/${id}`, {
+      method: 'DELETE',
+    });
+    const responseData = await res.json();
+    if (!res.ok) {
+      throw new Error(responseData.message || "Failed to delete taxi.");
+    }
+    return responseData;
+  } catch (error) {
+    console.error("Error deleting taxi:", error);
+    throw error;
+  }
+};
+
+
+// ========================================================
+// handle関数
+// ========================================================
+export function handleSetIdModalOpen (
+  id: number,
+  setCurrentId: (id: number) => void,
+  setIsModalOpen: (isOpen: boolean) => void
+  ) {
+  setCurrentId(id);
+  setIsModalOpen(true);
+};
+
+export async function handleTaxiDelete (
+  taxiId: number,
+  deleteTaxi: (taxiId: number) => Promise<void>,
+  fetchTaxis: (setTaxis: Dispatch<SetStateAction<GeneralTaxiType[]>>) => Promise<void>,
+  setTaxis: Dispatch<SetStateAction<GeneralTaxiType[]>>
+  ) {
+  try {
+    await deleteTaxi(taxiId);
+    fetchTaxis(setTaxis);
+  } catch (error) {
+    console.error("Failed to delete taxi:", error);
+  }
+};
+
+
+export const createOptionsArray = (start: number, end: number) => {
+  const options = [];
+  for (let i = start; i <= end; i++) {
+    options.push({ value: i, label: i.toString() });
+  }
+  return options;
+}

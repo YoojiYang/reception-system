@@ -7,7 +7,7 @@ import CustomButton from "@/app/utils/components/CustomButton";
 import IncrementButton from "@/app/utils/components/IncrementButton";
 import DecrementButton from "@/app/utils/components/DecrementButton";
 
-const EditReserveCount = ({ currentRoom, closeModal, arrivalCounts, setModalOpen }: EditReserveCountProps) => {
+const EditReserveCount = ({ currentRoom, setModalOpen }: EditReserveCountProps) => {
   const [localChangeAdultsCount, setLocalChangeAdultsCount] = useState<number>(0);
   const [localChangechildrenCount, setLocalChangechildrenCount] = useState<number>(0);
   

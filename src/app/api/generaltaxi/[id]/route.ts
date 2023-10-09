@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import prisma from '../../../../../prisma';
 import { main } from '@/app/utils/utils';
 
-// 各部屋情報の取得
+// 各予約情報の取得
 export const GET = async (req: Request, res: NextResponse) => {
   try {
     const id: number = parseInt(req.url.split("/generaltaxi/")[1]);
@@ -39,9 +39,6 @@ export const PUT = async (req: Request, res: NextResponse) => {
       carCount,
       reservationTime,
     } = requestBody;
-
-    console.log("Request body:", requestBody);
-    console.log("Parsed ID:", id);
 
     await main();
 

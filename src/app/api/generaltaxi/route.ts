@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import prisma from "../../../../prisma";
 import { main } from "@/app/utils/utils";
 
-// 一般タクシーの全情報の取得
+// VIPタクシーの全情報の取得
 export const GET = async (req: Request, res: NextResponse) => {
   try {
     await main();

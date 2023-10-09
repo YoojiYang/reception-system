@@ -1,3 +1,4 @@
+import { type } from "os";
 import React from "react";
 
 export type RoomType = {
@@ -109,14 +110,17 @@ export type EditArrivalInfoProps = {
 
 export type EditReserveCountProps = {
   currentRoom: RoomType;
-  closeModal: () => void;
-  arrivalCounts: Record<number, { adultsTotal: number; childrenTotal: number; }>;
   setModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 export type GeneralTaxiProps = {
   generalTaxis: GeneralTaxiType[];
   setGeneralTaxis: React.Dispatch<React.SetStateAction<GeneralTaxiType[]>>;
+};
+
+export type VipTaxiProps = {
+  vipTaxis: VipTaxiType[];
+  setVipTaxis: React.Dispatch<React.SetStateAction<VipTaxiType[]>>;
 };
 
 
@@ -134,6 +138,12 @@ export type TaxiReservationProps = {
   initialValues?: GeneralTaxiData;
 };
 
+export type VipTaxiReservationProps = {
+  currentRoom: RoomType;
+  vipTaxis: VipTaxiType[];
+  setVipTaxis: React.Dispatch<React.SetStateAction<VipTaxiType[]>>;
+};
+
 export type ModalProps = {
   isVisible: boolean;
   onClose: () => void;
@@ -147,3 +157,9 @@ export type GeneralTaxiData = {
   peopleCount: number;
   carCount: number;
 }
+
+export enum NeedOrNotStatus {
+  "必要" = "必要",
+  "不要" = "不要",
+  "未確認" = "未確認",
+};

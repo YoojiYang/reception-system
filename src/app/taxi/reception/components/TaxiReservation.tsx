@@ -3,27 +3,14 @@ import { fetchAllGeneralTaxis } from "@/app/utils/utils";
 import { useState } from "react";
 import { TaxiReservationProps } from "../../../../../types/types";
 import CustomSelect from "@/app/utils/components/CustomSelect";
+import { carCountOptions, columnOptions, indexOptions, peopleCountOptions, sectionOptions } from "@/app/utils/selectOptions";
 
-const TaxiReservation = ({ operationType, onSubmit, setEditing, setGeneralTaxis, initialValues  }: TaxiReservationProps) => {
+const TaxiReservation = ({ operationType, onSubmit, setEditing, setGeneralTaxis, initialValues }: TaxiReservationProps) => {
   const [section, setSection] = useState<number>(initialValues?.section || 0);
   const [column, setColumn] = useState<number>(initialValues?.column || 0);
   const [index, setIndex] = useState<number>(initialValues?.index || 0);
   const [peopleCount, setPeopleCount] = useState<number>(initialValues?.peopleCount || 0);
   const [carCount, setCarCount] = useState<number>(initialValues?.carCount || 0);
-
-  const createOptionsArray = (start: number, end: number) => {
-    const options = [];
-    for (let i = start; i <= end; i++) {
-      options.push({ value: i, label: i.toString() });
-    }
-    return options;
-  }
-
-  const sectionOptions = createOptionsArray(122, 128);
-  const columnOptions = createOptionsArray(1, 11);
-  const indexOptions = createOptionsArray(1, 20);
-  const peopleCountOptions = createOptionsArray(0, 4);
-  const carCountOptions = createOptionsArray(0, 5);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();

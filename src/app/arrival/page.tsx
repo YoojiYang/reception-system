@@ -1,4 +1,4 @@
-import ArrivalComponent from "./components/arrival";
+import ArrivalComponent from "./components/ArrivalComponent";
 
 export default function Arrival() {
     return (

@@ -7,7 +7,7 @@ export const GET = async (req: Request, res: NextResponse) => {
   try {
     await main();
 
-    const vipTaxis = await prisma.vipTaxi.findMany({
+    const viptaxis = await prisma.vipTaxi.findMany({
       include: {
         room: true,
         taxi: true,
@@ -15,7 +15,7 @@ export const GET = async (req: Request, res: NextResponse) => {
       orderBy: { id: "asc" },
     });
 
-    return NextResponse.json({ message: "Success", vipTaxis }, { status: 200 });
+    return NextResponse.json({ message: "Success", viptaxis }, { status: 200 });
   } catch (error) {
     return NextResponse.json({ message: "Error", error }, { status: 500 });
   } finally {

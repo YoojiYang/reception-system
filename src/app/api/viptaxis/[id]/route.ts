@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import prisma from '../../../../../prisma';
 import { main } from '@/app/utils/utils';
 
-// 各部屋情報の取得
+// 各予約情報の取得
 export const GET = async (req: Request, res: NextResponse) => {
   try {
     const id: number = parseInt(req.url.split("/viptaxi/")[1]);
@@ -28,21 +28,15 @@ export const GET = async (req: Request, res: NextResponse) => {
 export const PUT = async (req: Request, res: NextResponse) => {
   
   try {
-    const id: number = parseInt(req.url.split("/viptaxi/")[1]);
-    
+    const id: number = parseInt(req.url.split("/viptaxis/")[1]);
     const requestBody = await req.json();
 
     const {
       needOrNot,
-      column,
-      index,
       peopleCount,
       carCount,
       reservationTime,
     } = requestBody;
-
-    console.log("Request body:", requestBody);
-    console.log("Parsed ID:", id);
 
     await main();
 
@@ -71,7 +65,7 @@ export const PUT = async (req: Request, res: NextResponse) => {
 // タクシーの各予約情報の削除
 export const DELETE = async (req: Request, res: NextResponse) => {
   try {
-    const id: number = parseInt(req.url.split("/viptaxi/")[1]);
+    const id: number = parseInt(req.url.split("/viptaxis/")[1]);
 
     await main();
 

@@ -7,11 +7,12 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "vercel-build": "prisma generate && next build"
+    "vercel-build": "prisma generate && next build",
+    "postinstall": "prisma generate"
   },
   "dependencies": {
     "@prisma/client": "^5.3.1",
-    "@types/node": "20.6.3",
+    "@supabase/supabase-js": "^2.38.0",
     "@types/react": "18.2.22",
     "@types/react-dom": "18.2.7",
     "autoprefixer": "10.4.16",
@@ -28,6 +29,7 @@
   },
   "devDependencies": {
     "@types/express": "^4.17.17",
+    "@types/node": "^20.8.3",
     "prisma": "^5.3.1"
   }
 }

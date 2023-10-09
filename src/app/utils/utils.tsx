@@ -36,16 +36,6 @@ export async function main() {
 };
 
 // 全情報の取得
-export async function fetchAllRooms() {
-  const res = await fetch(`${API_URL}/room`, {
-    cache: 'no-store',
-  });
-
-  const json = await res.json()
-  
-  return json.rooms;
-}
-
 export async function fetchAllArrivals() {
   const res = await fetch(`${API_URL}/arrival`, {
     cache: 'no-store',

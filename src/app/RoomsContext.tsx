@@ -2,13 +2,13 @@
 
 import { Dispatch, SetStateAction, createContext, useContext, useEffect, useState } from "react";
 import { RoomType, RoomsContextType, RoomsProviderProps } from "../../types/types";
-import { fetchAllRooms } from "./utils/utils";
+import { fetchAllData } from "./utils/utils";
 
 const RoomsContext = createContext<RoomsContextType | null>(null);
 
 export const fetchRooms = async (setRooms: Dispatch<SetStateAction<RoomType[]>>) => {
   try {
-    const fetchedRooms = await fetchAllRooms();
+    const fetchedRooms = await fetchAllData("rooms");
     setRooms(fetchedRooms);
   } catch (error) {
     console.error(error);

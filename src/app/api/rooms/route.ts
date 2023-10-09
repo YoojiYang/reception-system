@@ -1,9 +1,9 @@
 import { main } from '@/app/utils/utils';
 import { PrismaClient } from '@prisma/client';
-import { Response } from 'express';
 import { NextResponse } from 'next/server';
 
 const prisma = new PrismaClient();
+
 // 全部屋の情報の取得
 export const GET = async (req: Request, res: NextResponse) => {
   try {

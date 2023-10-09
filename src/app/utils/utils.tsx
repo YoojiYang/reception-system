@@ -57,7 +57,7 @@ export async function fetchAllGeneralTaxis() {
 }
 
 export async function fetchAllData(route: string) {
-  const res = await fetch(`${API_URL}api/${route}`, {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/${route}`, {
     cache: 'no-store',
   });
 

@@ -22,8 +22,7 @@ export default function Home() {
   async function fetchAllData(route: string) {
     // console.log(`Fetching data from: ${API_URL}api/${route}`);
     try {
-      // const res = await fetch(`${API_URL}api/${route}`, {
-      const res = await fetch(`https://reception-system.vercel.app/api/rooms`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/${route}`, {
         cache: 'no-store',
       });
   
@@ -47,12 +46,14 @@ export default function Home() {
 
   function test() {
     fetchRooms(setRooms);
-    console.log("成功")
   }
+
+  const route = "rooms";
 
   return (
     <div>
       <h1>hello, world</h1>
+      <p>{ `${process.env.NEXT_PUBLIC_API_HOST}/${route}` }</p>
       <button onClick={ () => test() }>データベース接続チェック</button>
       <div>
         { rooms[0]?.name || "no data" }

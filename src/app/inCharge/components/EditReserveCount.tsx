@@ -23,8 +23,6 @@ const EditReserveCount = ({ currentRoom, setModalOpen }: EditReserveCountProps) 
       currentRoom, 
       localChangeAdultsCount, 
       localChangechildrenCount,
-      rooms, 
-      API_URL, 
       (response) => {
         fetchRooms(setRooms);
         setLastUpdated(Date.now());

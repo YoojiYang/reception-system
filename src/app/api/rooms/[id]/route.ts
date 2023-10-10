@@ -1,11 +1,16 @@
 import { NextResponse } from 'next/server';
 import prisma from '../../../../../prisma';
-import { main } from '@/app/utils/utils';
-import { cors } from '@/app/lib/cors';
+// import { cors } from '@/app/lib/cors';
+import { NextApiRequest, NextApiResponse } from 'next';
+import { main } from '../../utils/utils';
 
 // 各部屋情報の取得
-export const GET = async (req: Request, res: NextResponse) => {
-  cors(req, res);
+export const GET = async (req: NextApiRequest, res: NextApiResponse) => {
+
+  if (!req.url) {
+    throw new Error("URL is not defined");
+  }
+
   try {
     const id: number = parseInt(req.url.split("/room/")[1]);
     await main();
@@ -13,12 +18,12 @@ export const GET = async (req: Request, res: NextResponse) => {
     const room = await prisma.room.findFirst({ where: { id }});
 
     if (!room) {
-      return NextResponse.json({ message: "Not Found" }, { status: 404 });
+      res.status(404).json({ message: "Not Found" });
     }
 
-    return NextResponse.json({ message: "Success", room }, { status: 200 });
+    res.status(200).json({ message: "Success", room });
   } catch (error) {
-    return NextResponse.json({ message: "Error", error }, { status: 500 });
+    res.status(500).json({ message: "Error", error });
   } finally {
     await prisma.$disconnect();
   }
@@ -26,8 +31,13 @@ export const GET = async (req: Request, res: NextResponse) => {
 
 
 // 各部屋情報の更新
-export const PUT = async (req: Request, res: NextResponse) => {
-  cors(req, res);
+export const PUT = async (req: NextApiRequest, res: NextApiResponse) => {
+  // cors(req, res);
+
+  if (!req.url) {
+    throw new Error("URL is not defined");
+  }
+
   try {
     const id: number = parseInt(req.url.split("/room/")[1]);
     // const requestBody = await req.json();
@@ -39,7 +49,7 @@ export const PUT = async (req: Request, res: NextResponse) => {
       changedAdultsCount,
       changedChildrenCount,
       scheduledArrival,
-    } = await req.json();
+    } = req.body;
     
     await main();
 
@@ -55,10 +65,10 @@ export const PUT = async (req: Request, res: NextResponse) => {
       where: { id },
     });
 
-    return NextResponse.json({ message: "Success", room }, { status: 200 });
+    res.status(200).json({ message: "Success", room });
   } catch (error) {
     console.error("Error in PUT method:", error);  // エラーの詳細をログに出力
-    return NextResponse.json({ message: "Error", error }, { status: 500 });
+    res.status(500).json({ message: "Error", error });
   } finally {
     await prisma.$disconnect();
   }

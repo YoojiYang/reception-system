@@ -1,33 +1,44 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import prisma from "../../../../prisma";
-import { main } from "@/app/utils/utils";
-import { cors } from "@/app/lib/cors";
+// import { cors } from "@/app/lib/cors";
+import { NextApiRequest, NextApiResponse } from "next";
+import { genericGET, main } from "../utils/utils";
+
+
+export const GET = (req: NextRequest, res: NextResponse) => {
+  return genericGET(req, res, () => prisma.generalTaxi.findMany({
+    include: { taxi: true },
+    orderBy: { id: "asc" },
+  }), "generalTaxis");
+}
 
 // VIPタクシーの全情報の取得
-export const GET = async (req: Request, res: NextResponse) => {
-  cors(req, res);
+
+
+// export const GET = async (req: NextApiRequest, res: NextApiResponse) => {
+//   // cors(req, res);
+//   try {
+//     await main();
+
+//     const generalTaxis = await prisma.generalTaxi.findMany({
+//       include: {
+//         taxi: true,
+//       },
+//       orderBy: { id: "asc" },
+//     });
+
+//     res.status(200).json({ message: "Success", generalTaxis });
+//   } catch (error) {
+//     res.status(500).json({ message: "Error", error });
+//   } finally {
+//     await prisma.$disconnect();
+//   }
+// };
+
+export const POST = async (req: NextApiRequest, res: NextApiResponse) => {
+  // cors(req, res);
   try {
-    await main();
-
-    const generalTaxis = await prisma.generalTaxi.findMany({
-      include: {
-        taxi: true,
-      },
-      orderBy: { id: "asc" },
-    });
-
-    return NextResponse.json({ message: "Success", generalTaxis }, { status: 200 });
-  } catch (error) {
-    return NextResponse.json({ message: "Error", error }, { status: 500 });
-  } finally {
-    await prisma.$disconnect();
-  }
-};
-
-export const POST = async (req: Request, res: NextResponse) => {
-  cors(req, res);
-  try {
-    const { section, column, index, peopleCount, carCount, reservationTime } = await req.json();
+    const { section, column, index, peopleCount, carCount, reservationTime } = req.body;
     
     await main();
     
@@ -51,9 +62,9 @@ export const POST = async (req: Request, res: NextResponse) => {
 
     const createdTaxi = createdGeneralTaxi.taxi;
     
-    return NextResponse.json({ message: "Success", taxi: createdTaxi, generalTaxi: createdGeneralTaxi }, { status: 201 });
+    res.status(201).json({ message: "Success", taxi: createdTaxi, generalTaxi: createdGeneralTaxi });
   } catch (error) {
-    return NextResponse.json({ message: "Error", error }, { status: 500 });
+    res.status(500).json({ message: "Error", error });
   } finally {
     await prisma.$disconnect();
   }

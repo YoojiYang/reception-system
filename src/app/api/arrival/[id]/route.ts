@@ -1,12 +1,17 @@
-import { NextResponse } from 'next/server';
 import prisma from '../../../../../prisma';
-import { main } from '@/app/utils/utils';
-import { cors } from '@/app/lib/cors';
+// import { cors } from '@/app/lib/cors';
+import { NextApiRequest, NextApiResponse } from 'next';
+import { main } from '../../utils/utils';
 
 // 各部屋情報の取得
-export const GET = async (req: Request, res: NextResponse) => {
-  cors(req, res);
+export const GET = async (req: NextApiRequest, res: NextApiResponse) => {
+  // cors(req, res);
+
   try {
+    if (!req.url) {
+      throw new Error("URL is not defined");
+    }
+
     const roomId: number = parseInt(req.url.split("/arrival/")[1]);
     await main();
     const arrival = await prisma.arrival.findMany({ where: { roomId }});
@@ -15,16 +20,16 @@ export const GET = async (req: Request, res: NextResponse) => {
     const totalChildrenCount = arrival.reduce((acc, cur) => acc + cur.childrenCount, 0);
     const totalCount = totalAdultsCount + totalChildrenCount;
 
-    return NextResponse.json({
+    res.status(200).json({
       message: "Success",
       arrival,
       totalAdultsCount,
       totalChildrenCount,
       totalCount,
-    }, { status: 200 });
+    });
 
   } catch (error) {
-    return NextResponse.json({ message: "Error", error }, { status: 500 });
+    res.status(500).json({ message: "Error", error });
   } finally {
     await prisma.$disconnect();
   }
@@ -32,11 +37,16 @@ export const GET = async (req: Request, res: NextResponse) => {
 
 
 // 到着情報の更新
-export const PUT = async (req: Request, res: NextResponse) => {
-  cors(req, res);
+export const PUT = async (req: NextApiRequest, res: NextApiResponse) => {
+  // cors(req, res);
+
+  if (!req.url) {
+    throw new Error("URL is not defined");
+  }
+
   try {
     const id: number = parseInt(req.url.split("/arrival/")[1]);
-    const requestBody = await req.json();
+    const requestBody = req.body;
     
     const {
       adultsCount, 
@@ -53,10 +63,10 @@ export const PUT = async (req: Request, res: NextResponse) => {
       },
       where: { id },
     });
-    return NextResponse.json({ message: "Success", arrival }, { status: 200 });
+    res.status(200).json({ message: "Success", arrival });
   } catch (error) {
     console.error("Error in PUT method:", error);  // エラーの詳細をログに出力
-    return NextResponse.json({ message: "Error", error }, { status: 500 });
+    res.status(500).json({ message: "Error", error });
   } finally {
     await prisma.$disconnect();
   }

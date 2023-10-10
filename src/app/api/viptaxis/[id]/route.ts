@@ -1,11 +1,16 @@
-import { NextResponse } from 'next/server';
 import prisma from '../../../../../prisma';
-import { main } from '@/app/utils/utils';
-import { cors } from '@/app/lib/cors';
+// import { cors } from '@/app/lib/cors';
+import { NextApiRequest, NextApiResponse } from 'next';
+import { main } from '../../utils/utils';
 
 // 各予約情報の取得
-export const GET = async (req: Request, res: NextResponse) => {
-  cors(req, res);
+export const GET = async (req: NextApiRequest, res: NextApiResponse) => {
+  // cors(req, res);
+
+  if (!req.url) {
+    throw new Error("URL is not defined");
+  }
+
   try {
     const id: number = parseInt(req.url.split("/viptaxi/")[1]);
     await main();
@@ -17,9 +22,9 @@ export const GET = async (req: Request, res: NextResponse) => {
       },
     });
 
-    return NextResponse.json({message: "Success", vipTaxi }, { status: 200 });
+    res.status(200).json({message: "Success", vipTaxi });
   } catch (error) {
-    return NextResponse.json({ message: "Error", error }, { status: 500 });
+    res.status(500).json({ message: "Error", error });
   } finally {
     await prisma.$disconnect();
   }
@@ -27,11 +32,16 @@ export const GET = async (req: Request, res: NextResponse) => {
 
 
 // タクシーの各予約情報の更新
-export const PUT = async (req: Request, res: NextResponse) => {
-  cors(req, res);
+export const PUT = async (req: NextApiRequest, res: NextApiResponse) => {
+  // cors(req, res);
+
+  if (!req.url) {
+    throw new Error("URL is not defined");
+  }
+
   try {
     const id: number = parseInt(req.url.split("/viptaxis/")[1]);
-    const requestBody = await req.json();
+    const requestBody = req.body;
 
     const {
       needOrNot,
@@ -55,18 +65,23 @@ export const PUT = async (req: Request, res: NextResponse) => {
       },
       where: { id },
     });
-    return NextResponse.json({ message: "Success", vipTaxi }, { status: 200 });
+    res.status(200).json({ message: "Success", vipTaxi });
   } catch (error) {
     console.error("Error in PUT method:", error);  // エラーの詳細をログに出力
-    return NextResponse.json({ message: "Error", error }, { status: 500 });
+    res.status(500).json({ message: "Error", error });
   } finally {
     await prisma.$disconnect();
   }
 };
 
 // タクシーの各予約情報の削除
-export const DELETE = async (req: Request, res: NextResponse) => {
-  cors(req, res);
+export const DELETE = async (req: NextApiRequest, res: NextApiResponse) => {
+  // cors(req, res);
+
+  if (!req.url) {
+    throw new Error("URL is not defined");
+  }
+
   try {
     const id: number = parseInt(req.url.split("/viptaxis/")[1]);
 
@@ -79,18 +94,19 @@ export const DELETE = async (req: Request, res: NextResponse) => {
       }
     });
     if (!vipTaxi || !vipTaxi.taxiId) {
-      return NextResponse.json({ message: "Taxi not found for the given vipTaxi ID", error: "No such taxi" }, { status: 404 });
+      res.status(404).json({ message: "Taxi not found for the given vipTaxi ID", error: "No such taxi" });
+      return;
     }
 
     await prisma.taxi.delete({
       where: { id: vipTaxi.taxiId },
     });
 
-    return NextResponse.json({ message: "Deleted successfully" }, { status: 200 });
+    res.status(200).json({ message: "Deleted successfully" });
 
   } catch (error) {
     console.error("Error in DELETE method:", error);  // エラーの詳細をログに出力
-    return NextResponse.json({ message: "Error", error }, { status: 500 });
+    res.status(500).json({ message: "Error", error });
   } finally {
     await prisma.$disconnect();
   }

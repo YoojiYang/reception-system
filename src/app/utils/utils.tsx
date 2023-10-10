@@ -25,15 +25,6 @@ export function formatTime(isoDateString: Date) {
 // API関連
 // ＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
 
-export async function main() {
-  try {
-    await prisma.$connect();
-  } catch (error) {
-    console.error(error);
-    throw new Error("DB接続に失敗しました");
-  }
-};
-
 // 全情報の取得
 export async function fetchAllArrivals() {
   const res = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/api/arrival`, {

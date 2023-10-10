@@ -1,29 +1,21 @@
-import { cors } from '@/app/lib/cors';
-import { main } from '@/app/utils/utils';
+// import { cors } from '@/app/lib/cors';
 import { PrismaClient } from '@prisma/client';
-import { NextResponse } from 'next/server';
+import { NextApiRequest, NextApiResponse } from 'next';
+import { NextRequest, NextResponse } from 'next/server';
+import { genericGET, main } from '../utils/utils';
 
 const prisma = new PrismaClient();
 
 // 全部屋の情報の取得
-export const GET = async (req: Request, res: NextResponse) => {
-  cors(req, res);
-  try {
-    await main();
-    const rooms = await prisma.room.findMany();
-    return NextResponse.json({ message: "Success", rooms }, { status: 200 });
-  } catch (error) {
-    return NextResponse.json({ message: "Error", error }, { status: 500 });
-  } finally {
-    await prisma.$disconnect();
-  }
-};
+export const GET = (req: NextRequest, res: NextResponse) => {
+  return genericGET(req, res, () => prisma.room.findMany(), "rooms");
+}
 
 // 全部屋の情報の更新
-export const PUT = async (req: Request, res: NextResponse) => {
-  cors(req, res);
+export const PUT = async (req: NextApiRequest, res: NextApiResponse) => {
+  // cors(req, res);
   try {
-    const roomsData = await req.json();
+    const roomsData = req.body;
     
     await main();
 
@@ -42,10 +34,10 @@ export const PUT = async (req: Request, res: NextResponse) => {
       }
     }
 
-    return NextResponse.json({ message: "Success", roomsData }, { status: 200 });
+    res.status(200).json({ message: "Success", roomsData });
   } catch (error) {
     console.error("Error in PUT method:", error);  // エラーの詳細をログに出力
-    return NextResponse.json({ message: "Error", error }, { status: 500 });
+    res.status(500).json({ message: "Error", error });
   } finally {
     await prisma.$disconnect();
   }

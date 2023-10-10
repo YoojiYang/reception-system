@@ -1,34 +1,21 @@
-import { NextResponse } from "next/server";
 import prisma from "../../../../prisma";
-import { main } from "@/app/utils/utils";
-import { cors } from "@/app/lib/cors";
+// import { cors } from "@/app/lib/cors";
+import { NextApiRequest, NextApiResponse } from "next";
+import { NextRequest, NextResponse } from "next/server";
+import { genericGET, main } from "../utils/utils";
 
-// VIPタクシー、およびtaxiとroomデータベースからの関連情報取得
-export const GET = async (req: Request, res: NextResponse) => {
-  cors(req, res);
+
+export const GET = (req: NextRequest, res: NextResponse) => {
+  return genericGET(req, res, () => prisma.vipTaxi.findMany({
+    include: { room: true, taxi: true, },
+    orderBy: { id: "asc" },
+  }), "viptaxis");
+}
+
+
+export const POST = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
-    await main();
-
-    const viptaxis = await prisma.vipTaxi.findMany({
-      include: {
-        room: true,
-        taxi: true,
-      },
-      orderBy: { id: "asc" },
-    });
-
-    return NextResponse.json({ message: "Success", viptaxis }, { status: 200 });
-  } catch (error) {
-    return NextResponse.json({ message: "Error", error }, { status: 500 });
-  } finally {
-    await prisma.$disconnect();
-  }
-};
-
-export const POST = async (req: Request, res: NextResponse) => {
-  cors(req, res);
-  try {
-    const { needOrNot, roomId, peopleCount, carCount, reservationTime } = await req.json();
+    const { needOrNot, roomId, peopleCount, carCount, reservationTime } = req.body;
     
     await main();
     
@@ -55,9 +42,9 @@ export const POST = async (req: Request, res: NextResponse) => {
 
     const createdTaxi = createdVipTaxi.taxi;
     
-    return NextResponse.json({ message: "Success", taxi: createdTaxi, vipTaxi: createdVipTaxi }, { status: 201 });
+    res.status(201).json({ message: "Success", taxi: createdTaxi, vipTaxi: createdVipTaxi });
   } catch (error) {
-    return NextResponse.json({ message: "Error", error }, { status: 500 });
+    res.status(500).json({ message: "Error", error });
   } finally {
     await prisma.$disconnect();
   }

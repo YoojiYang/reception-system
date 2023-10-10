@@ -1,8 +1,7 @@
 import { NextResponse } from 'next/server';
 import prisma from '../../../../prisma';
-import { main } from '@/app/utils/utils';
 import { NextApiRequest, NextApiResponse } from 'next';
-import { cors } from '@/app/lib/cors';
+// import { cors } from '@/app/lib/cors';
 
 // 全部屋の情報の取得
 // export const GET = async (req: NextApiRequest, res: NextApiResponse) => {

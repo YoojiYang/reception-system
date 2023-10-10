@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server";
 import prisma from "../../../../prisma";
-import { main } from "@/app/utils/utils";
 import { NextApiRequest, NextApiResponse } from "next";
 
 // export const GET = async (req: NextApiRequest, res: NextApiResponse) => {

@@ -198,8 +198,6 @@ export async function handleReserveCountChangeUpdate(
   selectedRoom: RoomType | undefined,
   changeAdultsCount: number,
   changeChildrenCount: number,
-  rooms: RoomType[],
-  API_URL: string,
   onSuccess: (response: any) => void,
   onError: (error: any) => void
 ) {

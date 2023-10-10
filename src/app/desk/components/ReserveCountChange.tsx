@@ -29,8 +29,6 @@ export function ReserveCountChange({ setCountChange }: ReserveCountChangeProps) 
         selectedRoom, 
         localAdultsCount, 
         localChildrenCount,
-        rooms, 
-        API_URL, 
         (response) => {
           fetchRooms(setRooms);
           setLastUpdated(Date.now());

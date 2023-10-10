@@ -1,3 +1,4 @@
+import { cors } from '@/app/lib/cors';
 import { main } from '@/app/utils/utils';
 import { PrismaClient } from '@prisma/client';
 import { NextResponse } from 'next/server';
@@ -6,6 +7,7 @@ const prisma = new PrismaClient();
 
 // 全部屋の情報の取得
 export const GET = async (req: Request, res: NextResponse) => {
+  cors(req, res);
   try {
     await main();
     const rooms = await prisma.room.findMany();
@@ -19,6 +21,7 @@ export const GET = async (req: Request, res: NextResponse) => {
 
 // 全部屋の情報の更新
 export const PUT = async (req: Request, res: NextResponse) => {
+  cors(req, res);
   try {
     const roomsData = await req.json();
     

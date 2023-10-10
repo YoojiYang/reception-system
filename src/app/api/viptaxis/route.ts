@@ -1,9 +1,11 @@
 import { NextResponse } from "next/server";
 import prisma from "../../../../prisma";
 import { main } from "@/app/utils/utils";
+import { cors } from "@/app/lib/cors";
 
 // VIPタクシー、およびtaxiとroomデータベースからの関連情報取得
 export const GET = async (req: Request, res: NextResponse) => {
+  cors(req, res);
   try {
     await main();
 
@@ -24,6 +26,7 @@ export const GET = async (req: Request, res: NextResponse) => {
 };
 
 export const POST = async (req: Request, res: NextResponse) => {
+  cors(req, res);
   try {
     const { needOrNot, roomId, peopleCount, carCount, reservationTime } = await req.json();
     

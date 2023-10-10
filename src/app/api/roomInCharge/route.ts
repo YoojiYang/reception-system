@@ -4,6 +4,7 @@ import { main } from "@/app/utils/utils";
 import { NextApiRequest, NextApiResponse } from "next";
 
 // export const GET = async (req: NextApiRequest, res: NextApiResponse) => {
+//   cors(req, res);
 //   try {
 //     await main();
 
@@ -26,6 +27,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 // };
 
 // export const POST = async (req: Request, res: NextResponse) => {
+//   cors(req, res);
 //   try {
 //     const { roomId, inChargeId } = await req.json();
 

@@ -1,9 +1,11 @@
 import { NextResponse } from 'next/server';
 import prisma from '../../../../../prisma';
 import { main } from '@/app/utils/utils';
+import { cors } from '@/app/lib/cors';
 
 // 各予約情報の取得
 export const GET = async (req: Request, res: NextResponse) => {
+  cors(req, res);
   try {
     const id: number = parseInt(req.url.split("/viptaxi/")[1]);
     await main();
@@ -26,7 +28,7 @@ export const GET = async (req: Request, res: NextResponse) => {
 
 // タクシーの各予約情報の更新
 export const PUT = async (req: Request, res: NextResponse) => {
-  
+  cors(req, res);
   try {
     const id: number = parseInt(req.url.split("/viptaxis/")[1]);
     const requestBody = await req.json();
@@ -64,6 +66,7 @@ export const PUT = async (req: Request, res: NextResponse) => {
 
 // タクシーの各予約情報の削除
 export const DELETE = async (req: Request, res: NextResponse) => {
+  cors(req, res);
   try {
     const id: number = parseInt(req.url.split("/viptaxis/")[1]);
 

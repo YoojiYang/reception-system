@@ -1,10 +1,11 @@
-// import { Response } from 'express';
 import { NextResponse } from 'next/server';
 import prisma from '../../../../../prisma';
 import { main } from '@/app/utils/utils';
+import { cors } from '@/app/lib/cors';
 
 // 各部屋情報の取得
 export const GET = async (req: Request, res: NextResponse) => {
+  cors(req, res);
   try {
     const id: number = parseInt(req.url.split("/room/")[1]);
     await main();
@@ -26,6 +27,7 @@ export const GET = async (req: Request, res: NextResponse) => {
 
 // 各部屋情報の更新
 export const PUT = async (req: Request, res: NextResponse) => {
+  cors(req, res);
   try {
     const id: number = parseInt(req.url.split("/room/")[1]);
     // const requestBody = await req.json();

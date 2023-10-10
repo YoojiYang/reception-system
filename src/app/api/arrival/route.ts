@@ -1,9 +1,11 @@
 import { NextResponse } from "next/server";
 import prisma from "../../../../prisma";
 import { main } from "@/app/utils/utils";
+import { cors } from "@/app/lib/cors";
 
 // 全到着情報の取得
 export const GET = async (req: Request, res: NextResponse) => {
+  cors(req, res);
   try {
     await main();
     const arrivals = await prisma.arrival.findMany({
@@ -19,6 +21,7 @@ export const GET = async (req: Request, res: NextResponse) => {
 };
 
 export const POST = async (req: Request, res: NextResponse) => {
+  cors(req, res);
   try {
     const { roomId, adultsCount, childrenCount } = await req.json();
     

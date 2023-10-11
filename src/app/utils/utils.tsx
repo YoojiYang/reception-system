@@ -1,5 +1,3 @@
-import exp from "constants";
-import prisma from "../../../prisma";
 import { GeneralTaxiData, GeneralTaxiType, RoomType } from "../../../types/types";
 import { Dispatch, SetStateAction } from "react";
 

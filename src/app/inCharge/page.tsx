@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react"
 import { handleSetIdModalOpen } from "../utils/utils";
-import EditInCharge from "./components/EditArrivalInfo";
 import EditReserveCount from "./components/EditReserveCount";
 import { fetchRooms, useRooms } from "../RoomsContext";
 import { useArrival } from "../ArrivalContext";
@@ -71,12 +70,12 @@ function InCharge() {
       { isModalOpen && (
         <Modal isVisible={ isModalOpen } onClose={ closeModal }>
           <div className="flex w-full h-24">
-            <h3 className="w-1/8">＜</h3>
+            <h3 className="w-1/8">前の部屋</h3>
             <div className="w-3/4">
               <h2 className="text-center text-3xl">{ currentRoom?.name }</h2>
               <h2 className="text-center text-3xl">{ currentRoom?.company }</h2>
             </div>
-            <h3 className="w-1/8">＞</h3>
+            <h3 className="w-1/8">次の部屋</h3>
             <button onClick={ closeModal }>閉じる</button>
           </div>
           <EditArrivalInfo currentRoom={ currentRoom } closeModal={ closeModal } arrivalCounts={ arrivalCounts } setModalOpen={ setIsModalOpen }/>

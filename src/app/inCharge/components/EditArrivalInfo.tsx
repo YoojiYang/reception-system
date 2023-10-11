@@ -1,14 +1,13 @@
 import CustomButton from "@/app/utils/components/CustomButton";
-import { EditArrivalInfoProps, RoomType } from "../../../../types/types";
-import { API_URL } from "@/app/utils/config";
-import { fetchAllArrivals, handleEditReserveList, postArrival, setRoomsMap } from "@/app/utils/utils";
-import { fetchRooms, useRooms } from "@/app/RoomsContext";
+import { EditArrivalInfoProps } from "../../../../types/types";
+import { fetchAllData, postArrival, setRoomsMap } from "@/app/utils/utils";
+import { useRooms } from "@/app/RoomsContext";
 import { useState } from "react";
 import IncrementButton from "@/app/utils/components/IncrementButton";
 import DecrementButton from "@/app/utils/components/DecrementButton";
 import { useArrival } from "@/app/ArrivalContext";
 
-function EditArrivalInfo({ currentRoom, closeModal, arrivalCounts, setModalOpen }: EditArrivalInfoProps) {
+function EditArrivalInfo({ currentRoom, arrivalCounts, setModalOpen }: EditArrivalInfoProps) {
   const { rooms, setRooms } = useRooms();
   const { arrivals, setArrivals } = useArrival();
   const [localArrivalAdultsCount, setLocalArrivalAdultsCount] = useState<number>(0);
@@ -36,7 +35,7 @@ function EditArrivalInfo({ currentRoom, closeModal, arrivalCounts, setModalOpen 
     try {
       await postArrival(currentRoom.id, localArrivalAdultsCount, localArrivalChildrenCount);
 
-      const fetchedArrivals = await fetchAllArrivals();
+      const fetchedArrivals = await fetchAllData("arrival");
       setArrivals(fetchedArrivals);
       setLocalArrivalAdultsCount(0);
       setLocalArrivalChildrenCount(0);

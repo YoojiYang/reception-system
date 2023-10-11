@@ -25,17 +25,6 @@ export function formatTime(isoDateString: Date) {
 // API関連
 // ＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
 
-// 全情報の取得
-export async function fetchAllArrivals() {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/api/arrival`, {
-    cache: 'no-store',
-  });
-
-  const json = await res.json()
-  
-  return json.arrivals;
-}
-
 export async function fetchAllGeneralTaxis() {
   const res = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/api/generaltaxi`, {
     cache: 'no-store',
@@ -83,7 +72,7 @@ export async function postArrival(roomId: number, adultsCount: number, childrenC
     },
     body: JSON.stringify({ roomId, adultsCount, childrenCount }),
   });  
-  const json = await res.json()
+  const json = await res.json();
   
   return json.arrival;
 }
@@ -99,7 +88,7 @@ export async function postGeneralTaxi(data: GeneralTaxiData) {
     },
     body: JSON.stringify({ section, column, index, peopleCount, carCount }),
   });  
-  const json = await res.json()
+  const json = await res.json();
   
   return json.generalTaxi;
 }
@@ -114,7 +103,49 @@ export async function postData(route: string, data: Record<string, any>) {
   });  
   const json = await res.json()
   
-  return json[1];
+  return json[route];
+}
+
+
+export async function handleEditData(
+  route: string,
+  data: any,
+  editingId: number,
+  onSuccess?: (response: any) => void,
+  onError?: (error: any) => void
+  ) {
+    try {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/api/${route}/${editingId}`, {
+      method: 'PUT',
+      body: JSON.stringify(data),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    const responseData = await res.json();
+    
+    if (!res.ok) {
+      throw new Error(responseData.message || "Failed to update data.");
+    }
+    
+    if (onSuccess) {
+      onSuccess(responseData);
+    }
+    
+  } catch (error) {
+    console.log(`Error updating ${route}:`, error);
+    if (onError) {
+      onError(error);
+    }
+  }
+}
+
+export function setRoomsMap(rooms: RoomType[]) {
+  const roomsMap: Record<number, RoomType> = {};
+  rooms.forEach(room => {
+    roomsMap[room.id] = room;
+  });
+  return roomsMap;
 }
 
 // 情報の更新
@@ -135,39 +166,28 @@ export function deepEqual(obj1: any, obj2: any): boolean {
   return true;
 }
 
-
-export function setRoomsMap(rooms: RoomType[]) {
-  const roomsMap: Record<number, RoomType> = {};
-  rooms.forEach(room => {
-    roomsMap[room.id] = room;
-  });
-  return roomsMap;
-}
-
-
 export async function handleEditReserveList(
   editedRooms: Record<number, RoomType>,
   rooms: RoomType[],
-  API_URL: string,
   onSuccess: (response: any) => void,
   onError: (error: any) => void
-) {
-  const roomsMap = setRoomsMap(rooms);
-
-  const changes: Record<number, RoomType> = {};
-  for (const id in editedRooms) {
-    const originalRoom = roomsMap[parseInt(id)];
-    if (originalRoom && !deepEqual(editedRooms[id], originalRoom)) {
-      changes[id] = editedRooms[id];
+  ) {
+    const roomsMap = setRoomsMap(rooms);
+    
+    const changes: Record<number, RoomType> = {};
+    for (const id in editedRooms) {
+      const originalRoom = roomsMap[parseInt(id)];
+      if (originalRoom && !deepEqual(editedRooms[id], originalRoom)) {
+        changes[id] = editedRooms[id];
+      }
     }
-  }
   if (Object.keys(changes).length === 0) {
     console.log('No changes detected.');
     return;
   }
 
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/api/room`, {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/api/rooms`, {
       method: 'PUT',
       body: JSON.stringify(changes),
       headers: {
@@ -204,7 +224,7 @@ export async function handleReserveCountChangeUpdate(
   };
 
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/api/room/${selectedRoom.id}`, {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/api/rooms/${selectedRoom.id}`, {
       method: 'PUT',
       body: JSON.stringify(updatedRoom),
       headers: {

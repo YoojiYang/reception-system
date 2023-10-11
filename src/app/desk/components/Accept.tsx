@@ -1,7 +1,7 @@
 "use client";
 
 import DecrementButton from "@/app/utils/components/DecrementButton";
-import { fetchAllArrivals, postArrival } from "../../utils/utils"
+import { fetchAllData, postArrival } from "../../utils/utils"
 import { AcceptProps, RoomType } from "../../../../types/types";
 import IncrementButton from "@/app/utils/components/IncrementButton";
 import { useState } from "react";
@@ -30,7 +30,7 @@ export function Accept({ setAccepting, setArrivals }: AcceptProps) {
     try {
       await postArrival(selectedRoomId, localAdultsCount, localChildrenCount);
 
-      const fetchedArrivals = await fetchAllArrivals();
+      const fetchedArrivals = await fetchAllData("arrival");
       setArrivals(fetchedArrivals);
     } catch (error) {
       console.error(error);
@@ -71,6 +71,7 @@ export function Accept({ setAccepting, setArrivals }: AcceptProps) {
                   inputMode="numeric"
                   name="adultsCount"
                   value={ localAdultsCount }
+                  onChange={ (e) => { setLocalAdultsCount(parseInt(e.target.value)) } }
                   className="text-center h-full w-full flex items-center justify-center text-5xl bg-inherit"
                   />
               </div>
@@ -88,6 +89,7 @@ export function Accept({ setAccepting, setArrivals }: AcceptProps) {
                   type="text"
                   inputMode="numeric"
                   value={ localChildrenCount }
+                  onChange={ (e) => { setLocalChildrenCount(parseInt(e.target.value)) } }
                   className="text-center h-full w-full flex items-center justify-center text-5xl bg-inherit"
                   />
               </div>

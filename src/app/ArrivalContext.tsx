@@ -2,13 +2,13 @@
 
 import { Dispatch, SetStateAction, createContext, useContext, useEffect, useState } from "react";
 import { ArrivalContextType, ArrivalProviderProps, ArrivalType } from "../../types/types";
-import { fetchAllArrivals } from "./utils/utils";
+import { fetchAllData } from "./utils/utils";
 
 const ArrivalContext = createContext<ArrivalContextType | null>(null);
 
 export const fetchArrival = async (setArrival: Dispatch<SetStateAction<ArrivalType[]>>) => {
   try {
-    const fetchedArrival = await fetchAllArrivals();
+    const fetchedArrival = await fetchAllData("arrival");
     setArrival(fetchedArrival);
   } catch (error) {
     console.error(error);

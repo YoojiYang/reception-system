@@ -1,8 +1,8 @@
 // import { cors } from '@/app/lib/cors';
-import { PrismaClient } from '@prisma/client';
-import { NextApiRequest, NextApiResponse } from 'next';
+import { PrismaClient, Room } from '@prisma/client';
 import { NextRequest, NextResponse } from 'next/server';
-import { genericGET, main } from '../utils/utils';
+import { genericGET, genericPUT, main } from '../utils/utils';
+import { RoomType } from '../../../../types/types';
 
 const prisma = new PrismaClient();
 
@@ -11,33 +11,44 @@ export const GET = (req: NextRequest, res: NextResponse) => {
   return genericGET(req, res, () => prisma.room.findMany(), "rooms");
 }
 
-// 全部屋の情報の更新
-export const PUT = async (req: NextApiRequest, res: NextApiResponse) => {
-  // cors(req, res);
+// 1. updateAllRooms関数の修正
+const updateMultipleRooms = async (roomsData: Record<number, RoomType>) => {
+  const updatePromises = [];
+
+  for (const roomId in roomsData) {
+    const roomData = roomsData[roomId];
+    updatePromises.push(
+      prisma.room.update({
+        where: { id: roomData.id },
+        data: {
+          company: roomData.company,
+          reserveAdultsCount: roomData.reserveAdultsCount,
+          reserveChildrenCount: roomData.reserveChildrenCount,
+          scheduledArrival: roomData.scheduledArrival,
+          // 他のフィールドも必要に応じて追加
+        },
+      })
+    );
+  }
+
+  return await Promise.all(updatePromises);
+};
+
+// 2. APIエンドポイントの作成
+export const PUT = async (req: NextRequest, res: NextResponse) => {
   try {
-    const roomsData = req.body;
-    
     await main();
+     // req.bodyの内容を文字列として読み取る
+    const rawData = await req.text();
 
-    for (const roomID in roomsData) {
-      if (roomsData.hasOwnProperty(roomID)) {
-        const roomData = roomsData[roomID];
-        await prisma.room.update({
-          where: { id: parseInt(roomID) },
-          data: {
-            company: roomData.company,
-            reserveAdultsCount: roomData.reserveAdultsCount,
-            reserveChildrenCount: roomData.reserveChildrenCount,
-            scheduledArrival: roomData.scheduledArrival,
-          },
-        });
-      }
-    }
+    const roomsData: Record<number, RoomType> = JSON.parse(rawData);
+    console.log("roomsData:", roomsData);
+    const results = await updateMultipleRooms(roomsData);
 
-    res.status(200).json({ message: "Success", roomsData });
+    return NextResponse.json({ message: "Success", results }, { status: 200 });
   } catch (error) {
-    console.error("Error in PUT method:", error);  // エラーの詳細をログに出力
-    res.status(500).json({ message: "Error", error });
+    console.error("Error in PUT method for rooms:", error);
+    return NextResponse.json({ message: "Error", error }, { status: 500 });
   } finally {
     await prisma.$disconnect();
   }

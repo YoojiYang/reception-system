@@ -4,21 +4,12 @@ import ReserveIndex from './ReserveIndex';
 import { formatTime, handleEditReserveList } from '../../utils/utils';
 import CustomButton from "@/app/utils/components/CustomButton";
 import { fetchRooms, useRooms } from "@/app/RoomsContext";
-import { API_URL } from "@/app/utils/config";
 
 const EditReserveList = ({ setEditing }: EditReserveListProps) => {
   const { rooms, setRooms } = useRooms();
   const[editedRooms, setEditedRooms] = useState<Record<number, RoomType>>({});
 
-  // roomsが更新されるたびに、editedRoomsを更新する
-  useEffect(() => {
-    setEditedRooms(rooms.reduce((acc, room) => {
-      acc[room.id] = room;
-      return acc;
-    }, {} as Record<number, RoomType>));
-  }, [rooms]);
-  
-  // 編集内容をローカルのstateに保存する
+  // 変更内容を記録
   const handleInputChange = useCallback((roomId: number, key: keyof RoomType, value: any) => {
     setEditedRooms(prevRooms => ({
       ...prevRooms,
@@ -28,12 +19,13 @@ const EditReserveList = ({ setEditing }: EditReserveListProps) => {
       }
     }));
   }, []);
-
+  
+  
   const handleRegister = () => {
+    console.log("handleRegister");
     handleEditReserveList(
       editedRooms, 
       rooms, 
-      API_URL, 
       (response) => {
         fetchRooms(setRooms);
       }, 
@@ -41,10 +33,22 @@ const EditReserveList = ({ setEditing }: EditReserveListProps) => {
         console.error(error);
       }
       );
-    setEditing(false);
-  };
-
-  const sortedRooms = useMemo(() => {
+      setEditing(false);
+    };
+  
+    // roomsが更新されるたびに、editedRoomsを更新する
+    useEffect(() => {
+      setEditedRooms(rooms.reduce((acc, room) => {
+        acc[room.id] = room;
+        return acc;
+      }, {} as Record<number, RoomType>));
+    }, [rooms]);
+    
+    useEffect(() => {
+      fetchRooms(setRooms);
+    }, [setRooms]);
+    
+    const sortedRooms = useMemo(() => {
     return [...rooms].sort((a: RoomType, b: RoomType) => a.id - b.id);
   }, [rooms]);
 

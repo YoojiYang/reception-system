@@ -4,12 +4,10 @@ import IncrementButton from "@/app/utils/components/IncrementButton"
 import { ReserveCountChangeProps, RoomType } from "../../../../types/types"
 import { useEffect, useMemo, useState } from "react";
 import { fetchRooms, useRooms } from "@/app/RoomsContext";
-import { API_URL } from "@/app/utils/config";
-import { handleReserveCountChangeUpdate } from "@/app/utils/utils";
+import { handleEditData, handleReserveCountChangeUpdate } from "@/app/utils/utils";
 
 export function ReserveCountChange({ setCountChange }: ReserveCountChangeProps) {
   const { rooms, setRooms, lastUpdated, setLastUpdated } = useRooms();
-  const[editedRooms, setEditedRooms] = useState<Record<number, RoomType>>({});
   const [selectedRoomId, setSelectedRoomId] = useState<number>(0);
   const [localAdultsCount, setLocalAdultsCount] = useState<number>(0);
   const [localChildrenCount, setLocalChildrenCount] = useState<number>(0);
@@ -19,27 +17,36 @@ export function ReserveCountChange({ setCountChange }: ReserveCountChangeProps) 
     setSelectedRoomId(roomId);
   };
   
-    // 選択された部屋のデータを取得
-    const selectedRoom = rooms.find(room => room.id === selectedRoomId);
-    const adultsCount = selectedRoom ? selectedRoom.reserveAdultsCount + selectedRoom.changedAdultsCount: 0;
-    const childrenCount = selectedRoom ? selectedRoom.reserveChildrenCount + selectedRoom.changedChildrenCount: 0;
+  // 選択された部屋のデータを取得
+  const selectedRoom = rooms.find(room => room.id === selectedRoomId);
+  const adultsCount = selectedRoom ? selectedRoom.reserveAdultsCount + selectedRoom.changedAdultsCount: 0;
+  const childrenCount = selectedRoom ? selectedRoom.reserveChildrenCount + selectedRoom.changedChildrenCount: 0;
 
-    const handleRegister = () => {
-      handleReserveCountChangeUpdate(
-        selectedRoom, 
-        localAdultsCount, 
-        localChildrenCount,
-        (response) => {
-          fetchRooms(setRooms);
-          setLastUpdated(Date.now());
-        }, 
-        (error) => {
-          console.error(error);
-        }
-        );
-      setCountChange(false);
+  const handleRegister = () => {
+    if (!selectedRoom) {
+      console.error("Room not found.");
+      return;
+    }
+
+    const data = {
+      changedAdultsCount: selectedRoom?.changedAdultsCount + localAdultsCount,
+      changedChildrenCount: selectedRoom?.changedChildrenCount + localChildrenCount,
     };
-    
+
+    handleEditData(
+      "rooms",
+      data,
+      selectedRoom?.id,
+      (response) => {
+        fetchRooms(setRooms);
+        setLastUpdated(Date.now());
+      }, 
+      (error) => {
+        console.error(error);
+      }
+      );
+    setCountChange(false);
+  };
 
   const sortedRooms = useMemo(() => {
     return [...rooms].sort((a: RoomType, b: RoomType) => a.id - b.id);
@@ -79,6 +86,7 @@ export function ReserveCountChange({ setCountChange }: ReserveCountChangeProps) 
                     inputMode="numeric"
                     name="adultsCount"
                     value={ localAdultsCount }
+                    onChange={ (e) => { setLocalAdultsCount(parseInt(e.target.value)) } }
                     className="text-center h-full w-full flex items-center justify-center text-5xl bg-inherit"
                     />
                 </div>
@@ -96,6 +104,7 @@ export function ReserveCountChange({ setCountChange }: ReserveCountChangeProps) 
                     type="text"
                     inputMode="numeric"
                     value={ localChildrenCount }
+                    onChange={ (e) => { setLocalChildrenCount(parseInt(e.target.value)) } }
                     className="text-center h-full w-full flex items-center justify-center text-5xl bg-inherit"
                     />
                 </div>

@@ -8,18 +8,17 @@ import { ArrivalType } from "../../../types/types";
 import ReserveIndex from "../reception/components/ReserveIndex";
 import CustomButton from "../utils/components/CustomButton";
 import { useArrival } from "../ArrivalContext";
+import Modal from "../utils/components/Modal";
 
 function Desk() {
   const { arrivals, setArrivals } = useArrival();
   const [accepting, setAccepting] = useState<boolean>(false);
   const [countChange, setCountChange] = useState<boolean>(false);
 
-  const handleModalBackgroundClick = (event: React.MouseEvent<HTMLDivElement>) => {
-    if (event.target === event.currentTarget) {
-      setAccepting(false);
-      setCountChange(false);
-    }
-  };
+  const closeModal = () => {
+    setAccepting(false);
+    setCountChange(false);
+  }
 
   return (
     <div className='mx-8'>
@@ -33,24 +32,14 @@ function Desk() {
       <div>
         <ReserveIndex />
       { accepting && (
-        <div
-          onClick={ handleModalBackgroundClick }
-          className="fixed top-60 left-40 bg-blue-300/50 w-4/5 rounded-xl items-center justify-center z-10"
-        >
-          <div className="bg-blue-50/90 p-10 m-12 h-auto rounded-xl overflow-y-auto">
-            <Accept setAccepting={ setAccepting } setArrivals={ setArrivals }/>
-          </div>
-        </div>
+        <Modal isVisible={ accepting } onClose={ closeModal }>
+          <Accept setAccepting={ setAccepting } setArrivals={ setArrivals }/>
+        </Modal>
         )}
       { countChange && (
-        <div
-          onClick={ handleModalBackgroundClick }
-          className="fixed top-60 left-40 bg-blue-300/50 w-4/5 rounded-xl items-center justify-center z-10"
-        >
-          <div className="bg-blue-50/90 p-10 m-12 h-auto rounded-xl overflow-y-auto">
-            <ReserveCountChange setCountChange={ setCountChange }/>
-          </div>
-        </div>
+        <Modal isVisible={ countChange } onClose={ closeModal }>
+          <ReserveCountChange setCountChange={ setCountChange }/>
+        </Modal>
         )}
       </div>
       {arrivals

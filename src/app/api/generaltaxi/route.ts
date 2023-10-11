@@ -2,14 +2,15 @@ import { NextRequest, NextResponse } from "next/server";
 import prisma from "../../../../prisma";
 // import { cors } from "@/app/lib/cors";
 import { NextApiRequest, NextApiResponse } from "next";
-import { genericGET, main } from "../utils/utils";
+import { genericGET, genericPOST, main } from "../utils/utils";
+import { rejects } from "assert";
 
 
 export const GET = (req: NextRequest, res: NextResponse) => {
   return genericGET(req, res, () => prisma.generalTaxi.findMany({
     include: { taxi: true },
     orderBy: { id: "asc" },
-  }), "generalTaxis");
+  }), "generaltaxi");
 }
 
 // VIPタクシーの全情報の取得
@@ -35,37 +36,21 @@ export const GET = (req: NextRequest, res: NextResponse) => {
 //   }
 // };
 
-export const POST = async (req: NextApiRequest, res: NextApiResponse) => {
-  // cors(req, res);
-  try {
-    const { section, column, index, peopleCount, carCount, reservationTime } = req.body;
-    
-    await main();
-    
-    const createdGeneralTaxi = await prisma.generalTaxi.create({
+export const POST = async (req: NextRequest, res: NextResponse) => {
+  return genericPOST(req, res, (data) => {
+    return prisma.generalTaxi.create({
       data: {
-        section,
-        column,
-        index,
+        section: data.section,
+        column: data.column,
+        index: data.index,
         taxi: {
           create: {
-            peopleCount,
-            carCount,
-            reservationTime, 
+            peopleCount: data.peopleCount,
+            carCount: data.carCount,
+            reservationTime: data.reservationTime,
           }
         }
-      },
-      include: {
-        taxi: true
       }
     });
-
-    const createdTaxi = createdGeneralTaxi.taxi;
-    
-    res.status(201).json({ message: "Success", taxi: createdTaxi, generalTaxi: createdGeneralTaxi });
-  } catch (error) {
-    res.status(500).json({ message: "Error", error });
-  } finally {
-    await prisma.$disconnect();
-  }
-}
+  }, "generaltaxi");
+};

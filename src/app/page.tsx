@@ -2,6 +2,7 @@
 
 import React, { Dispatch, SetStateAction, useState } from "react";
 import { RoomType } from "../../types/types";
+import ReserveList from "./reception/components/ReserveList";
 
 
 export default function Home() {
@@ -50,10 +51,8 @@ export default function Home() {
     <div>
       <h1>hello, world</h1>
       <p>{ `${process.env.NEXT_PUBLIC_API_HOST}/api/${route}` }</p>
+      <ReserveList rooms={ rooms } setRooms={ setRooms } />
       <button onClick={ () => test() }>接続チェック</button>
-      <div>
-
-      </div>
     </div>
   )
 }

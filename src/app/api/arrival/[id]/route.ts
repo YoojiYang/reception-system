@@ -1,7 +1,4 @@
-import prisma from '../../../../../prisma';
-// import { cors } from '@/app/lib/cors';
-import { NextApiRequest, NextApiResponse } from 'next';
-import { genericGET, genericPUT, main } from '../../utils/utils';
+import { genericGET, genericPUT } from '../../utils/utils';
 import { NextRequest, NextResponse } from 'next/server';
 
 // 各部屋情報の取得

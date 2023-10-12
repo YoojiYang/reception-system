@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { genericGET, main } from '../utils/utils';
 import { RoomType } from '../../../../types/types';
+import prisma from '../../../../prisma';
 
 // 全部屋の情報の取得
 export const GET = (req: NextRequest, res: NextResponse) => {
@@ -45,7 +46,5 @@ export const PUT = async (req: NextRequest, res: NextResponse) => {
   } catch (error) {
     console.error("Error in PUT method for rooms:", error);
     return NextResponse.json({ message: "Error", error }, { status: 500 });
-  } finally {
-    await prisma.$disconnect();
   }
 };

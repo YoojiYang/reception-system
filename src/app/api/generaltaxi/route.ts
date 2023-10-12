@@ -1,9 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import prisma from "../../../../prisma";
-// import { cors } from "@/app/lib/cors";
-import { NextApiRequest, NextApiResponse } from "next";
 import { genericGET, genericPOST, main } from "../utils/utils";
-import { rejects } from "assert";
 
 
 export const GET = (req: NextRequest, res: NextResponse) => {

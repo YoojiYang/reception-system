@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from "next/server";
-import { type } from "os";
 
 type FetchFunction = () => Promise<any>;
 type ResponseKey = string;
@@ -39,8 +38,6 @@ export const genericGET = async (
     return NextResponse.json(responseObj, { status: 200 });
   } catch (error) {
     return NextResponse.json({ message: "Error", error }, { status: 500 });
-  } finally {
-    await prisma.$disconnect();
   }
 };
 
@@ -60,8 +57,6 @@ export const genericPOST = async (
   } catch (error) {
     console.error(`Error in POST method for ${endpoint}:`, error);
     return NextResponse.json({ message: "Error", error }, { status: 500 });
-  } finally {
-    await prisma.$disconnect();
   }
 }
 
@@ -86,8 +81,6 @@ export const genericPUT = async (
   } catch (error) {
     console.error(`Error in PUT method for ${endpoint}:`, error);
     return NextResponse.json({ message: "Error", error }, { status: 500 });
-  } finally {
-    await prisma.$disconnect();
   }
 };
 
@@ -121,7 +114,5 @@ export const genericDELETE = async (
     } catch (error) {
       console.error(`Error in DELETE method for ${endpoint}:`, error);
       return NextResponse.json({ message: "Error", error }, { status: 500 });
-    } finally {
-      await prisma.$disconnect();
     }
   };

@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { genericGET, main } from '../utils/utils';
 import { RoomType } from '../../../../types/types';
-import prisma from '../../../../prisma';
 
 // 全部屋の情報の取得
 export const GET = (req: NextRequest, res: NextResponse) => {

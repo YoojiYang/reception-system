@@ -4,9 +4,9 @@ import React, { Dispatch, SetStateAction, useState } from "react";
 import { RoomType } from "../../types/types";
 import ReserveList from "./reception/components/ReserveList";
 
-
 export default function Home() {
   const [rooms, setRooms] = useState<RoomType[]>([]);
+  const [editing, setEditing] = useState<boolean>(false); // 編集画面かどうかを判断するためのstate
 
   const fetchRooms = async (setRooms: Dispatch<SetStateAction<RoomType[]>>) => {
     try {
@@ -51,8 +51,10 @@ export default function Home() {
     <div>
       <h1>hello, world</h1>
       <p>{ `${process.env.NEXT_PUBLIC_API_HOST}/api/${route}` }</p>
-      <ReserveList rooms={ rooms } setRooms={ setRooms } />
+      <ReserveList setEditing={ setEditing } />
       <button onClick={ () => test() }>接続チェック</button>
     </div>
   )
+
+
 }

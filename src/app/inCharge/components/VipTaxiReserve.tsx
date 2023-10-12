@@ -20,7 +20,7 @@ const VipTaxiReserve = ({ currentRoom, vipTaxis, setVipTaxis }: VipTaxiReservati
 
   const fetchVipTaxis = async (setVipTaxis: Dispatch<SetStateAction<VipTaxiType[]>>) => {
     try {
-      const fetchedVipTaxis = await fetchAllData("viptaxis");
+      const fetchedVipTaxis = await fetchAllData("viptaxi");
       setVipTaxis(fetchedVipTaxis);
     } catch (error) {
       console.error(error);
@@ -33,7 +33,7 @@ const VipTaxiReserve = ({ currentRoom, vipTaxis, setVipTaxis }: VipTaxiReservati
     
     try {
       await postData(
-        "viptaxis",
+        "viptaxi",
         {
           needOrNot: needOrNot,
           roomId: currentRoom.id,
@@ -53,7 +53,7 @@ const VipTaxiReserve = ({ currentRoom, vipTaxis, setVipTaxis }: VipTaxiReservati
   // タクシーの削除処理
   const handleDelete = async (taxiId: number) => {
     try {
-      await deleteVipTaxi("viptaxis", taxiId);
+      await deleteVipTaxi("viptaxi", taxiId);
       fetchVipTaxis(setVipTaxis);
     } catch (error) {
       console.error("Failed to delete taxi:", error);
@@ -129,7 +129,7 @@ const VipTaxiReserve = ({ currentRoom, vipTaxis, setVipTaxis }: VipTaxiReservati
               </div>
             </div>
           </div>
-          <div className=''>
+          <div>
             {vipTaxis
               .filter((taxi: VipTaxiType) => taxi.roomId === currentRoom.id)
               .sort((a: VipTaxiType, b: VipTaxiType) => a.id - b.id)
@@ -177,7 +177,7 @@ const VipTaxiReserve = ({ currentRoom, vipTaxis, setVipTaxis }: VipTaxiReservati
                           carCount: editCarCount,
                           reservationTime: editReservationTime,
                         };
-                        await updateTaxi("viptaxis", data, editingTaxiId);
+                        await updateTaxi("viptaxi", data, editingTaxiId);
                         await fetchVipTaxis(setVipTaxis);
                         setEditingTaxiId(null);
                       } else {
@@ -194,6 +194,7 @@ const VipTaxiReserve = ({ currentRoom, vipTaxis, setVipTaxis }: VipTaxiReservati
                     onClick={ () => handleDelete(taxi.id) }
                     className={ "py-2 px-2 text-lg"}
                   />
+                  <p>{taxi.id}</p>
                 </div>
             ))}
           </div>

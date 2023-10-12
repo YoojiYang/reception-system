@@ -39,7 +39,6 @@ export async function fetchAllData(route: string) {
   });
 
   const json = await res.json()
-
   return json[route];
 }
 
@@ -92,6 +91,7 @@ export async function postGeneralTaxi(data: GeneralTaxiData) {
 }
 
 export async function postData(route: string, data: Record<string, any>) {
+  console.log(data);
   const res = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/api/${route}`, {
     method: 'POST',
     headers: {

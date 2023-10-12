@@ -49,7 +49,7 @@ export default function Home() {
   return (
     <div>
       <h1>hello, world</h1>
-      <p>{ `${process.env.NEXT_PUBLIC_API_HOST}/${route}` }</p>
+      <p>{ `${process.env.NEXT_PUBLIC_API_HOST}/api/${route}` }</p>
       <button onClick={ () => test() }>接続チェック</button>
       <div>
 

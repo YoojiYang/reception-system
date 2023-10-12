@@ -28,7 +28,7 @@ const VipTaxi = ({ vipTaxis, setVipTaxis }: VipTaxiProps) => {
 
   const fetchVipTaxis = async (setVipTaxis: Dispatch<SetStateAction<VipTaxiType[]>>) => {
     try {
-      const fetchedVipTaxis = await fetchAllData("viptaxis");
+      const fetchedVipTaxis = await fetchAllData("viptaxi");
       setVipTaxis(fetchedVipTaxis);
     } catch (error) {
       console.error(error);
@@ -37,7 +37,7 @@ const VipTaxi = ({ vipTaxis, setVipTaxis }: VipTaxiProps) => {
 
   const handleDelete = async (taxiId: number) => {
     try {
-      await deleteVipTaxi("viptaxis", taxiId);
+      await deleteVipTaxi("viptaxi", taxiId);
       fetchVipTaxis(setVipTaxis);
     } catch (error) {
       console.error("Failed to delete taxi:", error);

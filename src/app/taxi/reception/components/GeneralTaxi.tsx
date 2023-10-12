@@ -1,4 +1,4 @@
-import { deleteGeneralTaxi, fetchAllGeneralTaxis, updateGeneralTaxi } from "@/app/utils/utils";
+import { deleteGeneralTaxi, fetchAllData, fetchAllGeneralTaxis, updateGeneralTaxi } from "@/app/utils/utils";
 import { GeneralTaxiData, GeneralTaxiProps, GeneralTaxiType } from "../../../../../types/types";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import CustomButton from "@/app/utils/components/CustomButton";
@@ -12,7 +12,7 @@ const GeneralTaxi = ({ generalTaxis, setGeneralTaxis }: GeneralTaxiProps) => {
   
   const fetchGeneralTaxis = async (setGeneralTaxis: Dispatch<SetStateAction<GeneralTaxiType[]>>) => {
     try {
-      const fetchedGeneraltaxis = await fetchAllGeneralTaxis();
+      const fetchedGeneraltaxis = await fetchAllData("generaltaxi");
       setGeneralTaxis(fetchedGeneraltaxis);
     } catch (error) {
       console.error(error);

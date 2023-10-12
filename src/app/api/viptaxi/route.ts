@@ -1,13 +1,13 @@
 import prisma from "../../../../prisma";
 import { NextRequest, NextResponse } from "next/server";
-import { genericGET, genericPOST, main } from "../utils/utils";
+import { genericGET, genericPOST } from "../utils/utils";
 
 
 export const GET = (req: NextRequest, res: NextResponse) => {
   return genericGET(req, res, () => prisma.vipTaxi.findMany({
     include: { room: true, taxi: true, },
     orderBy: { id: "asc" },
-  }), "viptaxis");
+  }), "viptaxi");
 }
 
 
@@ -30,5 +30,5 @@ export const POST = async (req: NextRequest, res: NextResponse) => {
         }
       }
     });
-  }, "viptaxis");
+  }, "viptaxi");
 };

@@ -1,10 +1,6 @@
-// import { cors } from '@/app/lib/cors';
-import { PrismaClient, Room } from '@prisma/client';
 import { NextRequest, NextResponse } from 'next/server';
-import { genericGET, genericPUT, main } from '../utils/utils';
+import { genericGET, main } from '../utils/utils';
 import { RoomType } from '../../../../types/types';
-
-const prisma = new PrismaClient();
 
 // 全部屋の情報の取得
 export const GET = (req: NextRequest, res: NextResponse) => {

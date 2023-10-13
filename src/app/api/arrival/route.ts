@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { genericGET, genericPOST } from "../utils/utils";
+import prisma from "../../../../prisma";
 
 // 全到着情報の取得
 export const GET = (req: NextRequest, res: NextResponse) => {

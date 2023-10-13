@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { genericDELETE, genericGET, genericPUT } from '../../utils/utils';
+import prisma from '../../../../../prisma';
 
 export const GET = async (req: NextRequest, res: NextResponse) => {
   const id: number = parseInt(req.url.split("/generaltaxi/")[1]);

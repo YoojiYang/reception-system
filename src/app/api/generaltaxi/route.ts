@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { genericGET, genericPOST, main } from "../utils/utils";
+import { genericGET, genericPOST } from "../utils/utils";
+import prisma from "../../../../prisma";
 
 
 export const GET = (req: NextRequest, res: NextResponse) => {

@@ -1,9 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { genericGET, main } from '../utils/utils';
 import { RoomType } from '../../../../types/types';
-import { PrismaClient } from '@prisma/client';
+// import { PrismaClient } from '@prisma/client';
+import prisma from '../../../../prisma';
 
-const prisma = new PrismaClient({ log: ["info"] });
+// const prisma = new PrismaClient({ log: ["info"] });
 
 // 全部屋の情報の取得
 export const GET = (req: NextRequest, res: NextResponse) => {

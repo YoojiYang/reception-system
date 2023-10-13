@@ -1,3 +1,4 @@
+import { PrismaClient } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 
 type FetchFunction = () => Promise<any>;
@@ -7,7 +8,7 @@ type UpdateFunction = (id: number, data: any) => Promise<any>;
 type FindFunction = (id: number) => Promise<any>;
 type DeleteFunction = (id: number) => Promise<any>;
 
-
+const prisma = new PrismaClient({ log: ["info"] });
 
 export async function main() {
   try {

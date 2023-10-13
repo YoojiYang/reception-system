@@ -51,8 +51,18 @@ export default function Home() {
     <div>
       <h1>hello, world</h1>
       <p>{ `${process.env.NEXT_PUBLIC_API_HOST}/api/${route}` }</p>
-      <ReserveList setEditing={ setEditing } />
-      <button onClick={ () => test() }>接続チェック</button>
+      <button onClick={ () => fetchRooms(setRooms) }>テスト</button>
+      <div>
+        <p>
+        rooms: {rooms[0]?.name}
+        </p>
+        <p>
+        rooms: {rooms[0]?.company}
+        </p>
+        <p>
+        rooms: {rooms[0]?.reserveAdultsCount}
+        </p>
+      </div>
     </div>
   )
 

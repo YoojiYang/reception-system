@@ -35,9 +35,9 @@ export const genericGET = async (
       message: "Success",
       [responseKey]: data
     };
-    return NextResponse.json(responseObj, { status: 200 });
+    return NextResponse.json(responseObj, { status: 200, headers: { "Access-Control-Allow-Origin": "*" } });
   } catch (error) {
-    return NextResponse.json({ message: "Error", error }, { status: 500 });
+    return NextResponse.json({ message: "Error", error }, { status: 500, headers: { "Access-Control-Allow-Origin": "*" } });
   }
 };
 
@@ -53,10 +53,10 @@ export const genericPOST = async (
     await main();
     const result = await createFn(data);
 
-    return NextResponse.json({ message: "Success", [endpoint]: result }, { status: 201 });
+    return NextResponse.json({ message: "Success", [endpoint]: result }, { status: 201, headers: { "Access-Control-Allow-Origin": "*" } });
   } catch (error) {
     console.error(`Error in POST method for ${endpoint}:`, error);
-    return NextResponse.json({ message: "Error", error }, { status: 500 });
+    return NextResponse.json({ message: "Error", error }, { status: 500, headers: { "Access-Control-Allow-Origin": "*" } });
   }
 }
 
@@ -77,10 +77,10 @@ export const genericPUT = async (
     await main();
     const result = await updateFn(id, data);
 
-    return NextResponse.json({ message: "Success", result }, { status: 200 });
+    return NextResponse.json({ message: "Success", result }, { status: 200, headers: { "Access-Control-Allow-Origin": "*" } });
   } catch (error) {
     console.error(`Error in PUT method for ${endpoint}:`, error);
-    return NextResponse.json({ message: "Error", error }, { status: 500 });
+    return NextResponse.json({ message: "Error", error }, { status: 500, headers: { "Access-Control-Allow-Origin": "*" } });
   }
 };
 
@@ -109,10 +109,10 @@ export const genericDELETE = async (
 
     await deleteFn(record.taxiId);
 
-    return NextResponse.json({ message: "Success" }, { status: 200 });
+    return NextResponse.json({ message: "Success" }, { status: 200, headers: { "Access-Control-Allow-Origin": "*" } });
 
     } catch (error) {
       console.error(`Error in DELETE method for ${endpoint}:`, error);
-      return NextResponse.json({ message: "Error", error }, { status: 500 });
+      return NextResponse.json({ message: "Error", error }, { status: 500, headers: { "Access-Control-Allow-Origin": "*" } });
     }
   };

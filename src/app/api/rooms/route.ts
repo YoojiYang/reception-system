@@ -1,10 +1,33 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { genericGET, main } from '../utils/utils';
 import { RoomType } from '../../../../types/types';
-// import { PrismaClient } from '@prisma/client';
 import prisma from '../../../../prisma';
+import { NextApiRequest, NextApiResponse } from 'next';
 
-// const prisma = new PrismaClient({ log: ["info"] });
+// export default withCORS(async (req: NextApiRequest, res: NextApiResponse) => {
+//   if (req.method === "GET") {
+//     return genericGET(req, res, () => prisma.room.findMany(), "rooms");
+//   }
+
+//   if (req.method === "PUT") {
+//     try {
+//       await main();
+//        // req.bodyの内容を文字列として読み取る
+//       const rawData = await req.text();
+  
+//       const roomsData: Record<number, RoomType> = JSON.parse(rawData);
+//       console.log("roomsData:", roomsData);
+//       const results = await updateMultipleRooms(roomsData);
+  
+//       return NextResponse.json({ message: "Success", results }, { status: 200 });
+//     } catch (error) {
+//       console.error("Error in PUT method for rooms:", error);
+//       return NextResponse.json({ message: "Error", error }, { status: 500 });
+//     }
+//   }
+// });
+
+
 
 // 全部屋の情報の取得
 export const GET = (req: NextRequest, res: NextResponse) => {

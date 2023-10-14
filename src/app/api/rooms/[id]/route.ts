@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import prisma from '../../../../../prisma';
 import { genericGET, genericPUT } from '../../utils/utils';
+import prisma from '../../../../../prisma';
 
 
 // 各部屋情報の取得

@@ -1,7 +1,7 @@
 import CustomButton from "@/app/utils/components/CustomButton";
-import { fetchAllGeneralTaxis } from "@/app/utils/utils";
-import { useState } from "react";
-import { TaxiReservationProps } from "../../../../../types/types";
+import { fetchAllData, fetchGeneralTaxis } from "@/app/utils/utils";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { GeneralTaxiType, TaxiReservationProps } from "../../../../../types/types";
 import CustomSelect from "@/app/utils/components/CustomSelect";
 import { carCountOptions, columnOptions, indexOptions, peopleCountOptions, sectionOptions } from "@/app/utils/selectOptions";
 
@@ -16,9 +16,7 @@ const TaxiReservation = ({ operationType, onSubmit, setEditing, setGeneralTaxis,
     e.preventDefault();
     
     try {
-      await onSubmit(section, column, index, peopleCount, carCount);
-      const fetchedGeneralTaxi = await fetchAllGeneralTaxis();
-      setGeneralTaxis(fetchedGeneralTaxi);
+      onSubmit(section, column, index, peopleCount, carCount);
     } catch (error) {
       console.error(error);
       return;

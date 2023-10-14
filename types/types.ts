@@ -1,3 +1,4 @@
+import { data } from "autoprefixer";
 import React from "react";
 
 export type RoomType = {
@@ -119,6 +120,10 @@ export type EditReserveCountProps = {
 export type GeneralTaxiProps = {
   generalTaxis: GeneralTaxiType[];
   setGeneralTaxis: React.Dispatch<React.SetStateAction<GeneralTaxiType[]>>;
+};
+
+export type FormatedGeneralTaxiType = {
+  [key: string]: typeof data[0];
 };
 
 export type VipTaxiProps = {

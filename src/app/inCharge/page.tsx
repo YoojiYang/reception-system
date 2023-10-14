@@ -41,7 +41,7 @@ function InCharge() {
 
   useEffect(() => {
     fetchRooms(setRooms);
-  }, [setRooms, ]);
+  }, [setRooms]);
 
     
   return (

@@ -1,44 +1,26 @@
-import { deleteGeneralTaxi, fetchAllData, fetchAllGeneralTaxis, updateGeneralTaxi } from "@/app/utils/utils";
-import { GeneralTaxiData, GeneralTaxiProps, GeneralTaxiType } from "../../../../../types/types";
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { deleteGeneralTaxi, fetchGeneralTaxis, postGeneralTaxi, updateTaxi } from "@/app/utils/utils";
+import { FormatedGeneralTaxiType, GeneralTaxiData, GeneralTaxiProps, GeneralTaxiType } from "../../../../../types/types";
+import { useEffect, useState } from "react";
 import CustomButton from "@/app/utils/components/CustomButton";
 import Modal from "@/app/utils/components/Modal";
 import TaxiReservation from "./TaxiReservation";
 
 
 const GeneralTaxi = ({ generalTaxis, setGeneralTaxis }: GeneralTaxiProps) => {
+  const [editing, setEditing] = useState<boolean>(false);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [editingTaxiId, setEditingTaxiId] = useState<number | null>(null);
-  
-  const fetchGeneralTaxis = async (setGeneralTaxis: Dispatch<SetStateAction<GeneralTaxiType[]>>) => {
-    try {
-      const fetchedGeneraltaxis = await fetchAllData("generaltaxi");
-      setGeneralTaxis(fetchedGeneraltaxis);
-    } catch (error) {
-      console.error(error);
-    }
-  };
 
-  const getSelectedTaxiData = (id: number): GeneralTaxiData | undefined => {
-    const taxi = generalTaxis.find(taxi => taxi.id === id);
-    if (!taxi || !taxi.taxi) return;
-  
-    return {
-      section: taxi.section,
-      column: taxi.column,
-      index: taxi.index,
-      peopleCount: taxi.taxi.peopleCount,
-      carCount: taxi.taxi.carCount
-    };
-  };
-  
-  const selectedTaxiData = editingTaxiId ? getSelectedTaxiData(editingTaxiId) : undefined;
-  
+  const formatedGeneralTaxis= generalTaxis.reduce<FormatedGeneralTaxiType>((acc, item) => {
+    acc[String(item.id)] = item;
+    return acc;
+}, {});
+
   const totalCarCount = generalTaxis.reduce((acc: number, generalTaxi: GeneralTaxiType) => {
     return acc + (generalTaxi.taxi?.carCount || 0);
   }, 0);
-
-
+  
+  
   const handleDelete = async (taxiId: number) => {
     try {
       await deleteGeneralTaxi(taxiId);
@@ -58,6 +40,9 @@ const GeneralTaxi = ({ generalTaxis, setGeneralTaxis }: GeneralTaxiProps) => {
         <div>
           <h2>一般タクシー</h2>
           <p>予約合計{ totalCarCount }</p>
+          <div className='h-32 flex items-center justify-end space-x-8'>
+            <CustomButton text={ "追加" } onClick={ () => { setEditing(true) }} className={ "py-4 px-8 text-xl" } />
+          </div>
         </div>
         <div className='h-8 mt-4 grid grid-cols-8 gap-2 items-center'>
           <p className='text-center h-full flex items-center justify-center'>タグ</p>
@@ -99,17 +84,41 @@ const GeneralTaxi = ({ generalTaxis, setGeneralTaxis }: GeneralTaxiProps) => {
               </div>
           ))}
         </div>
+        { editing && (
+          <div>
+            <Modal isVisible={ editing } onClose={ () => setEditing(false) }>
+              <TaxiReservation
+                operationType="create"
+                onSubmit={ async ( section, column, index, peopleCount, carCount ) => {
+                  const data: GeneralTaxiData = { section, column, index, peopleCount, carCount };
+                  await postGeneralTaxi(data);
+                  fetchGeneralTaxis(setGeneralTaxis);
+                }}
+                setEditing={ setEditing }
+                setGeneralTaxis={ setGeneralTaxis }
+              />
+            </Modal>
+          </div>
+        )}
+
         { isModalOpen && editingTaxiId && (
           <Modal isVisible={ isModalOpen } onClose={ () => setIsModalOpen(false) }>
             <TaxiReservation
               operationType="update"
               onSubmit={ async (section, column, index, peopleCount, carCount) => {
-                const data: GeneralTaxiData = { section, column, index, peopleCount, carCount };
-                await updateGeneralTaxi(data, editingTaxiId);
+                const data = {
+                  section: section,
+                  column: column,
+                  index: index,
+                  peopleCount: peopleCount,
+                  carCount: carCount,
+                };
+                await updateTaxi("generaltaxi", data, editingTaxiId);
+                fetchGeneralTaxis(setGeneralTaxis);
               }}
               setEditing={ setIsModalOpen }
               setGeneralTaxis={ setGeneralTaxis }
-              initialValues={ selectedTaxiData }
+              initialValues={ formatedGeneralTaxis[editingTaxiId] }
             />
           </Modal>
         )}

@@ -13,23 +13,39 @@ export const GET = async (req: NextRequest, res: NextResponse) => {
 };
 
 export const PUT = async (req: NextRequest, res: NextResponse) => {
-  return genericPUT(req, res, async (id, data) => {
-    return await prisma.generalTaxi.update({
-      data: {
-        section: data.section,
-        column: data.column,
-        index: data.index,
-        taxi: {
-          update: {
-            peopleCount: data.peopleCount,
-            carCount: data.carCount,
-            reservationTime: data.reservationTime,
-          }
+  return genericPUT(req, res,
+    async (id, data) => {
+      const generalTaxiRecord = await prisma.generalTaxi.findUnique({
+        where: { id },
+        select: {
+          taxiId: true,
         }
-      },
-      where: { id },
-    });
-  }, "generaltaxi");
+      });
+
+      if (!generalTaxiRecord || !generalTaxiRecord.taxiId) {
+        throw new Error("taxiId is not defined");
+      }
+
+      await prisma.taxi.update({
+        where: { id: generalTaxiRecord.taxiId },
+        data: {
+          peopleCount: data.peopleCount,
+          carCount: data.carCount,
+          reservationTime: data.reservationTime,
+        }
+      });
+
+      return await prisma.generalTaxi.update({
+        where: { id },
+        data: {
+          section: data.section,
+          column: data.column,
+          index: data.index,
+        }
+      });
+    },
+    "generaltaxi"
+  );
 };
 
 export const DELETE = async (req: NextRequest, res: NextResponse) => {

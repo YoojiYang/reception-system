@@ -52,6 +52,16 @@ export async function fetchAllInCharges() {
   return json.inCharges;
 }
 
+export const fetchGeneralTaxis = async (setGeneralTaxis: Dispatch<SetStateAction<GeneralTaxiType[]>>) => {
+  try {
+    const fetchedGeneraltaxis = await fetchAllData("generaltaxi");
+    setGeneralTaxis(fetchedGeneraltaxis);
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+
 // 個別情報の取得
 
 export async function fetchArrivalsForRoom(roomId: number) {
@@ -268,9 +278,9 @@ export async function updateTaxi(
   data: {
     peopleCount: number,
     carCount: number,
-    section?: string,
-    column?: string,
-    index?: string,
+    section?: number,
+    column?: number,
+    index?: number,
     reservationTime?: string,
   },
   editingTaxiId: number,
@@ -372,3 +382,4 @@ export const createOptionsArray = (start: number, end: number) => {
   }
   return options;
 }
+

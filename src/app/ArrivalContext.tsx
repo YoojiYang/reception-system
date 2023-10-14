@@ -17,13 +17,14 @@ export const fetchArrival = async (setArrival: Dispatch<SetStateAction<ArrivalTy
 
 export const ArrivalProvider: React.FC<ArrivalProviderProps> = ({ children }) => {
   const [arrivals, setArrivals] = useState<ArrivalType[]>([]);
+  const [lastUpdated, setLastUpdated] = useState<number>(Date.now());
 
   useEffect(() => {
     fetchArrival(setArrivals);
   }, []);
 
   return (
-    <ArrivalContext.Provider value={{ arrivals, setArrivals }}>
+    <ArrivalContext.Provider value={{ arrivals, setArrivals, lastUpdated, setLastUpdated }}>
       { children }
     </ArrivalContext.Provider>
   );

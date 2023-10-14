@@ -11,7 +11,7 @@ import EditArrivalInfo from "./components/EditArrivalInfo";
 import { VipTaxiType } from "../../../types/types";
 
 function InCharge() {
-  const { rooms, setRooms, lastUpdated } = useRooms();
+  const { rooms, setRooms,  } = useRooms();
   const { arrivals, setArrivals } = useArrival();
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [currentRoomId, setCurrentRoomId] = useState<number | null>(null);
@@ -41,7 +41,7 @@ function InCharge() {
 
   useEffect(() => {
     fetchRooms(setRooms);
-  }, [setRooms, lastUpdated]);
+  }, [setRooms, ]);
 
     
   return (

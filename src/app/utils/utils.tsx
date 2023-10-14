@@ -1,4 +1,4 @@
-import { GeneralTaxiData, GeneralTaxiType, RoomType } from "../../../types/types";
+import { GeneralTaxiData, GeneralTaxiType, HandleEditDataProps, RoomType } from "../../../types/types";
 import { Dispatch, SetStateAction } from "react";
 
 
@@ -100,36 +100,32 @@ export async function postData(route: string, data: Record<string, any>) {
     body: JSON.stringify(data),
   });  
   const json = await res.json()
-  
+  console.log(JSON.stringify(json));
   return json[route];
 }
 
 
-export async function handleEditData(
-  route: string,
-  data: any,
-  editingId: number,
-  onSuccess?: (response: any) => void,
-  onError?: (error: any) => void
-  ) {
-    try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/api/${route}/${editingId}`, {
-      method: 'PUT',
-      body: JSON.stringify(data),
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
-    const responseData = await res.json();
-    
-    if (!res.ok) {
-      throw new Error(responseData.message || "Failed to update data.");
-    }
-    
-    if (onSuccess) {
-      onSuccess(responseData);
-    }
-    
+export async function handleEditData(props: HandleEditDataProps){
+  const { route, data, editingId, onSuccess, onError } = props;
+
+  try {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/api/${route}/${editingId}`, {
+    method: 'PUT',
+    body: JSON.stringify(data),
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+  const responseData = await res.json();
+  
+  if (!res.ok) {
+    throw new Error(responseData.message || "Failed to update data.");
+  }
+  
+  if (onSuccess) {
+    onSuccess(responseData);
+  }
+  
   } catch (error) {
     console.log(`Error updating ${route}:`, error);
     if (onError) {

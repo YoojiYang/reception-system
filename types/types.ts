@@ -1,4 +1,3 @@
-import { type } from "os";
 import React from "react";
 
 export type RoomType = {
@@ -65,6 +64,8 @@ export type EditReserveListProps = {
 export type AcceptProps = {
   setAccepting: React.Dispatch<React.SetStateAction<boolean>>;
   setArrivals: React.Dispatch<React.SetStateAction<ArrivalType[]>>;
+  lastUpdated: number;
+  setLastUpdated: React.Dispatch<React.SetStateAction<number>>;
 };
 
 export type ReserveCountChangeProps = {
@@ -95,6 +96,8 @@ export type RoomsProviderProps = {
 export type ArrivalContextType = {
   arrivals: ArrivalType[];
   setArrivals: React.Dispatch<React.SetStateAction<ArrivalType[]>>;
+  lastUpdated: number;
+  setLastUpdated: React.Dispatch<React.SetStateAction<number>>;
 };
 
 export type ArrivalProviderProps = {
@@ -157,6 +160,15 @@ export type GeneralTaxiData = {
   peopleCount: number;
   carCount: number;
 }
+
+export type HandleEditDataProps = {
+  route: string;
+  data: any;
+  editingId?: number;
+  onSuccess?: (response: any) => void;
+  onError?: (error: any) => void;
+};
+
 
 export enum NeedOrNotStatus {
   "必要" = "必要",

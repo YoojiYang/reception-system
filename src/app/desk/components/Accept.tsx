@@ -1,15 +1,16 @@
 "use client";
 
 import DecrementButton from "@/app/utils/components/DecrementButton";
-import { fetchAllData, postArrival } from "../../utils/utils"
+import { handleEditData, postData } from "../../utils/utils"
 import { AcceptProps, RoomType } from "../../../../types/types";
 import IncrementButton from "@/app/utils/components/IncrementButton";
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import CustomButton from "@/app/utils/components/CustomButton";
 import { useRooms } from "@/app/RoomsContext";
+import { fetchArrival } from "@/app/ArrivalContext";
 
-export function Accept({ setAccepting, setArrivals }: AcceptProps) {
-  const { rooms, setRooms } = useRooms();
+export function Accept({ setAccepting, setArrivals, lastUpdated, setLastUpdated }: AcceptProps) {
+  const { rooms } = useRooms();
   const [selectedRoomId, setSelectedRoomId] = useState<number>(0);
   const [localAdultsCount, setLocalAdultsCount] = useState<number>(0);
   const [localChildrenCount, setLocalChildrenCount] = useState<number>(0);
@@ -19,7 +20,36 @@ export function Accept({ setAccepting, setArrivals }: AcceptProps) {
     setSelectedRoomId(roomId);
   };
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const selectedRoom = rooms.find(room => room.id === selectedRoomId);
+
+
+  // const handleRegister = () => {
+  //   if (!selectedRoom) {
+  //     console.error("Room not found.");
+  //     return;
+  //   }
+
+  //   const data = {
+  //     adultsCount: localAdultsCount,
+  //     childrenCount: localChildrenCount,
+  //   };
+    
+  //   console.log(selectedRoom?.id);
+  //   handleEditData({
+  //     route: "arrival",
+  //     data: data,
+  //     onSuccess: (response) => {
+  //       fetchArrival(setArrivals);
+  //       setLastUpdated(Date.now());
+  //     }, 
+  //     onError: (error) => {
+  //       console.error(error);
+  //     },
+  //   });
+  //   setAccepting(false);
+  // };
+
+  const handleRegister = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     if (selectedRoomId === -1) {
@@ -27,11 +57,16 @@ export function Accept({ setAccepting, setArrivals }: AcceptProps) {
       return;
     }
 
-    try {
-      await postArrival(selectedRoomId, localAdultsCount, localChildrenCount);
+    const data = {
+      roomId: selectedRoomId,
+      adultsCount: localAdultsCount,
+      childrenCount: localChildrenCount,
+    };
 
-      const fetchedArrivals = await fetchAllData("arrival");
-      setArrivals(fetchedArrivals);
+    try {
+      await postData("arrival", data);
+      fetchArrival(setArrivals);
+      setLastUpdated(Date.now());
     } catch (error) {
       console.error(error);
       return;
@@ -39,11 +74,19 @@ export function Accept({ setAccepting, setArrivals }: AcceptProps) {
 
     setAccepting(false);
   };
+
+  const sortedRooms = useMemo(() => {
+    return [...rooms].sort((a: RoomType, b: RoomType) => a.id - b.id);
+  }, [rooms]);
+
+  useEffect(() => {
+    fetchArrival(setArrivals);
+  }, [setArrivals, lastUpdated]);
   
   return(
     <div>
     <div className="p-2 h-auto">
-      <form onSubmit={ handleSubmit }>
+      <form onSubmit={ handleRegister }>
         <div className="flex h-56">
           <div className="w-1/2">
             <p className="text-3xl text-center">部屋名</p>
@@ -54,9 +97,7 @@ export function Accept({ setAccepting, setArrivals }: AcceptProps) {
                 className='text-center cols-span-5 flex h-full w-full items-center justify-center text-4xl border-solid border-2 border-blue-500 rounded-xl'
                 >
                 <option value="-1">▼部屋名を選択▼</option>
-                {rooms
-                  .sort((a: RoomType, b: RoomType) => a.id - b.id)
-                  .map((room: RoomType) => (
+                {sortedRooms.map((room: RoomType) => (
                     <option key={ room.id } value={ room.id }>{ room.name }</option>
                     ))}
               </select>

@@ -4,7 +4,7 @@ import IncrementButton from "@/app/utils/components/IncrementButton"
 import { ReserveCountChangeProps, RoomType } from "../../../../types/types"
 import { useEffect, useMemo, useState } from "react";
 import { fetchRooms, useRooms } from "@/app/RoomsContext";
-import { handleEditData, handleReserveCountChangeUpdate } from "@/app/utils/utils";
+import { handleEditData } from "@/app/utils/utils";
 
 export function ReserveCountChange({ setCountChange }: ReserveCountChangeProps) {
   const { rooms, setRooms, lastUpdated, setLastUpdated } = useRooms();
@@ -33,18 +33,18 @@ export function ReserveCountChange({ setCountChange }: ReserveCountChangeProps) 
       changedChildrenCount: selectedRoom?.changedChildrenCount + localChildrenCount,
     };
 
-    handleEditData(
-      "rooms",
-      data,
-      selectedRoom?.id,
-      (response) => {
+    handleEditData({
+      route: "rooms",
+      data: data,
+      editingId: selectedRoom?.id,
+      onSuccess: (response) => {
         fetchRooms(setRooms);
         setLastUpdated(Date.now());
       }, 
-      (error) => {
+      onError: (error) => {
         console.error(error);
-      }
-      );
+      },
+    });
     setCountChange(false);
   };
 

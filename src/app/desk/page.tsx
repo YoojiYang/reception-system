@@ -11,7 +11,7 @@ import { useArrival } from "../ArrivalContext";
 import Modal from "../utils/components/Modal";
 
 function Desk() {
-  const { arrivals, setArrivals } = useArrival();
+  const { arrivals, setArrivals, lastUpdated, setLastUpdated } = useArrival();
   const [accepting, setAccepting] = useState<boolean>(false);
   const [countChange, setCountChange] = useState<boolean>(false);
 
@@ -33,7 +33,7 @@ function Desk() {
         <ReserveIndex />
       { accepting && (
         <Modal isVisible={ accepting } onClose={ closeModal }>
-          <Accept setAccepting={ setAccepting } setArrivals={ setArrivals }/>
+          <Accept setAccepting={ setAccepting } setArrivals={ setArrivals } lastUpdated={ lastUpdated } setLastUpdated={ setLastUpdated }/>
         </Modal>
         )}
       { countChange && (

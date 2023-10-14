@@ -1,14 +1,9 @@
 'use client';
 
-import { Dispatch, SetStateAction, use, useEffect, useState } from "react";
+import { useState } from "react";
 import GeneralTaxi from "./components/GeneralTaxi";
-import CustomButton from "@/app/utils/components/CustomButton";
 import VipTaxi from "./components/VipTaxi";
-import { GeneralTaxiData, GeneralTaxiType, VipTaxiType } from "../../../../types/types";
-import Modal from "@/app/utils/components/Modal";
-import TaxiReservation from "./components/TaxiReservation";
-import { fetchAllData, postGeneralTaxi } from "@/app/utils/utils";
-
+import { GeneralTaxiType, VipTaxiType } from "../../../../types/types";
 
 function TaxiReception() {
   const [generalTaxis, setGeneralTaxis] = useState<GeneralTaxiType[]>([]);

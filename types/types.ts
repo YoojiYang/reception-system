@@ -123,7 +123,7 @@ export type GeneralTaxiProps = {
 };
 
 export type FormatedGeneralTaxiType = {
-  [key: string]: typeof data[0];
+  [key: string]: GeneralTaxiType;
 };
 
 export type VipTaxiProps = {

@@ -10,7 +10,7 @@ const EditReserveCount = ({ currentRoom, setModalOpen }: EditReserveCountProps) 
   const [localChangeAdultsCount, setLocalChangeAdultsCount] = useState<number>(0);
   const [localChangechildrenCount, setLocalChangechildrenCount] = useState<number>(0);
   
-  const { rooms, setRooms, , set } = useRooms();
+  const { rooms, setRooms, lastUpdated , setLastUpdated } = useRooms();
   const roomsMap = setRoomsMap(rooms);
   const reserveCount = roomsMap[currentRoom.id]?.reserveAdultsCount + roomsMap[currentRoom.id]?.reserveChildrenCount || 0;
   const changedAdultsCount = roomsMap[currentRoom.id]?.changedAdultsCount || 0;
@@ -24,7 +24,7 @@ const EditReserveCount = ({ currentRoom, setModalOpen }: EditReserveCountProps) 
       localChangechildrenCount,
       (response) => {
         fetchRooms(setRooms);
-        set(Date.now());
+        setLastUpdated(Date.now());
         setLocalChangeAdultsCount(0);
         setLocalChangechildrenCount(0);
       }, 
@@ -37,7 +37,7 @@ const EditReserveCount = ({ currentRoom, setModalOpen }: EditReserveCountProps) 
 
   useEffect(() => {
     fetchRooms(setRooms);
-  }, [setRooms, ]);
+  }, [setRooms, lastUpdated]);
   
   return (
     <div>

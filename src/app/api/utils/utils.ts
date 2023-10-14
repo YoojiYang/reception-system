@@ -129,8 +129,9 @@ export const genericDELETE = async (
     await main();
 
     const record = await findfn(id);
+    console.log("record:", record);
     if (!record || !record.taxiId) {
-      return NextResponse.json({ message: `Taxi not found for the given ${endpoint} ID`, error: " No such taxi" }, { status: 404 });
+      return NextResponse.json({ message: `Taxi not found for the given ${endpoint} ID: ${record}`, error: " No such taxi" }, { status: 404 });
     }
 
     await deleteFn(record.taxiId);

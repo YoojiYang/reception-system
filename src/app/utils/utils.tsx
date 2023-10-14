@@ -320,6 +320,8 @@ export async function deleteVipTaxi (
   route: string,
   id: number,
   ) {
+    console.log(route);
+    console.log(id);
   try {
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/api/${route}/${id}`, {
       method: 'DELETE',

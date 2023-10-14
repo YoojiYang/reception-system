@@ -32,66 +32,21 @@ export const PUT = async (req: NextRequest, res: NextResponse) => {
   }, "generaltaxi");
 };
 
-// // タクシーの各予約情報の更新
-// export const PUT = async (req: NextApiRequest, res: NextApiResponse) => {
-//   // cors(req, res);
-
-//   if (!req.url) {
-//     throw new Error("URL is not defined");
-//   }
-
-//   try {
-//     const id: number = parseInt(req.url.split("/generaltaxi/")[1]);
-    
-//     const requestBody = req.body;
-
-//     const {
-//       section,
-//       column,
-//       index,
-//       peopleCount,
-//       carCount,
-//       reservationTime,
-//     } = requestBody;
-
-//     await main();
-
-//     const generalTaxi = await prisma.generalTaxi.update({
-//       data: {
-//         section,
-//         column,
-//         index,
-//         taxi: {
-//           update: {
-//             peopleCount,
-//             carCount,
-//             reservationTime,
-//           }
-//         }
-//       },
-//       where: { id },
-//     });
-//     res.status(200).json({ message: "Success", generalTaxi });
-//   } catch (error) {
-//     console.error("Error in PUT method:", error);  // エラーの詳細をログに出力
-//     res.status(500).json({ message: "Error", error });
-//   } finally {
-//     await prisma.$disconnect();
-//   }
-// };
-
-
 export const DELETE = async (req: NextRequest, res: NextResponse) => {
   return genericDELETE(req, res,
     async (id) => {
-      return await prisma.generalTaxi.findUnique({
+      const generalTaxiRecord = await prisma.generalTaxi.findUnique({
         where: { id },
         select: {
           taxiId: true,
         }
       });
+      return generalTaxiRecord;
     },
     async (taxiId) => {
+      if (!taxiId) {
+        throw new Error("taxiId is not defined");
+      }
       return await prisma.taxi.delete({
         where: { id: taxiId },
       });
@@ -99,4 +54,3 @@ export const DELETE = async (req: NextRequest, res: NextResponse) => {
     "generaltaxi"
   );
 };
-

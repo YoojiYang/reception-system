@@ -39,15 +39,19 @@ export const PUT = async (req: NextRequest, res: NextResponse) => {
 export const DELETE = async (req: NextRequest, res: NextResponse) => {
   return genericDELETE(req, res,
     async (id) => {
-      return await prisma.vipTaxi.findUnique({
+      const vipTaxiRecord = await prisma.vipTaxi.findUnique({
         where: { id },
         select: {
           taxiId: true,
         }
       });
+      return vipTaxiRecord;
     },
     async (taxiId) => {
-      return await prisma.vipTaxi.delete({
+      if (!taxiId) {
+        throw new Error("taxiId is not defined");
+      }
+      return await prisma.taxi.delete({
         where: { id: taxiId },
       });
     },

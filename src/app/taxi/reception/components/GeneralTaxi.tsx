@@ -7,14 +7,25 @@ import TaxiReservation from "./TaxiReservation";
 
 
 const GeneralTaxi = ({ generalTaxis, setGeneralTaxis }: GeneralTaxiProps) => {
-  const [editing, setEditing] = useState<boolean>(false);
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  const [editingTaxiId, setEditingTaxiId] = useState<number | null>(null);
+  const [isNewPost, setIsNewPost] = useState<boolean>(false);
+  const [isEditing, setIsEditing] = useState<boolean>(false);
+  const [editingTaxiId, setEditingTaxiId] = useState<number>(0);
 
+  
+  
   const formatedGeneralTaxis= generalTaxis.reduce<FormatedGeneralTaxiType>((acc, item) => {
     acc[String(item.id)] = item;
     return acc;
-}, {});
+  }, {});
+  
+  const selectedTaxi = formatedGeneralTaxis[editingTaxiId];
+  const selectedTaxiData: GeneralTaxiData = {
+  section: selectedTaxi.section,
+  column: selectedTaxi.column,
+  index: selectedTaxi.index,
+  peopleCount: selectedTaxi.taxi?.peopleCount || 0,
+  carCount: selectedTaxi.taxi?.carCount || 0
+};
 
   const totalCarCount = generalTaxis.reduce((acc: number, generalTaxi: GeneralTaxiType) => {
     return acc + (generalTaxi.taxi?.carCount || 0);
@@ -41,7 +52,7 @@ const GeneralTaxi = ({ generalTaxis, setGeneralTaxis }: GeneralTaxiProps) => {
           <h2>一般タクシー</h2>
           <p>予約合計{ totalCarCount }</p>
           <div className='h-32 flex items-center justify-end space-x-8'>
-            <CustomButton text={ "追加" } onClick={ () => { setEditing(true) }} className={ "py-4 px-8 text-xl" } />
+            <CustomButton text={ "追加" } onClick={ () => { setIsNewPost(true) }} className={ "py-4 px-8 text-xl" } />
           </div>
         </div>
         <div className='h-8 mt-4 grid grid-cols-8 gap-2 items-center'>
@@ -72,7 +83,7 @@ const GeneralTaxi = ({ generalTaxis, setGeneralTaxis }: GeneralTaxiProps) => {
                   text={ "編集" }
                   onClick={ () => {
                     setEditingTaxiId(taxi.id);
-                    setIsModalOpen(true);
+                    setIsEditing(true);
                   }}
                   className={ "py-2 px-2 text-lg" }
                 />
@@ -84,9 +95,9 @@ const GeneralTaxi = ({ generalTaxis, setGeneralTaxis }: GeneralTaxiProps) => {
               </div>
           ))}
         </div>
-        { editing && (
+        { isNewPost && (
           <div>
-            <Modal isVisible={ editing } onClose={ () => setEditing(false) }>
+            <Modal isVisible={ isNewPost } onClose={ () => setIsNewPost(false) }>
               <TaxiReservation
                 operationType="create"
                 onSubmit={ async ( section, column, index, peopleCount, carCount ) => {
@@ -94,15 +105,15 @@ const GeneralTaxi = ({ generalTaxis, setGeneralTaxis }: GeneralTaxiProps) => {
                   await postGeneralTaxi(data);
                   fetchGeneralTaxis(setGeneralTaxis);
                 }}
-                setEditing={ setEditing }
+                setEditing={ setIsNewPost }
                 setGeneralTaxis={ setGeneralTaxis }
               />
             </Modal>
           </div>
         )}
 
-        { isModalOpen && editingTaxiId && (
-          <Modal isVisible={ isModalOpen } onClose={ () => setIsModalOpen(false) }>
+        { isEditing && editingTaxiId && (
+          <Modal isVisible={ isEditing } onClose={ () => setIsEditing(false) }>
             <TaxiReservation
               operationType="update"
               onSubmit={ async (section, column, index, peopleCount, carCount) => {
@@ -116,9 +127,9 @@ const GeneralTaxi = ({ generalTaxis, setGeneralTaxis }: GeneralTaxiProps) => {
                 await updateTaxi("generaltaxi", data, editingTaxiId);
                 fetchGeneralTaxis(setGeneralTaxis);
               }}
-              setEditing={ setIsModalOpen }
+              setEditing={ setIsEditing }
               setGeneralTaxis={ setGeneralTaxis }
-              initialValues={ formatedGeneralTaxis[editingTaxiId] }
+              initialValues={ selectedTaxiData }
             />
           </Modal>
         )}

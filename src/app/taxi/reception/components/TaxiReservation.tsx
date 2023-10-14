@@ -9,9 +9,10 @@ const TaxiReservation = ({ operationType, onSubmit, setEditing, setGeneralTaxis,
   const [section, setSection] = useState<number>(initialValues?.section || 0);
   const [column, setColumn] = useState<number>(initialValues?.column || 0);
   const [index, setIndex] = useState<number>(initialValues?.index || 0);
-  const [peopleCount, setPeopleCount] = useState<number>(initialValues?.peopleCount || 0);
-  const [carCount, setCarCount] = useState<number>(initialValues?.carCount || 0);
+  const [peopleCount, setPeopleCount] = useState<number>(initialValues?.taxi.peopleCount || 0);
+  const [carCount, setCarCount] = useState<number>(initialValues?.taxi.carCount || 0);
 
+  console.log("initialValues:", initialValues);
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     

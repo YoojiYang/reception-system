@@ -32,7 +32,7 @@ export type GeneralTaxiType = {
   section: number;
   column: number;
   index: number;
-  taxi?: TaxiType;
+  taxi: TaxiType;
 };
 
 export type TaxiType = {
@@ -123,7 +123,7 @@ export type GeneralTaxiProps = {
 };
 
 export type FormatedGeneralTaxiType = {
-  [key: string]: GeneralTaxiType;
+  [key: string]: GeneralTaxiType | undefined;
 };
 
 export type VipTaxiProps = {
@@ -143,7 +143,7 @@ export type TaxiReservationProps = {
     ) => void;
   setEditing: React.Dispatch<React.SetStateAction<boolean>>;
   setGeneralTaxis: React.Dispatch<React.SetStateAction<GeneralTaxiType[]>>;
-  initialValues?: GeneralTaxiData;
+  initialValues?: GeneralTaxiType| undefined;
 };
 
 export type VipTaxiReservationProps = {

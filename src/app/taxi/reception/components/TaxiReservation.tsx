@@ -1,7 +1,6 @@
 import CustomButton from "@/app/utils/components/CustomButton";
-import { fetchAllData, fetchGeneralTaxis } from "@/app/utils/utils";
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
-import { GeneralTaxiType, TaxiReservationProps } from "../../../../../types/types";
+import { useState } from "react";
+import { TaxiReservationProps } from "../../../../../types/types";
 import CustomSelect from "@/app/utils/components/CustomSelect";
 import { carCountOptions, columnOptions, indexOptions, peopleCountOptions, sectionOptions } from "@/app/utils/selectOptions";
 
@@ -12,7 +11,6 @@ const TaxiReservation = ({ operationType, onSubmit, setEditing, setGeneralTaxis,
   const [peopleCount, setPeopleCount] = useState<number>(initialValues?.taxi.peopleCount || 0);
   const [carCount, setCarCount] = useState<number>(initialValues?.taxi.carCount || 0);
 
-  console.log("initialValues:", initialValues);
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     

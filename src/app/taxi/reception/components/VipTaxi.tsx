@@ -20,7 +20,6 @@ async function fetchAllVipTaxis() {
 }
 
 const VipTaxi = ({ vipTaxis, setVipTaxis }: VipTaxiProps) => {
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [editingTaxiId, setEditingTaxiId] = useState<number | null>(null);
   const [editPeopleCount, setEditPeopleCount] = useState<number>(0);
   const [editCarCount, setEditCarCount] = useState<number>(0);
@@ -35,19 +34,18 @@ const VipTaxi = ({ vipTaxis, setVipTaxis }: VipTaxiProps) => {
     }
   };
 
+  const totalCarCount = vipTaxis.reduce((acc: number, vipTaxi: VipTaxiType) => {
+    return acc + (vipTaxi.taxi?.carCount || 0);
+  }, 0);
+
   const handleDelete = async (taxiId: number) => {
     try {
       await deleteVipTaxi("viptaxi", taxiId);
       fetchVipTaxis(setVipTaxis);
     } catch (error) {
       console.error("Failed to delete taxi:", error);
-    }
-  };
-
-  const totalCarCount = vipTaxis.reduce((acc: number, vipTaxi: VipTaxiType) => {
-    return acc + (vipTaxi.taxi?.carCount || 0);
-  }, 0);
-
+    }  
+  };  
 
   useEffect(() => {
     fetchVipTaxis(setVipTaxis);
@@ -121,7 +119,7 @@ const VipTaxi = ({ vipTaxis, setVipTaxis }: VipTaxiProps) => {
                       carCount: editCarCount,
                       reservationTime: editReservationTime,
                     };
-                    await updateTaxi("viptaxis", data, editingTaxiId);
+                    await updateTaxi("viptaxi", data, editingTaxiId);
                     await fetchVipTaxis(setVipTaxis);
                     setEditingTaxiId(null);
                   } else {

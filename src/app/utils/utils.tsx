@@ -245,34 +245,6 @@ export async function handleReserveCountChangeUpdate(
   }
 }
 
-export async function updateGeneralTaxi(
-  data: GeneralTaxiData,
-  editingTaxiId: number,
-) {
-  const { section, column, index, peopleCount, carCount } = data;
-
-  try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/api/generaltaxi/${editingTaxiId}`, {
-      method: 'PUT',
-      body: JSON.stringify({ section, column, index, peopleCount, carCount }),
-      headers: {
-        'Content-Type': 'application/json'
-      },
-    });
-
-    const responseData = await res.json();
-
-    if (!res.ok) {
-      throw new Error(responseData.message || "Failed to update taxi .");
-    }
-
-  } catch (error) {
-    console.log("Error updating taxi;", error);
-  }
-}
-
-
-
 export async function updateTaxi(
   route: string,
   data: {

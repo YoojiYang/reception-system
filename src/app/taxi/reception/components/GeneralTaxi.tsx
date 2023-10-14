@@ -18,21 +18,6 @@ const GeneralTaxi = ({ generalTaxis, setGeneralTaxis }: GeneralTaxiProps) => {
     return acc;
   }, {});
   
-  // const selectedTaxi = formatedGeneralTaxis[editingTaxiId];
-  
-
-  // if (selectedTaxiData && selectedTaxi.taxi) {
-  //   selectedTaxiData = {
-  //     section: selectedTaxi.section,
-  //     column: selectedTaxi.column,
-  //     index: selectedTaxi.index,
-  //     peopleCount: selectedTaxi.taxi.peopleCount,
-  //     carCount: selectedTaxi.taxi.carCount
-  //   };
-  // }
-
-  console.log("formatedGeneralTaxis:", formatedGeneralTaxis);
-
   const totalCarCount = generalTaxis.reduce((acc: number, generalTaxi: GeneralTaxiType) => {
     return acc + (generalTaxi.taxi?.carCount || 0);
   }, 0);

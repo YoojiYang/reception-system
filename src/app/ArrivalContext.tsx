@@ -18,13 +18,28 @@ export const fetchArrival = async (setArrival: Dispatch<SetStateAction<ArrivalTy
 export const ArrivalProvider: React.FC<ArrivalProviderProps> = ({ children }) => {
   const [arrivals, setArrivals] = useState<ArrivalType[]>([]);
   const [lastUpdated, setLastUpdated] = useState<number>(Date.now());
+  const [arrivalCounts, setArrivalCounts] = useState<Record<number, { adultsTotal: number, childrenTotal: number }>>({});
+
+  useEffect(() => {
+    const result: Record<number, { adultsTotal: number, childrenTotal: number }> = {};
+
+    for (const arrival of arrivals) {
+        if (!result[arrival.roomId]) {
+            result[arrival.roomId] = { adultsTotal: 0, childrenTotal: 0 };
+        }
+        result[arrival.roomId].adultsTotal += arrival.adultsCount;
+        result[arrival.roomId].childrenTotal += arrival.childrenCount;
+    }
+    setArrivalCounts(result);
+}, [arrivals]);
+
 
   useEffect(() => {
     fetchArrival(setArrivals);
   }, []);
 
   return (
-    <ArrivalContext.Provider value={{ arrivals, setArrivals, lastUpdated, setLastUpdated }}>
+    <ArrivalContext.Provider value={{ arrivals, setArrivals, lastUpdated, setLastUpdated, arrivalCounts }}>
       { children }
     </ArrivalContext.Provider>
   );

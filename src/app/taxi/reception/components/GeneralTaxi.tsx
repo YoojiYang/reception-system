@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import CustomButton from "@/app/utils/components/CustomButton";
 import Modal from "@/app/utils/components/Modal";
 import TaxiReservation from "./TaxiReservation";
+import { indexFontCSS, recordFontCSS } from "@/app/utils/style";
 
 
 const GeneralTaxi = ({ generalTaxis, setGeneralTaxis }: GeneralTaxiProps) => {
@@ -39,24 +40,34 @@ const GeneralTaxi = ({ generalTaxis, setGeneralTaxis }: GeneralTaxiProps) => {
   return (
     <div>
       <div>
-        <div>
-          <h2>一般タクシー</h2>
-          <p>予約合計{ totalCarCount }</p>
-          <div className='h-32 flex items-center justify-end space-x-8'>
-            <CustomButton text={ "追加" } onClick={ () => { setIsNewPost(true) }} className={ "py-4 px-8 text-xl" } />
+        <div className="flex justify-between">
+          <div className="h-auto m-4 py-4 flex space-x-12 items-end">
+            <h2 className="text-2xl font-bold">一般タクシー</h2>
+            <p className="text-xl">
+              予約合計
+              <span className="mx-2 text-3xl font-bold">
+                { totalCarCount }
+              </span>
+              台
+            </p>
           </div>
+          <div className=' flex items-center justify-center space-x-8'>
+            <div>
+              <CustomButton text={ "追加" } onClick={ () => { setIsNewPost(true) }} className={ "py-4 px-8 text-xl" } />
+            </div>
+        </div>
         </div>
         <div className='h-8 mt-4 grid grid-cols-8 gap-2 items-center'>
-          <p className='text-center h-full flex items-center justify-center'>タグ</p>
-          <p className='text-center h-full flex items-center justify-center'>Sec.</p>
-          <p className='text-center h-full flex items-center justify-center'>列</p>
-          <p className='text-center h-full flex items-center justify-center'>番</p>
-          <p className='text-center h-full flex items-center justify-center'>人数</p>
-          <p className='text-center h-full flex items-center justify-center'>台数</p>
+          <p className={ indexFontCSS }>タグ</p>
+          <p className={ indexFontCSS }>Section</p>
+          <p className={ indexFontCSS }>列</p>
+          <p className={ indexFontCSS }>番</p>
+          <p className={ indexFontCSS }>人数</p>
+          <p className={ indexFontCSS }>台数</p>
         </div>
       </div>
       <div>
-        <div className=''>
+        <div className='h-full p-2 bg-white rounded-2xl'>
           {generalTaxis
             .sort((a: GeneralTaxiType, b: GeneralTaxiType) => a.id - b.id)
             .map((taxi: GeneralTaxiType) => (
@@ -64,12 +75,12 @@ const GeneralTaxi = ({ generalTaxis, setGeneralTaxis }: GeneralTaxiProps) => {
                   key={taxi.id}
                   className='h-12 mt-4 grid grid-cols-8 gap-2 items-center'
               >
-                <p className='text-center h-full flex items-center justify-center'>T{ taxi.id >= 3 ? taxi.id + 1 : taxi.id }</p>
-                <p className='text-center h-full flex items-center justify-center'>{ taxi.section }</p>
-                <p className='text-center h-full flex items-center justify-center'>{ taxi.column }</p>
-                <p className='text-center h-full flex items-center justify-center'>{ taxi.index }</p>
-                <p className='text-center h-full flex items-center justify-center'>{ taxi.taxi?.peopleCount}</p>
-                <p className='text-center h-full flex items-center justify-center'>{ taxi.taxi?.carCount}</p>
+                <p className={ recordFontCSS }>T{ taxi.id >= 3 ? taxi.id + 1 : taxi.id }</p>
+                <p className={ recordFontCSS }>{ taxi.section }</p>
+                <p className={ recordFontCSS }>{ taxi.column }</p>
+                <p className={ recordFontCSS }>{ taxi.index }</p>
+                <p className={ recordFontCSS }>{ taxi.taxi?.peopleCount}</p>
+                <p className={ recordFontCSS }>{ taxi.taxi?.carCount}</p>
                 <CustomButton
                   text={ "編集" }
                   onClick={ () => {

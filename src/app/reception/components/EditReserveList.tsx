@@ -4,6 +4,7 @@ import ReserveIndex from './ReserveIndex';
 import { formatTime, handleEditReserveList } from '../../utils/utils';
 import CustomButton from "@/app/utils/components/CustomButton";
 import { fetchRooms, useRooms } from "@/app/RoomsContext";
+import { receptionIndexCSS } from "@/app/utils/style";
 
 const EditReserveList = ({ setEditing }: EditReserveListProps) => {
   const { rooms, setRooms } = useRooms();
@@ -54,71 +55,77 @@ const EditReserveList = ({ setEditing }: EditReserveListProps) => {
 
   return (
     <div>
-      <div className='h-32 mr-8 flex items-center justify-end'>
+      <div className='h-auto mr-8 flex items-center justify-end'>
         <CustomButton text={ "登録" } onClick={ handleRegister } className={ "py-4 px-8 text-xl" } />
       </div>
         
       <ReserveIndex />
-
-      {sortedRooms.map((room: RoomType) => (
-        <form key={room.id} className='col-span-7 text-center h-full flex items-center justify-center'>
-          <div className='h-12 mt-4 grid grid-cols-10 gap-2 items-center'>
-            <p className='text-center h-full flex items-center justify-center'>{ room.name }</p>
-              {/* 会社名 */}
-              <input
-                type='text'
-                name='company'
-                defaultValue={ room.company }
-                onChange={ (e) => handleInputChange(room.id, 'company', e.target.value) }
-                className='col-span-3 text-center h-full flex items-center justify-center'
-              />
-              {/* 大人の人数 */}
-              <input
-                type='number'
-                name='adultsCount'
-                defaultValue={ room.reserveAdultsCount }
-                onChange={ (e) => handleInputChange(room.id, 'reserveAdultsCount', parseInt(e.target.value)) }
-                className='text-center h-full flex items-center justify-center'
-              />
-              {/* 子供の予約人数 */}
-              <input
-                type='number'
-                name='childrenCount'
-                defaultValue={ room.reserveChildrenCount }
-                onChange={ (e) => handleInputChange(room.id, 'reserveChildrenCount', parseInt(e.target.value)) }
-                className='text-center h-full flex items-center justify-center'
-              />
-              {/* 到着予定時刻 */}
-              <input
-                type='text'
-                name='scheduledArrival'
-                defaultValue={ formatTime(room.scheduledArrival) }
-                onChange={ (e) => {
-                  const timeValue = e.target.value;
-                  const [hours, minutes] = timeValue.split(':').map(Number);
-
-                  const currentDate = new Date();
-                  currentDate.setUTCHours(hours, minutes, 0, 0);
-                  const isoString = currentDate.toISOString();
-
-                  handleInputChange(room.id, 'scheduledArrival', isoString);
-                }}
-                className='text-center h-full flex items-center justify-center'
-              />
-              {/* 担当者 */}
-              <select
-                name="inCharge"
-                className='col-span-3 text-center h-full flex items-center justify-center'
-                multiple
-              >
-                {/* TODO */}
-                {/* {inCharges.map((inCharge: InChargeType) => (
-                  <option key={ inCharge.id } value={ inCharge.id }>{ inCharge.name }</option>
-                ))} */}
-              </select>
-          </div>
-        </form>
-      ))}
+      <div>
+        {sortedRooms.map((room: RoomType) => (
+          <form key={room.id}>
+            <div className={ receptionIndexCSS.outside1 }>
+              <div className={ receptionIndexCSS.outside21 }>
+                <p className={ receptionIndexCSS.roomName }>{ room.name }</p>
+                <input
+                  type='text'
+                  name='company'
+                  defaultValue={ room.company }
+                  onChange={ (e) => handleInputChange(room.id, 'company', e.target.value) }
+                  className={ receptionIndexCSS.companyName }
+                  />
+              </div>
+              <div className={ receptionIndexCSS.outside22 }>
+                <div className={ receptionIndexCSS.outside3 }>
+                  {/* 大人の人数 */}
+                  <input
+                    type='number'
+                    name='adultsCount'
+                    defaultValue={ room.reserveAdultsCount }
+                    onChange={ (e) => handleInputChange(room.id, 'reserveAdultsCount', parseInt(e.target.value)) }
+                    className={ receptionIndexCSS.adults }
+                    />
+                  {/* 子供の予約人数 */}
+                  <input
+                    type='number'
+                    name='childrenCount'
+                    defaultValue={ room.reserveChildrenCount }
+                    onChange={ (e) => handleInputChange(room.id, 'reserveChildrenCount', parseInt(e.target.value)) }
+                    className={ receptionIndexCSS.children }
+                    />
+                  {/* 到着予定時刻 */}
+                  <input
+                    type='text'
+                    name='scheduledArrival'
+                    defaultValue={ formatTime(room.scheduledArrival) }
+                    onChange={ (e) => {
+                      const timeValue = e.target.value;
+                      const [hours, minutes] = timeValue.split(':').map(Number);
+                      
+                      const currentDate = new Date();
+                      currentDate.setUTCHours(hours, minutes, 0, 0);
+                      const isoString = currentDate.toISOString();
+                      
+                      handleInputChange(room.id, 'scheduledArrival', isoString);
+                    }}
+                    className={ receptionIndexCSS.arrivalTime }
+                    />
+                </div>
+                {/* 担当者 */}
+                <select
+                  name="inCharge"
+                  className={ receptionIndexCSS.staff }
+                  multiple
+                  >
+                  {/* TODO */}
+                  {/* {inCharges.map((inCharge: InChargeType) => (
+                    <option key={ inCharge.id } value={ inCharge.id }>{ inCharge.name }</option>
+                  ))} */}
+                </select>
+              </div>
+            </div>
+          </form>
+        ))}
+      </div>
     </div>
   );
 }

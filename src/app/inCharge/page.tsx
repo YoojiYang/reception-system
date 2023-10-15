@@ -8,13 +8,13 @@ import { useArrival } from "../ArrivalContext";
 import Modal from "../utils/components/Modal";
 import VipTaxiReserve from "./components/VipTaxiReserve";
 import EditArrivalInfo from "./components/EditArrivalInfo";
+import { bgGrayCSS, indexFontCSS, pageTitleCSS, recordFontCSS } from "../utils/style";
+import Sidebar from "../utils/components/Sidebar";
 
 function InCharge() {
   const { rooms, setRooms,  } = useRooms();
-  const { arrivals, setArrivals } = useArrival();
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [currentRoomId, setCurrentRoomId] = useState<number | null>(null);
-  const [arrivalCounts, setArrivalCounts] = useState<Record<number, { adultsTotal: number, childrenTotal: number }>>({});
 
   const currentRoom = rooms.find(room => room.id === currentRoomId) || rooms[0];
 
@@ -24,63 +24,58 @@ function InCharge() {
   }
 
   useEffect(() => {
-    const result: Record<number, { adultsTotal: number, childrenTotal: number }> = {};
-
-    for (const arrival of arrivals) {
-      if (!result[arrival.roomId]) {
-        result[arrival.roomId] = { adultsTotal: 0, childrenTotal: 0 };
-      }
-      result[arrival.roomId].adultsTotal += arrival.adultsCount;
-      result[arrival.roomId].childrenTotal += arrival.childrenCount;
-    }
-
-    setArrivalCounts(result);
-  }, [arrivals]);
-
-  useEffect(() => {
     fetchRooms(setRooms);
   }, [setRooms]);
-
     
   return (
-    <div className='mx-8'>
-      <div>
-        <h1 className='mt-8 text-4xl'>個室担当用</h1>
+    <div>
+      <div className="m-8">
+        <Sidebar />
       </div>
-      <div className="grid grid-cols-2">
+      <div className="m-8 pl-8">
         <div>
+          <h1 className={ pageTitleCSS }>個室担当用</h1>
+        </div>
+        <div className={ `${bgGrayCSS} mt-8`}>
+          <div className="grid grid-cols-8">
+            <p className={ `${indexFontCSS} col-span-2` }>部屋名</p>
+            <p className={ `${indexFontCSS} col-span-3` }>会社名</p>
+            <p className={ indexFontCSS }>合計</p>
+            <p className={ indexFontCSS }>現在</p>
+            <p className={ indexFontCSS }>タクシー</p>
+          </div>
           <div className="flex flex-col">
             {rooms
               .sort((a, b) => a.id - b.id)
               .map(room => (
-                <button 
-                  key={ room.id } 
-                  onClick={() => { handleSetIdModalOpen(room.id, setCurrentRoomId, setIsModalOpen) }}
-                  className="mt-4 h-12 text-2xl"
-                >
-                  { room.name }
-                </button>
+                <div key={room.id} className="h-12 my-1 grid grid-cols-8 items-center">
+                  <button 
+                    onClick={() => { handleSetIdModalOpen(room.id, setCurrentRoomId, setIsModalOpen) }}
+                    className={ `${recordFontCSS} mx-4 p-2 col-span-2 bg-blue-500 hover:bg-blue-700 text-white rounded-full` }
+                  >
+                    { room.name }
+                  </button>
+                  <p className={ `${recordFontCSS} col-span-3` }>{ room.company }</p>
+                  <p className={ recordFontCSS }>{ room.reserveAdultsCount + room.changedChildrenCount + room.changedAdultsCount + room.changedChildrenCount }</p>
+                  <p className={ recordFontCSS }>{ room.id }</p>
+                  <p className={ recordFontCSS }>{ room.id }</p>
+                </div>
             ))}
           </div>
         </div>
-      </div>
 
-      { isModalOpen && (
-        <Modal isVisible={ isModalOpen } onClose={ closeModal }>
-          <div className="flex w-full h-24">
-            <h3 className="w-1/8">前の部屋</h3>
-            <div className="w-3/4">
-              <h2 className="text-center text-3xl">{ currentRoom?.name }</h2>
+        { isModalOpen && (
+          <Modal isVisible={ isModalOpen } onClose={ closeModal }>
+            <div className="w-full h-24 space-y-4">
+              <h2 className="text-center text-5xl font-bold">{ currentRoom?.name }</h2>
               <h2 className="text-center text-3xl">{ currentRoom?.company }</h2>
             </div>
-            <h3 className="w-1/8">次の部屋</h3>
-            <button onClick={ closeModal }>閉じる</button>
-          </div>
-          <EditArrivalInfo currentRoom={ currentRoom } closeModal={ closeModal } arrivalCounts={ arrivalCounts } setModalOpen={ setIsModalOpen }/>
-          <EditReserveCount currentRoom={ currentRoom } setModalOpen={ setIsModalOpen }/>
-          <VipTaxiReserve currentRoom={ currentRoom } />
-        </Modal>
-      )}
+            <EditArrivalInfo currentRoom={ currentRoom } closeModal={ closeModal } setModalOpen={ setIsModalOpen }/>
+            <EditReserveCount currentRoom={ currentRoom } setModalOpen={ setIsModalOpen }/>
+            <VipTaxiReserve currentRoom={ currentRoom } />
+          </Modal>
+        )}
+      </div>
     </div>
   );
 }

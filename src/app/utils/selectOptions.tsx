@@ -38,3 +38,59 @@ export const deskSelectStyles = {
   }),
 };
 
+export const inChargeTaxiSelectStyles = {
+  control: (provided: any) => ({
+    ...provided,
+    height: 60,
+    minHeight: 50,
+    width: 100,
+    cursor: 'pointer',
+    borderRadius: '12px',
+  }),
+};
+
+
+export const inChargeTaxiStringSelectStyles = {
+  control: (provided: any) => ({
+    ...provided,
+    height: 60,
+    minHeight: 50,
+    width: 240,
+    cursor: 'pointer',
+    borderRadius: '12px',
+  }),
+};
+
+export const inChargeTaxiEditSelectStyles = {
+  control: (provided: any) => ({
+    ...provided,
+    height: 60,
+    minHeight: 50,
+    width: 240,
+    cursor: 'pointer',
+    borderRadius: '12px',
+  }),
+};
+
+
+export const taxiReceptoinSelectStyles = {
+  control: (provided: any) => ({
+    ...provided,
+    height: 80,
+    minHeight: 50,
+    width: 100,
+    cursor: 'pointer',
+    borderRadius: '12px',
+  }),
+};
+
+export const taxiReceptoinLargeSelectStyles = {
+  control: (provided: any) => ({
+    ...provided,
+    height: 80,
+    minHeight: 50,
+    width: 240,
+    cursor: 'pointer',
+    borderRadius: '12px',
+  }),
+};

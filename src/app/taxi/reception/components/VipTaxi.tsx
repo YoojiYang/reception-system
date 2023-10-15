@@ -6,6 +6,7 @@ import { carCountOptions, peopleCountOptions, reservationTimeOptions } from "@/a
 import CustomSelect from "@/app/utils/components/CustomSelect";
 import CustomStringSelect from "@/app/utils/components/CustomStringSelect";
 import { fetchVipTaxis, useVipTaxi } from "@/app/VipTaxiContext";
+import { indexFontCSS, recordFontCSS, recordFontLgCSS } from "@/app/utils/style";
 
 const VipTaxi = () => {
   const { vipTaxis, setVipTaxis, lastUpdated, setLastUpdated } = useVipTaxi();
@@ -36,20 +37,26 @@ const VipTaxi = () => {
   return (
     <div>
       <div>
-        <div>
-          <h2>VIPタクシー</h2>
-          <p>予約合計{ totalCarCount }</p>
+        <div className="h-auto m-4 py-4 flex space-x-12 items-end">
+          <p className="text-2xl font-bold">VIPタクシー</p>
+          <p className="text-xl">
+              予約合計
+            <span className="mx-2 text-3xl font-bold">
+              { totalCarCount }
+            </span>
+            台
+          </p>
         </div>
-        <div className="flex grid grid-cols-8">
-          <p className='text-center h-full flex items-center justify-center'>部屋番号</p>
-          <p className='text-center h-full flex items-center justify-center'>会社名</p>
-          <p className='text-center h-full flex items-center justify-center'>人数</p>
-          <p className='text-center h-full flex items-center justify-center'>台数</p>
-          <p className='text-center h-full flex items-center justify-center'>予約時間</p>
+        <div className="py-2 flex grid grid-cols-8">
+          <p className={ indexFontCSS }>部屋番号</p>
+          <p className={ `${indexFontCSS} col-span-2` }>会社名</p>
+          <p className={ indexFontCSS }>人数</p>
+          <p className={ indexFontCSS }>台数</p>
+          <p className={ indexFontCSS }>予約時間</p>
         </div>
       </div>
       <div>
-        <div className=''>
+        <div className='h-full p-2 bg-white rounded-2xl'>
           {vipTaxis
             .sort((a: VipTaxiType, b: VipTaxiType) => a.id - b.id)
             .map((taxi: VipTaxiType, index: number) => (
@@ -57,8 +64,8 @@ const VipTaxi = () => {
                   key={taxi.id}
                   className='h-12 mt-4 grid grid-cols-8 gap-2 items-center'
             >
-              <p className='text-center h-full flex items-center justify-center'>{ taxi.room?.name }</p>
-              <p className='text-center h-full flex items-center justify-center'>{ taxi.room?.company }</p>
+              <p className={ recordFontLgCSS }>{ taxi.room?.name }</p>
+              <p className={ `${recordFontLgCSS} col-span-2` }>{ taxi.room?.company }</p>
               { editingTaxiId === taxi.id ? (
                 <div className="flex col-span-3 grid grid-cols-3">
                   <CustomSelect
@@ -82,9 +89,9 @@ const VipTaxi = () => {
                 </div>
               ) : (
                 <div className="flex col-span-3 grid grid-cols-3">
-                  <p className='text-center h-full flex items-center justify-center'>{ taxi.taxi?.peopleCount}</p>
-                  <p className='text-center h-full flex items-center justify-center'>{ taxi.taxi?.carCount}</p>
-                  <p className='text-center h-full flex items-center justify-center'>{
+                  <p className={ recordFontCSS }>{ taxi.taxi?.peopleCount}</p>
+                  <p className={ recordFontCSS }>{ taxi.taxi?.carCount}</p>
+                  <p className={ recordFontCSS }>{
                     taxi.taxi?.reservationTime  instanceof Date
                     ? formatTime(taxi.taxi?.reservationTime)
                     : taxi.taxi?.reservationTime

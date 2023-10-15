@@ -4,8 +4,10 @@ import { deleteVipTaxi, formatTime, postData, updateTaxi } from "@/app/utils/uti
 import { useEffect, useState } from "react";
 import { VipTaxiReservationProps, VipTaxiType } from "../../../../types/types";
 import CustomStringSelect from "@/app/utils/components/CustomStringSelect";
-import { carCountOptions, needOrNotOptions, peopleCountOptions, reservationTimeOptions } from "@/app/utils/selectOptions";
+import { carCountOptions, inChargeTaxiSelectStyles, inChargeTaxiStringSelectStyles, needOrNotOptions, peopleCountOptions, reservationTimeOptions } from "@/app/utils/selectOptions";
 import { fetchVipTaxis, useVipTaxi } from "@/app/VipTaxiContext";
+import { bgGrayCSS, indexFontCSS, recordFontCSS } from "@/app/utils/style";
+import CustomSmallSelect from "@/app/utils/components/CustomSmallSelect";
 
 const VipTaxiReserve = ({ currentRoom }: VipTaxiReservationProps) => {
   const { vipTaxis, setVipTaxis, lastUpdated, setLastUpdated } = useVipTaxi();
@@ -60,100 +62,121 @@ const VipTaxiReserve = ({ currentRoom }: VipTaxiReservationProps) => {
     
   return (
     <div>
-      <div className="p-2 h-auto w-full">
+      <div className={` ${bgGrayCSS} m-4`}>
         <form onSubmit={ handleSubmit }>
-          <div className="flex justify-between">
-            <h3 className="text-3xl">[ タクシー予約 ]</h3>
-            <CustomButton text={ "登録" } type="submit" className={ "py-4 px-8 text-xl" }/>
+          <div className="m-2 flex justify-between items-center">
+            <h3 className={ indexFontCSS }>[ タクシー予約 ]</h3>
           </div>
           <div className="h-auto">
-            <div className="h-24">
-              <p className="text-3xl w-full text-center">必要/不要</p>
+            <div className="my-8 p-4 flex items-center bg-white rounded-2xl">
+              <p className="text-xl w-full text-center font-bold">必要 or 不要</p>
               <div className="h-full w-full text-center">
-                <div className="p-4 h-2/3 w-full">
+                <div className="w-full">
                   <CustomStringSelect
                     options={ needOrNotOptions }
                     name="needOrNot"
                     value={ needOrNot }
                     onChange={ setNeedOrNot }
+                    styles={ inChargeTaxiStringSelectStyles }
                   />
                 </div>
               </div>
-          </div>
-            <div className="flex">
-              <div className="w-1/3">
-                <p className="text-3xl w-full text-center">人数</p>
+            </div>
+            <div className="pt-2 grid grid-cols-6 items-center justify-center">
+                <p className={ indexFontCSS }>人数</p>
+                <p className={ indexFontCSS }>台数</p>
+                <p className={ `${indexFontCSS} col-span-3` }>予約時間</p>
+            </div>
+            <div className="pt-1 grid grid-cols-6 items-center justify-center">
+              <div className="">
                 <div className="h-full w-full text-center">
-                  <div className="p-4 h-2/3 w-full">
-                    <CustomSelect
+                  <div className="">
+                    <CustomSmallSelect
                       options={ peopleCountOptions }
                       name="peopleCount"
                       value={ peopleCount }
                       onChange={ setPeopleCount }
+                      styles={ inChargeTaxiSelectStyles }
                       />
                   </div>
                 </div>
               </div>
-              <div className="w-1/3">
-                <p className="text-3xl w-full text-center">台数</p>
+              <div className="">
                 <div className="h-full w-full text-center">
-                  <div className="p-4 h-2/3 w-full">
-                    <CustomSelect
+                  <div className="">
+                    <CustomSmallSelect
                       options={ carCountOptions }
                       name="carCount"
                       value={ carCount }
                       onChange={ setCarCount }
+                      styles={ inChargeTaxiSelectStyles }
                       />
                   </div>
                 </div>
               </div>
-              <div className="w-1/3">
-                <p className="text-3xl w-full text-center">予約時間</p>
+              <div className="col-span-3">
                 <div className="h-full w-full text-center">
-                  <div className="p-4 h-2/3 w-full">
+                  <div className="">
                     <CustomStringSelect
                       options={ reservationTimeOptions }
                       name="reservationTimevationTime"
                       value={ reservationTime }
                       onChange={ setReservationTime }
+                      styles={ inChargeTaxiStringSelectStyles }
                       />
                   </div>
                 </div>
               </div>
+              <div className="">
+                <CustomButton text={ "登録" } type="submit" className={ "py-3 px-6 text-lg" }/>
+              </div>
             </div>
           </div>
-          <div>
+          <div className="h-auto mt-8 py-4 bg-white rounded-2xl">
+            <div className="grid grid-cols-6 items-center">
+              <div className="col-span-4 grid grid-cols-6">
+                <p className='text-center h-full flex items-center justify-center text-xl font-bold'>台数</p>
+                <p className='text-center h-full flex items-center justify-center text-xl font-bold'>人数</p>
+                <p className='text-center h-full flex items-center justify-center text-xl font-bold col-span-4'>予約時間</p>
+              </div>
+            </div>
             {vipTaxis
               .filter((taxi: VipTaxiType) => taxi.roomId === currentRoom.id)
               .sort((a: VipTaxiType, b: VipTaxiType) => a.id - b.id)
               .map((taxi: VipTaxiType, index: number) => (
-                <div key={taxi.id} className='h-12 mt-4 grid grid-cols-5 gap-2 items-center'>
+                <div key={taxi.id} className='h-12 mt-4 grid grid-cols-6'>
                   { editingTaxiId === taxi.id ? (
-                    <div className="flex col-span-3 grid grid-cols-3">
-                      <CustomSelect
+                    <div className="col-span-4 grid grid-cols-4">
+                      <CustomSmallSelect
                         options={ peopleCountOptions }
                         name="peopleCount"
                         value={ editPeopleCount }
                         onChange={ setEditPeopleCount }
-                      />
-                      <CustomSelect
+                        className="h-full w-full"
+                        styles={ inChargeTaxiSelectStyles }
+                        />
+                      <CustomSmallSelect
                         options={ carCountOptions }
                         name="carCount"
                         value={ editCarCount }
                         onChange={ setEditCarCount }
-                      />
+                        className="h-full w-full"
+                        styles={ inChargeTaxiSelectStyles }
+                        />
                       <CustomStringSelect
                         options={ reservationTimeOptions }
                         name="reservationTime"
                         value={ editReservationTime }
                         onChange={ setEditReservationTime }
-                      />
+                        className="col-span-2 h-full w-full"
+                        styles={ inChargeTaxiStringSelectStyles }
+                        />
                     </div>
                   ) : (
-                    <div className="flex col-span-3 grid grid-cols-3">
-                      <p className='text-center h-full flex items-center justify-center'>{ taxi.taxi?.peopleCount}</p>
-                      <p className='text-center h-full flex items-center justify-center'>{ taxi.taxi?.carCount}</p>
-                      <p className='text-center h-full flex items-center justify-center'>{
+                    <div className="col-span-4 grid grid-cols-6">
+                      <p className='text-center h-full flex items-center justify-center text-2xl'>{ taxi.taxi?.peopleCount}</p>
+                      <p className='text-center h-full flex items-center justify-center text-2xl'>{ taxi.taxi?.carCount}</p>
+                      <p className='text-center h-full flex items-center justify-center text-2xl col-span-4'>{
                         taxi.taxi?.reservationTime  instanceof Date
                         ? formatTime(taxi.taxi?.reservationTime)
                         : taxi.taxi?.reservationTime
@@ -161,33 +184,34 @@ const VipTaxiReserve = ({ currentRoom }: VipTaxiReservationProps) => {
                       </p>
                     </div>
                   )}
-                  <CustomButton
-                    text={ editingTaxiId === taxi.id ? "完了" : "編集" }
-                    onClick={ async () => {
-                      if (editingTaxiId === taxi.id) {
-                        const data = {
-                          peopleCount: editPeopleCount,
-                          carCount: editCarCount,
-                          reservationTime: editReservationTime,
-                        };
-                        await updateTaxi("viptaxi", data, editingTaxiId);
-                        await fetchVipTaxis(setVipTaxis);
-                        setEditingTaxiId(null);
-                      } else {
-                        setEditPeopleCount(taxi.taxi?.peopleCount || 0);
-                        setEditCarCount(taxi.taxi?.carCount || 0);
-                        setEditReservationTime("試合終了後");
-                        setEditingTaxiId(taxi.id);
-                      }
-                    }}
-                    className={ "py-2 px-2 text-lg" }
-                  />
-                  <CustomButton
-                    text={ "削除" }
-                    onClick={ () => handleDelete(taxi.id) }
-                    className={ "py-2 px-2 text-lg"}
-                  />
-                  <p>{taxi.id}</p>
+                  <div className="col-span-2 flex space-x-2 justify-center">
+                    <CustomButton
+                      text={ editingTaxiId === taxi.id ? "完了" : "編集" }
+                      onClick={ async () => {
+                        if (editingTaxiId === taxi.id) {
+                          const data = {
+                            peopleCount: editPeopleCount,
+                            carCount: editCarCount,
+                            reservationTime: editReservationTime,
+                          };
+                          await updateTaxi("viptaxi", data, editingTaxiId);
+                          await fetchVipTaxis(setVipTaxis);
+                          setEditingTaxiId(null);
+                        } else {
+                          setEditPeopleCount(taxi.taxi?.peopleCount || 0);
+                          setEditCarCount(taxi.taxi?.carCount || 0);
+                          setEditReservationTime("試合終了後");
+                          setEditingTaxiId(taxi.id);
+                        }
+                      }}
+                      className={ "py-3 px-6 text-md" }
+                    />
+                    <CustomButton
+                      text={ "削除" }
+                      onClick={ () => handleDelete(taxi.id) }
+                      className={ "py-3 px-6 text-md"}
+                    />
+                  </div>
                 </div>
             ))}
           </div>

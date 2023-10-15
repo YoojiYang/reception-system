@@ -21,6 +21,11 @@ export type ArrivalType = {
   room: RoomType;
 };
 
+export type RoomCardProps = {
+  startRoomId: number;
+  endRoomId: number;
+};
+
 export type InChargeType = {
   id: number;
   name: string;
@@ -102,6 +107,7 @@ export type ArrivalContextType = {
   setArrivals: React.Dispatch<React.SetStateAction<ArrivalType[]>>;
   lastUpdated: number;
   setLastUpdated: React.Dispatch<React.SetStateAction<number>>;
+  arrivalCounts: Record<number, { adultsTotal: number; childrenTotal: number; }>;
 };
 
 export type ArrivalProviderProps = {
@@ -122,7 +128,6 @@ export type VipTaxiProviderProps = {
 export type EditArrivalInfoProps = {
   currentRoom: RoomType;
   closeModal: () => void;
-  arrivalCounts: Record<number, { adultsTotal: number; childrenTotal: number; }>;
   setModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
@@ -190,4 +195,15 @@ export enum NeedOrNotStatus {
   "必要" = "必要",
   "不要" = "不要",
   "未確認" = "未確認",
+};
+
+export type ArrivalRecordCounts = {
+  [key: number]: number;
+};
+
+export type RoomsInfoProps = {
+  totalCount: number;
+  currentCount: number;
+  arrivalRecordCounts: Record<number, number>;
+  room: RoomType;
 };

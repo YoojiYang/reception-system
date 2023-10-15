@@ -5,6 +5,8 @@ import { RoomType, ReserveListProps } from '../../../../types/types';
 import { formatTime } from '../../utils/utils';
 import CustomButton from '@/app/utils/components/CustomButton';
 import { useRooms } from '@/app/RoomsContext';
+import ReserveIndex from './ReserveIndex';
+import { receptionIndexCSS } from '@/app/utils/style';
 
 export function ReserveList({ setEditing }: ReserveListProps) {
   const { rooms, setRooms } = useRooms();
@@ -15,25 +17,24 @@ export function ReserveList({ setEditing }: ReserveListProps) {
 
   return (
     <div>
-      <div className='h-32 mr-8 flex items-center justify-end'>
+      <div className='h-auto mr-8 flex items-center justify-end'>
         <CustomButton text={ "編集" } onClick={ () => { setEditing(true) } } className={ "py-4 px-8 text-xl" } />
       </div>  
-      <div>
-        <div className='h-8 mt-4 grid grid-cols-9 gap-2 items-center'>
-          <p className='text-center h-full flex items-center justify-center'>部屋名</p>
-          <p className='col-span-3 text-center h-full flex items-center justify-center'>会社名</p>
-          <p className='text-center h-full flex items-center justify-center'>人数</p>
-          <p className='text-center h-full flex items-center justify-center'>到着時刻</p>
-          <p className='col-span-3 text-center h-full flex items-center justify-center'>担当者</p>
-        </div>
-      </div>
+      <ReserveIndex />
       {sortedRooms.map((room: RoomType) => (
-        <div key={room.id} className='h-12 mt-4 grid grid-cols-9 gap-2 items-center'>
-          <p className='text-center h-full flex items-center justify-center'>{ room.name }</p>
-          <p className='col-span-3 text-center h-full flex items-center justify-center'>{ room.company }</p>
-          <p className='text-center h-full flex items-center justify-center'>{ room.reserveAdultsCount + room.reserveChildrenCount}</p>
-          <p className='text-center h-full flex items-center justify-center'>{ formatTime(room.scheduledArrival) }</p>
-          <p className='col-span-3 text-center h-full flex items-center justify-center'></p>
+        <div key={room.id} className={ receptionIndexCSS.outside1 }>
+          <div className={ receptionIndexCSS.outside21 }>
+            <p className={ receptionIndexCSS.roomName }>{ room.name }</p>
+            <p className={ receptionIndexCSS.companyName }>{ room.company }</p>
+          </div>
+          <div className={ receptionIndexCSS.outside22 }>
+            <div className={ receptionIndexCSS.outside3 }>
+              <p className={ receptionIndexCSS.adults }>{ room.reserveAdultsCount }</p>
+              <p className={ receptionIndexCSS.children }>{ room.reserveChildrenCount }</p>
+              <p className={ receptionIndexCSS.arrivalTime }>{ formatTime(room.scheduledArrival) }</p>
+            </div>
+            <p className={ receptionIndexCSS.staff }></p>
+          </div>
         </div>
       ))}
     </div>

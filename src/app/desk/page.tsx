@@ -5,12 +5,12 @@ import Accept from "./components/Accept";
 import ReserveCountChange from "./components/ReserveCountChange";
 import { formatTimeToJTV } from "../utils/utils";
 import { ArrivalType } from "../../../types/types";
-import ReserveIndex from "../reception/components/ReserveIndex";
 import CustomButton from "../utils/components/CustomButton";
 import { useArrival } from "../ArrivalContext";
 import Modal from "../utils/components/Modal";
 import Sidebar from "../utils/components/Sidebar";
 import { deskIndexCSS, pageTitleCSS } from "../utils/style";
+import DeskIndex from "./components/DeskIndex";
 
 function Desk() {
   const { arrivals, setArrivals, lastUpdated, setLastUpdated } = useArrival();
@@ -37,7 +37,7 @@ function Desk() {
         </div>
         <div className="p-4 bg-gray-200 rounded-2xl">
           <div>
-            <ReserveIndex />
+            <DeskIndex />
               {arrivals
                 .sort((a: ArrivalType, b: ArrivalType) => a.id - b.id)
                 .map((arrival: ArrivalType) => (

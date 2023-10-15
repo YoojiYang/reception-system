@@ -11,9 +11,9 @@ export default function Home() {
     <div>
       <div className="flex">
         <div className="w-60">
-          <Sidebar />
+          <Sidebar alwaysOpen={ true } />
         </div>
-        {/* <Arrival /> */}
+        <Arrival />
       </div>
     </div>
   )

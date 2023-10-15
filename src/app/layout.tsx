@@ -5,6 +5,8 @@ import { RoomsProvider } from './RoomsContext'
 import { ArrivalProvider } from './ArrivalContext'
 import { VipTaxiProvider } from './VipTaxiContext'
 
+
+
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
@@ -20,13 +22,13 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <RoomsProvider>
-          <ArrivalProvider>
-            <VipTaxiProvider>
-              {children}
-            </VipTaxiProvider>
-          </ArrivalProvider>
-        </RoomsProvider>
+          <RoomsProvider>
+            <ArrivalProvider>
+              <VipTaxiProvider>
+                {children}
+              </VipTaxiProvider>
+            </ArrivalProvider>
+          </RoomsProvider>
       </body>
     </html>
   )

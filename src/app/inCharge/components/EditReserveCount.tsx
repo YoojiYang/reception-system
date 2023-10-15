@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import CustomButton from "@/app/utils/components/CustomButton";
 import IncrementButton from "@/app/utils/components/IncrementButton";
 import DecrementButton from "@/app/utils/components/DecrementButton";
+import { bgGrayCSS, indexFontCSS } from "@/app/utils/style";
 
 const EditReserveCount = ({ currentRoom, setModalOpen }: EditReserveCountProps) => {
   const [localChangeAdultsCount, setLocalChangeAdultsCount] = useState<number>(0);
@@ -41,56 +42,58 @@ const EditReserveCount = ({ currentRoom, setModalOpen }: EditReserveCountProps) 
   
   return (
     <div>
-      <form>
-        <div className="flex justify-between">
-          <h3 className="text-3xl">[ 予約人数変更 ]</h3>
-          <CustomButton text={ "登録" } onClick={ handleRegister } className={ "py-4 px-8 text-xl" }/>
-        </div>
-        <div className="h-92 mt-8">
-          <div>
-          <p className="h-12 text-2xl text-center">利用者合計</p>
-          <p className="h-24 text-6xl text-center">
-            { reserveCount + changedCount + localChangeAdultsCount + localChangechildrenCount }
-          </p>
+      <div className={`${bgGrayCSS} m-4`}>
+        <form>
+          <div className="m-2 flex justify-between items-center">
+            <h3 className={ indexFontCSS }>[ 予約人数変更 ]</h3>
+            <CustomButton text={ "登録" } onClick={ handleRegister } className={ "py-3 px-6 text-lg" }/>
           </div>
-          <div className="mt-4 flex">
-            <p className="w-1/2 text-xl text-center">予約人数</p>
-            <p className="w-1/2 text-xl text-center">当日増減</p>
+          <div className="mt-4 flex items-center justify-center space-x-8">
+            <div className="space-y-2">
+              <p className="text-2xl text-center">予約人数</p>
+              <p className="text-4xl text-center">
+                { reserveCount }
+              </p>
+            </div>
+            <div className="space-y-2">
+              <p className="text-2xl text-center">当日増減</p>
+              <p className="text-4xl text-center">
+                { changedCount + localChangeAdultsCount + localChangechildrenCount }
+              </p>
+            </div>
           </div>
-          <div className="flex">
-            <p className="w-1/2 text-4xl text-center">
-              { reserveCount }
-            </p>
-            <p className="w-1/2 text-4xl text-center">
-              { changedCount + localChangeAdultsCount + localChangechildrenCount }
-            </p>
-          </div>
-          <div className="mt-4 flex">
-            <p className="w-1/2 text-2xl text-center">大人</p>
-            <p className="w-1/2 text-2xl text-center">子ども</p>
-          </div>
-          <div className="flex">
-            <p className="w-1/2 text-4xl text-center">
-              { changedAdultsCount + localChangeAdultsCount }
-            </p>
-            <p className="w-1/2 text-4xl text-center">
-              { changedChildrenCount + localChangechildrenCount }
-            </p>
-          </div>
-          <div>
-            <div className="flex">
-              <div className="w-1/2 flex justify-center">
+          <div className="h-auto mt-4">
+            <div className="h-full py-6 mx-40 flex flex-col justify-center bg-white rounded-2xl space-y-4">
+              <p className="text-2xl text-center">利用者合計</p>
+              <p className="text-6xl text-center">
+                { reserveCount + changedCount + localChangeAdultsCount + localChangechildrenCount }
+              </p>
+            </div>
+            <div className="h-auto p-4 mt-4 mx-12 grid grid-cols-2 items-center bg-white rounded-2xl">
+              <div className="space-y-4">
+              <p className="text-2xl text-center">大人</p>
+              <p className="text-4xl text-center font-bold">
+                { changedAdultsCount + localChangeAdultsCount }
+              </p>
+              <div className="flex justify-center space-x-4">
                 <IncrementButton count={ localChangeAdultsCount } setCount={ setLocalChangeAdultsCount }/>
                 <DecrementButton count={ localChangeAdultsCount } setCount={ setLocalChangeAdultsCount }/>
               </div>
-              <div className="w-1/2 flex justify-center">
-                <IncrementButton count={ localChangechildrenCount } setCount={ setLocalChangechildrenCount }/>
-                <DecrementButton count={ localChangechildrenCount } setCount={ setLocalChangechildrenCount }/>
+              </div>
+              <div className="space-y-4">
+                <p className="text-2xl text-center">子ども</p>
+                <p className="text-4xl text-center font-bold">
+                  { changedChildrenCount + localChangechildrenCount }
+                </p>
+                <div className="flex justify-center space-x-4">
+                  <IncrementButton count={ localChangechildrenCount } setCount={ setLocalChangechildrenCount }/>
+                  <DecrementButton count={ localChangechildrenCount } setCount={ setLocalChangechildrenCount }/>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      </form>
+        </form>
+      </div>
     </div>
   )
 }

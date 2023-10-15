@@ -2,15 +2,15 @@ import React from 'react';
 import Select, { StylesConfig } from 'react-select';
 
 type CustomSelectProps = {
-  options: { value: string; label: string }[];
+  options: { value: number; label: string }[];
   name: string;
-  value: string;
-  onChange: (value: string) => void;
+  value: number;
+  onChange: (value: number) => void;
   className?: string;
-  styles?: StylesConfig<{ value: string; label: string }, false>;
+  styles?: StylesConfig<{ value: number; label: string }, false>;
 };
 
-const CustomStringSelect: React.FC<CustomSelectProps> = ({ options, name, value, onChange, className, styles }) => {
+const CustomSmallSelect: React.FC<CustomSelectProps> = ({ options, name, value, onChange, className, styles }) => {
   
   const handleChange = (selectedOption: any) => {
     if (selectedOption) {
@@ -23,14 +23,13 @@ const CustomStringSelect: React.FC<CustomSelectProps> = ({ options, name, value,
   return (
     <Select
       options={ options }
-      isClearable={ true }
       name={ name }
       value={ options.find(option => option.value === value) }
       onChange={ handleChange }
-      className={ `text-center h-full w-full flex items-center justify-center text-xl bg-inherit z-30 ${className}` }
+      className={ `text-center h-full w-full flex items-center justify-center z-30 ${className} cursor-pointer` }
       styles={ styles }
     />
   );
 };
 
-export default CustomStringSelect;
+export default CustomSmallSelect;

@@ -202,7 +202,7 @@ export type ArrivalRecordCounts = {
 };
 
 export type RoomsInfoProps = {
-  totalCount: number;
+  totalReserveCount: number;
   currentCount: number;
   arrivalRecordCounts: Record<number, number>;
   room: RoomType;

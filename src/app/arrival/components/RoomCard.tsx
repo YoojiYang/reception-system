@@ -44,20 +44,21 @@ const RoomCard = ({ startRoomId, endRoomId }: RoomCardProps) => {
     fetchArrival(setArrivals);
   }, []);
 
-
   return (
     <div>
       {sortedRooms
         .map((room: RoomType) => {
-          const totalCount = room.reserveAdultsCount + room.changedAdultsCount;
+          const totalReserveCount = room.reserveAdultsCount + room.changedAdultsCount + room.reserveChildrenCount + room.changedChildrenCount;
           const currentCount = getCurrentArrivalCount(room.id);
           let colorClass = 'bg-blue-100 border-blue-500 border-4';
 
-          if (totalCount === currentCount && currentCount > 0) {
+          if (totalReserveCount === currentCount && currentCount > 0) {
             colorClass = 'bg-blue-500 text-gray-100';
-          } else if (currentCount > totalCount) {
+          } else if (currentCount > totalReserveCount) {
             colorClass = 'bg-red-50 border-red-300 border-4';
           } else if (currentCount === 0 && arrivalRecordCounts[room.id] > 0) {
+            colorClass = 'bg-gray-500 text-gray-300 border-gray-400 border-4';
+          } else if (currentCount === 0 && totalReserveCount === 0) {
             colorClass = 'bg-gray-500 text-gray-300 border-gray-400 border-4';
           }
 
@@ -70,7 +71,7 @@ const RoomCard = ({ startRoomId, endRoomId }: RoomCardProps) => {
                 <p className='text-2xl drop-shadow font-bold'>
                   { room.name }
                 </p>
-                <RoomsInfo totalCount={ totalCount } currentCount={ currentCount } arrivalRecordCounts={ arrivalRecordCounts} room={ room } />
+                <RoomsInfo totalReserveCount={ totalReserveCount } currentCount={ currentCount } arrivalRecordCounts={ arrivalRecordCounts} room={ room } />
               </div>
             </div>
           );

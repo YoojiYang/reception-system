@@ -1,53 +1,21 @@
 "use client";
 
 import DecrementButton from "@/app/utils/components/DecrementButton";
-import { handleEditData, postData } from "../../utils/utils"
-import { AcceptProps, RoomType } from "../../../../types/types";
+import { postData } from "../../utils/utils"
+import { AcceptProps } from "../../../../types/types";
 import IncrementButton from "@/app/utils/components/IncrementButton";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import CustomButton from "@/app/utils/components/CustomButton";
 import { useRooms } from "@/app/RoomsContext";
 import { fetchArrival } from "@/app/ArrivalContext";
+import { deskSelectStyles, roomNameOptions } from "@/app/utils/selectOptions";
+import CustomSelect from "@/app/utils/components/CustomSelect";
 
 export function Accept({ setAccepting, setArrivals, lastUpdated, setLastUpdated }: AcceptProps) {
   const { rooms } = useRooms();
   const [selectedRoomId, setSelectedRoomId] = useState<number>(0);
   const [localAdultsCount, setLocalAdultsCount] = useState<number>(0);
   const [localChildrenCount, setLocalChildrenCount] = useState<number>(0);
-
-  const handleRoomChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const roomId = parseInt(e.target.value);
-    setSelectedRoomId(roomId);
-  };
-
-  const selectedRoom = rooms.find(room => room.id === selectedRoomId);
-
-
-  // const handleRegister = () => {
-  //   if (!selectedRoom) {
-  //     console.error("Room not found.");
-  //     return;
-  //   }
-
-  //   const data = {
-  //     adultsCount: localAdultsCount,
-  //     childrenCount: localChildrenCount,
-  //   };
-    
-  //   console.log(selectedRoom?.id);
-  //   handleEditData({
-  //     route: "arrival",
-  //     data: data,
-  //     onSuccess: (response) => {
-  //       fetchArrival(setArrivals);
-  //       setLastUpdated(Date.now());
-  //     }, 
-  //     onError: (error) => {
-  //       console.error(error);
-  //     },
-  //   });
-  //   setAccepting(false);
-  // };
 
   const handleRegister = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -75,9 +43,6 @@ export function Accept({ setAccepting, setArrivals, lastUpdated, setLastUpdated 
     setAccepting(false);
   };
 
-  const sortedRooms = useMemo(() => {
-    return [...rooms].sort((a: RoomType, b: RoomType) => a.id - b.id);
-  }, [rooms]);
 
   useEffect(() => {
     fetchArrival(setArrivals);
@@ -91,16 +56,14 @@ export function Accept({ setAccepting, setArrivals, lastUpdated, setLastUpdated 
           <div className="w-1/2">
             <p className="text-3xl text-center">部屋名</p>
             <div className="p-4 h-2/3">
-              <select 
+              <CustomSelect
+                options={ roomNameOptions(rooms) }
                 name="roomName"
-                onChange={ handleRoomChange }
-                className='text-center cols-span-5 flex h-full w-full items-center justify-center text-4xl border-solid border-2 border-blue-500 rounded-xl'
-                >
-                <option value="-1">▼部屋名を選択▼</option>
-                {sortedRooms.map((room: RoomType) => (
-                    <option key={ room.id } value={ room.id }>{ room.name }</option>
-                    ))}
-              </select>
+                value={ selectedRoomId }
+                onChange={ setSelectedRoomId }
+                className="text-3xl"
+                styles={ deskSelectStyles }
+              />
             </div>
           </div>
           <div className="w-1/4">

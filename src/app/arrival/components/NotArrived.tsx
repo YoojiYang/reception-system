@@ -1,6 +1,8 @@
+import { useRooms } from "@/app/RoomsContext";
 import { NotArrivedProps, RoomType } from "../../../../types/types";
 
-export function NotArrived({ rooms, roomArrivalCounts }: NotArrivedProps) {
+export function NotArrived({ arrivalCounts }: NotArrivedProps) {
+  const { rooms, setRooms, lastUpdated, setLastUpdated } = useRooms();
 
   return (
     <div className="flex justify-center">
@@ -14,7 +16,7 @@ export function NotArrived({ rooms, roomArrivalCounts }: NotArrivedProps) {
           </p>
         </div>
         {rooms
-          .filter((room: RoomType) => room.reserveAdultsCount + room.changedAdultsCount !== roomArrivalCounts[room.id] && room.id <= 114)
+          .filter((room: RoomType) => room.reserveAdultsCount + room.changedAdultsCount !== arrivalCounts[room.id] && room.id <= 114)
           .sort((a: RoomType, b: RoomType) => a.id - b.id)
           .map((room: RoomType) => (
             
@@ -37,7 +39,7 @@ export function NotArrived({ rooms, roomArrivalCounts }: NotArrivedProps) {
                 <p>
                   到着
                   <span className="ml-2 mr-2 text-2xl drop-shadow">
-                    {  roomArrivalCounts[room.id] || 0 }
+                    { arrivalCounts[room.id] || 0 }
                   </span>
                   名
                 </p>
@@ -55,7 +57,7 @@ export function NotArrived({ rooms, roomArrivalCounts }: NotArrivedProps) {
             BOX
           </p>
         </div>
-        {rooms
+        {/* {rooms
           .filter((room: RoomType) => room.reserveAdultsCount + room.changedAdultsCount !== roomArrivalCounts[room.id] && room.id >= 201)
           .sort((a: RoomType, b: RoomType) => a.id - b.id)
           .map((room: RoomType) => (
@@ -86,7 +88,7 @@ export function NotArrived({ rooms, roomArrivalCounts }: NotArrivedProps) {
               </div>
             </div>
           </div>
-        ))}
+        ))} */}
       </div>
       
 

@@ -1,38 +1,18 @@
-import { TaxiType, VipTaxiProps, VipTaxiType } from "../../../../../types/types";
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
-import { API_URL } from "@/app/utils/config";
-import { deleteVipTaxi, fetchAllData, formatTime, updateTaxi } from "@/app/utils/utils";
+import { VipTaxiType } from "../../../../../types/types";
+import { useEffect, useState } from "react";
+import { deleteVipTaxi, formatTime, updateTaxi } from "@/app/utils/utils";
 import CustomButton from "@/app/utils/components/CustomButton";
-import Modal from "@/app/utils/components/Modal";
-import TaxiReservation from "./TaxiReservation";
 import { carCountOptions, peopleCountOptions, reservationTimeOptions } from "@/app/utils/selectOptions";
 import CustomSelect from "@/app/utils/components/CustomSelect";
 import CustomStringSelect from "@/app/utils/components/CustomStringSelect";
+import { fetchVipTaxis, useVipTaxi } from "@/app/VipTaxiContext";
 
-async function fetchAllVipTaxis() {
-  const res = await fetch(`${API_URL}/viptaxi`, {
-    cache: 'no-store',
-  });
-
-  const json = await res.json()
-  
-  return json.vipTaxis;
-}
-
-const VipTaxi = ({ vipTaxis, setVipTaxis }: VipTaxiProps) => {
+const VipTaxi = () => {
+  const { vipTaxis, setVipTaxis, lastUpdated, setLastUpdated } = useVipTaxi();
   const [editingTaxiId, setEditingTaxiId] = useState<number | null>(null);
   const [editPeopleCount, setEditPeopleCount] = useState<number>(0);
   const [editCarCount, setEditCarCount] = useState<number>(0);
   const [editReservationTime, setEditReservationTime] = useState<string>("試合終了後");
-
-  const fetchVipTaxis = async (setVipTaxis: Dispatch<SetStateAction<VipTaxiType[]>>) => {
-    try {
-      const fetchedVipTaxis = await fetchAllData("viptaxi");
-      setVipTaxis(fetchedVipTaxis);
-    } catch (error) {
-      console.error(error);
-    }
-  };
 
   const totalCarCount = vipTaxis.reduce((acc: number, vipTaxi: VipTaxiType) => {
     return acc + (vipTaxi.taxi?.carCount || 0);
@@ -42,14 +22,16 @@ const VipTaxi = ({ vipTaxis, setVipTaxis }: VipTaxiProps) => {
     try {
       await deleteVipTaxi("viptaxi", taxiId);
       fetchVipTaxis(setVipTaxis);
+      setLastUpdated(Date.now());
     } catch (error) {
       console.error("Failed to delete taxi:", error);
     }  
   };  
+  console.log('lastUpdated: ', lastUpdated);
 
   useEffect(() => {
     fetchVipTaxis(setVipTaxis);
-  }, [setVipTaxis]);
+  }, [setVipTaxis, lastUpdated]);
 
   return (
     <div>
@@ -121,6 +103,7 @@ const VipTaxi = ({ vipTaxis, setVipTaxis }: VipTaxiProps) => {
                     };
                     await updateTaxi("viptaxi", data, editingTaxiId);
                     await fetchVipTaxis(setVipTaxis);
+                    setLastUpdated(Date.now());
                     setEditingTaxiId(null);
                   } else {
                     setEditPeopleCount(taxi.taxi?.peopleCount || 0);

@@ -1,3 +1,4 @@
+import { RoomType } from "../../../types/types";
 import { createOptionsArray } from "./utils";
 
 export const sectionOptions = createOptionsArray(122, 128);
@@ -15,3 +16,25 @@ export const carCountOptions = createOptionsArray(0, 5);
 export const reservationTimeOptions = [
   { value: "試合終了後", label: "試合終了後" },
 ];
+
+export const roomNameOptions = (rooms: RoomType[]) => {
+  const sortedRooms = [...rooms].sort((a: RoomType, b: RoomType) => a.id - b.id);
+  return sortedRooms.map((room) => ({
+      value: room.id,
+      label: room.name,
+    }));
+};
+
+
+
+export const deskSelectStyles = {
+  control: (provided: any) => ({
+    ...provided,
+    height: 100,
+    minHeight: 50,
+    width: 400,
+    cursor: 'pointer',
+    borderRadius: '12px',
+  }),
+};
+

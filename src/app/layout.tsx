@@ -3,6 +3,7 @@ import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import { RoomsProvider } from './RoomsContext'
 import { ArrivalProvider } from './ArrivalContext'
+import { VipTaxiProvider } from './VipTaxiContext'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -21,7 +22,9 @@ export default function RootLayout({
       <body className={inter.className}>
         <RoomsProvider>
           <ArrivalProvider>
-          {children}
+            <VipTaxiProvider>
+              {children}
+            </VipTaxiProvider>
           </ArrivalProvider>
         </RoomsProvider>
       </body>

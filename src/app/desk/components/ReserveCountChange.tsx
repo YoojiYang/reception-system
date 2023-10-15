@@ -2,9 +2,13 @@ import CustomButton from "@/app/utils/components/CustomButton"
 import DecrementButton from "@/app/utils/components/DecrementButton"
 import IncrementButton from "@/app/utils/components/IncrementButton"
 import { ReserveCountChangeProps, RoomType } from "../../../../types/types"
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { fetchRooms, useRooms } from "@/app/RoomsContext";
 import { handleEditData } from "@/app/utils/utils";
+import { deskSelectStyles, roomNameOptions } from "@/app/utils/selectOptions";
+import CustomSelect from "@/app/utils/components/CustomSelect";
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import { bigNumberFontCSS, indexFontCSS, numberFontCSS } from "@/app/utils/style";
 
 export function ReserveCountChange({ setCountChange }: ReserveCountChangeProps) {
   const { rooms, setRooms, lastUpdated, setLastUpdated } = useRooms();
@@ -48,10 +52,6 @@ export function ReserveCountChange({ setCountChange }: ReserveCountChangeProps) 
     setCountChange(false);
   };
 
-  const sortedRooms = useMemo(() => {
-    return [...rooms].sort((a: RoomType, b: RoomType) => a.id - b.id);
-  }, [rooms]);
-
   useEffect(() => {
     fetchRooms(setRooms);
   }, [setRooms, lastUpdated]);
@@ -59,94 +59,96 @@ export function ReserveCountChange({ setCountChange }: ReserveCountChangeProps) 
 
   return(
     <div>
-      <div className="p-2 h-auto">
+      <div className="p-2 h-auto w-full">
         <form onSubmit={ handleRegister }>
-          <div className="flex h-56">
+          <div className="flex h-auto">
             <div className="w-1/2">
-              <p className="text-3xl text-center">部屋名</p>
-              <div className="p-4 h-2/3">
-                <select 
+              <p className={ indexFontCSS }>部屋名</p>
+              <div className="p-4">
+                <CustomSelect
+                  options={ roomNameOptions(rooms) }
                   name="roomName"
-                  onChange={ handleRoomChange }
-                  className='text-center cols-span-5 flex h-full w-full items-center justify-center text-4xl border-solid border-2 border-blue-500 rounded-xl'
-                  >
-                  <option value="-1">▼部屋名を選択▼</option>
-                  {sortedRooms.map((room: RoomType) => (
-                      <option key={ room.id } value={ room.id }>{ room.name }</option>
-                      ))}
-                </select>
+                  value={ selectedRoomId }
+                  onChange={ setSelectedRoomId }
+                  className="text-2xl"
+                  styles={ deskSelectStyles }
+                />
               </div>
             </div>
             <div className="w-1/4">
-              <p className="text-3xl text-center">大人</p>
+              <p className={ indexFontCSS }>大人</p>
               <div className="h-full text-center">
-                <div className="p-4 h-2/3">
+                <div className="p-4">
                   <input 
                     type="text"
                     inputMode="numeric"
                     name="adultsCount"
                     value={ localAdultsCount }
                     onChange={ (e) => { setLocalAdultsCount(parseInt(e.target.value)) } }
-                    className="text-center h-full w-full flex items-center justify-center text-5xl bg-inherit"
+                    className={ `${bigNumberFontCSS} h-full w-full bg-inherit` }
                     />
                 </div>
-                <div className="h-1/3 w-full flex items-center justify-center space-x-8">
+                <div className="w-full flex items-center justify-center space-x-4">
                   <IncrementButton count={ localAdultsCount } setCount={ setLocalAdultsCount }/>
                   <DecrementButton count={ localAdultsCount } setCount={ setLocalAdultsCount }/>
                 </div>
               </div>
             </div>
             <div className="w-1/4">
-              <p className="text-3xl text-center">子ども</p>
+              <p className={ indexFontCSS }>子ども</p>
               <div className="h-full text-center">
-                <div className="p-4 h-2/3">
+                <div className="p-4">
                   <input 
                     type="text"
                     inputMode="numeric"
                     value={ localChildrenCount }
                     onChange={ (e) => { setLocalChildrenCount(parseInt(e.target.value)) } }
-                    className="text-center h-full w-full flex items-center justify-center text-5xl bg-inherit"
+                    // className="text-center h-full w-full flex items-center justify-center text-5xl bg-inherit"
+                    className={ `${bigNumberFontCSS} h-full w-full bg-inherit` }
                     />
                 </div>
-                <div className="h-1/3 w-full flex items-center justify-center space-x-8">
+                <div className="w-full flex items-center justify-center space-x-4">
                   <IncrementButton count={ localChildrenCount } setCount={ setLocalChildrenCount }/>
                   <DecrementButton count={ localChildrenCount } setCount={ setLocalChildrenCount }/>
                 </div>
               </div>
             </div>
           </div>
-          <div className="h-32 grid grid-cols-9">
-            <div className="col-span-4">
-              <h2>変更前人数</h2>
-              <div className="flex">
-                <div>
-                  <p className="text-2xl">大人</p>
-                  <p className="text-4xl">{ adultsCount }</p>
+          <div className="mt-8 grid grid-cols-9 flex">
+            <h2 className={` ${indexFontCSS} col-span-4`}>変更前人数</h2>
+            <div></div>
+            <h2 className={` ${indexFontCSS} col-span-4`}>変更後人数</h2>
+          </div>
+          <div className="p-2 h-auto grid grid-cols-9">
+            <div className="p-2 col-span-4">
+              <div className="mx-8 p-4 flex justify-center content-center space-x-12  bg-white rounded-2xl">
+                <div className="">
+                  <p className={ indexFontCSS }>大人</p>
+                  <p className={ numberFontCSS }>{ adultsCount }</p>
                 </div>
-                <div>
-                  <p className="text-2xl">子ども</p>
-                  <p className="text-4xl">{ childrenCount }</p>
+                <div className="">
+                  <p className={ indexFontCSS }>子ども</p>
+                  <p className={ numberFontCSS }>{ childrenCount }</p>
                 </div>
               </div>
             </div>
-            <div>
-              →
+            <div className="flex justify-center items-center">
+              <ArrowForwardIcon className="text-6xl"/>
             </div>
-            <div className="col-span-4">
-              <h2>変更後人数</h2>
-              <div className="flex">
+            <div className="p-2 col-span-4">
+              <div className="mx-8 p-4 flex justify-center content-center space-x-12  bg-white rounded-2xl">
                 <div>
-                  <p>大人</p>
-                  <p>{ adultsCount + localAdultsCount }</p>
+                  <p className={ indexFontCSS }>大人</p>
+                  <p className={ numberFontCSS }>{ adultsCount + localAdultsCount }</p>
                 </div>
                 <div>
-                  <p>子ども</p>
-                  <p>{ childrenCount + localChildrenCount }</p>
+                  <p className={ indexFontCSS }>子ども</p>
+                  <p className={ numberFontCSS }>{ childrenCount + localChildrenCount }</p>
                 </div>
               </div>
             </div>
           </div>
-          <div className="mt-20 h-40 flex items-center justify-center">
+          <div className="m-4 h-auto flex items-center justify-center">
             <CustomButton text={ "登録" } type={ "submit" } className={ "py-8 px-16 text-4xl" }/>
           </div>
         </form>

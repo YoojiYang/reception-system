@@ -74,8 +74,11 @@ export type ReserveCountChangeProps = {
 };
 
 export type NotArrivedProps = {
-  rooms: RoomType[];
-  roomArrivalCounts: Record<number, number>;
+  arrivalCounts: TotalCountsType;
+};
+
+export type TotalCountsType = {
+  [roomId: number]: number;
 };
 
 export type CurrentCountProps = {
@@ -105,6 +108,17 @@ export type ArrivalProviderProps = {
   children: React.ReactNode;
 };
 
+export type VipTaxiContextType = {
+  vipTaxis: VipTaxiType[];
+  setVipTaxis: React.Dispatch<React.SetStateAction<VipTaxiType[]>>;
+  lastUpdated: number;
+  setLastUpdated: React.Dispatch<React.SetStateAction<number>>;
+};
+
+export type VipTaxiProviderProps = {
+  children: React.ReactNode;
+};
+
 export type EditArrivalInfoProps = {
   currentRoom: RoomType;
   closeModal: () => void;
@@ -131,7 +145,6 @@ export type VipTaxiProps = {
   setVipTaxis: React.Dispatch<React.SetStateAction<VipTaxiType[]>>;
 };
 
-
 export type TaxiReservationProps = {
   operationType: "create" | "update";
   onSubmit: (
@@ -148,8 +161,6 @@ export type TaxiReservationProps = {
 
 export type VipTaxiReservationProps = {
   currentRoom: RoomType;
-  vipTaxis: VipTaxiType[];
-  setVipTaxis: React.Dispatch<React.SetStateAction<VipTaxiType[]>>;
 };
 
 export type ModalProps = {

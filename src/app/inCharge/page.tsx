@@ -8,7 +8,6 @@ import { useArrival } from "../ArrivalContext";
 import Modal from "../utils/components/Modal";
 import VipTaxiReserve from "./components/VipTaxiReserve";
 import EditArrivalInfo from "./components/EditArrivalInfo";
-import { VipTaxiType } from "../../../types/types";
 
 function InCharge() {
   const { rooms, setRooms,  } = useRooms();
@@ -16,7 +15,6 @@ function InCharge() {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [currentRoomId, setCurrentRoomId] = useState<number | null>(null);
   const [arrivalCounts, setArrivalCounts] = useState<Record<number, { adultsTotal: number, childrenTotal: number }>>({});
-  const [vipTaxis, setVipTaxis] = useState<VipTaxiType[]>([]);
 
   const currentRoom = rooms.find(room => room.id === currentRoomId) || rooms[0];
 
@@ -80,7 +78,7 @@ function InCharge() {
           </div>
           <EditArrivalInfo currentRoom={ currentRoom } closeModal={ closeModal } arrivalCounts={ arrivalCounts } setModalOpen={ setIsModalOpen }/>
           <EditReserveCount currentRoom={ currentRoom } setModalOpen={ setIsModalOpen }/>
-          <VipTaxiReserve currentRoom={ currentRoom } vipTaxis={ vipTaxis } setVipTaxis={ setVipTaxis} />
+          <VipTaxiReserve currentRoom={ currentRoom } />
         </Modal>
       )}
     </div>

@@ -1,12 +1,14 @@
 import CustomButton from "@/app/utils/components/CustomButton";
 import CustomSelect from "@/app/utils/components/CustomSelect";
-import { deleteVipTaxi, fetchAllData, formatTime, postData, updateTaxi } from "@/app/utils/utils";
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { deleteVipTaxi, formatTime, postData, updateTaxi } from "@/app/utils/utils";
+import { useEffect, useState } from "react";
 import { VipTaxiReservationProps, VipTaxiType } from "../../../../types/types";
 import CustomStringSelect from "@/app/utils/components/CustomStringSelect";
 import { carCountOptions, needOrNotOptions, peopleCountOptions, reservationTimeOptions } from "@/app/utils/selectOptions";
+import { fetchVipTaxis, useVipTaxi } from "@/app/VipTaxiContext";
 
-const VipTaxiReserve = ({ currentRoom, vipTaxis, setVipTaxis }: VipTaxiReservationProps) => {
+const VipTaxiReserve = ({ currentRoom }: VipTaxiReservationProps) => {
+  const { vipTaxis, setVipTaxis, lastUpdated, setLastUpdated } = useVipTaxi();
   const [needOrNot, setNeedOrNot] = useState<string>("Unconfirmed");
   const [peopleCount, setPeopleCount] = useState<number>(0);
   const [carCount, setCarCount] = useState<number>(0);
@@ -16,17 +18,6 @@ const VipTaxiReserve = ({ currentRoom, vipTaxis, setVipTaxis }: VipTaxiReservati
   const [editCarCount, setEditCarCount] = useState<number>(0);
   const [editReservationTime, setEditReservationTime] = useState<string>("試合終了後");
 
-
-
-  const fetchVipTaxis = async (setVipTaxis: Dispatch<SetStateAction<VipTaxiType[]>>) => {
-    try {
-      const fetchedVipTaxis = await fetchAllData("viptaxi");
-      setVipTaxis(fetchedVipTaxis);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-  
   // タクシーの予約情報をデータベースに登録する
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -42,8 +33,8 @@ const VipTaxiReserve = ({ currentRoom, vipTaxis, setVipTaxis }: VipTaxiReservati
           reservationTime: reservationTime,
         },
       );
-
       fetchVipTaxis(setVipTaxis);
+      setLastUpdated(Date.now());
     } catch (error) {
       console.error(error);
       return;
@@ -55,15 +46,17 @@ const VipTaxiReserve = ({ currentRoom, vipTaxis, setVipTaxis }: VipTaxiReservati
     try {
       await deleteVipTaxi("viptaxi", taxiId);
       fetchVipTaxis(setVipTaxis);
+      setLastUpdated(Date.now());
     } catch (error) {
       console.error("Failed to delete taxi:", error);
     }
   };
   
+  console.log('lastUpdated: ', lastUpdated);
   // タクシーの予約状況を最新に更新する
   useEffect(() => {
     fetchVipTaxis(setVipTaxis);
-  }, [setVipTaxis]);
+  }, [setVipTaxis, lastUpdated]);
     
   return (
     <div>

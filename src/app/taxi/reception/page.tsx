@@ -7,7 +7,6 @@ import { GeneralTaxiType, VipTaxiType } from "../../../../types/types";
 
 function TaxiReception() {
   const [generalTaxis, setGeneralTaxis] = useState<GeneralTaxiType[]>([]);
-  const [vipTaxis, setVipTaxis] = useState<VipTaxiType[]>([]);
 
   return (
     <div className='mx-8'>
@@ -15,7 +14,7 @@ function TaxiReception() {
         <h1 className='mt-8 text-4xl'>タクシー受付</h1>
       </div>
       <GeneralTaxi generalTaxis={ generalTaxis } setGeneralTaxis={ setGeneralTaxis } />
-      <VipTaxi vipTaxis={ vipTaxis } setVipTaxis={ setVipTaxis } />
+      <VipTaxi />
     </div>
   )
 };

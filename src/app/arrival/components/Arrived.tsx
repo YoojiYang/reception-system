@@ -1,9 +1,11 @@
+import { useRooms } from "@/app/RoomsContext";
 import { NotArrivedProps, RoomType } from "../../../../types/types";
 
-export function Arrived({ rooms, roomArrivalCounts }: NotArrivedProps) {
+export function Arrived({ arrivalCounts }: NotArrivedProps) {
+  const { rooms, setRooms, lastUpdated, setLastUpdated } = useRooms();
 
   return (
-<div className="flex justify-center">
+    <div className="flex justify-center">
       <div className="w-1/2 m-4 pt-4 pb-4 rounded-2xl bg-blue-100">
         <div className="flex justify-center">
           <p
@@ -14,7 +16,7 @@ export function Arrived({ rooms, roomArrivalCounts }: NotArrivedProps) {
           </p>
         </div>
         {rooms
-          .filter((room: RoomType) => room.reserveAdultsCount + room.changedAdultsCount === roomArrivalCounts[room.id] && room.id <= 114)
+          .filter((room: RoomType) => room.reserveAdultsCount + room.changedAdultsCount === arrivalCounts[room.id] && room.id <= 114)
           .sort((a: RoomType, b: RoomType) => a.id - b.id)
           .map((room: RoomType) => (
             
@@ -37,7 +39,7 @@ export function Arrived({ rooms, roomArrivalCounts }: NotArrivedProps) {
                 <p>
                   到着
                   <span className="ml-2 mr-2 text-2xl drop-shadow">
-                    {  roomArrivalCounts[room.id] || 0 }
+                    {  arrivalCounts[room.id] || 0 }
                   </span>
                   名
                 </p>
@@ -56,7 +58,7 @@ export function Arrived({ rooms, roomArrivalCounts }: NotArrivedProps) {
           </p>
         </div>
         {rooms
-          .filter((room: RoomType) => room.reserveAdultsCount + room.changedAdultsCount === roomArrivalCounts[room.id] && room.id >= 201)
+          .filter((room: RoomType) => room.reserveAdultsCount + room.changedAdultsCount === arrivalCounts[room.id] && room.id >= 201)
           .sort((a: RoomType, b: RoomType) => a.id - b.id)
           .map((room: RoomType) => (
             
@@ -79,7 +81,7 @@ export function Arrived({ rooms, roomArrivalCounts }: NotArrivedProps) {
                 <p>
                   到着
                   <span className="ml-2 mr-2 text-2xl drop-shadow">
-                    {  roomArrivalCounts[room.id] || 0 }
+                    {  arrivalCounts[room.id] || 0 }
                   </span>
                   名
                 </p>

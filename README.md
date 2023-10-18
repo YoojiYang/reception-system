@@ -1,36 +1,70 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# 顧客受付システム
 
-## Getting Started
-
-First, run the development server:
-
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+## システム概要
+  
+顧客の予約人数の登録、来場者の人数管理とタクシーの受付を行うシステムです。
+    
+  
+### 機能一覧
+- ホーム画面
+  - 個室の利用状況を確認
+  - ステータスによって色が変わる
+    - 水色背景　→ 来場中
+    - 青背景 + 白文字　→ 全員到着
+    - 灰色背景　→　全員退室 or 予約なし
+    - 赤背景 → 登録エラー
+  - 業務終了ボタン（データの初期化）
+    - 実装中
+　　
+- Reception画面
+  - 予約情報の登録
+  - （担当者欄実装中）
+　　
+- Desk画面
+  - 来場者の情報の追加
+  - 予約人数の変更
+　　
+- 個室担当画面
+  - 個室の来場状況を数値で確認
+  - 到着情報、退室情報の登録
+  - 予約人数の変更
+  - タクシーの予約
+　　
+- タクシー受付画面
+  - 一般タクシーの予約状況の確認
+  - 一般タクシーの新規予約登録、変更、削除
+  - VIPタクシーの予約状況の確認
+  - VIPタクシーの予約内容変更、削除
+  
+- サイドバー機能
+  - 各ページへのリンク機能
+　　
+- タクシー案内画面
+  - 実装中
+　　  
+## 特徴
+  
+**機能の網羅性**: 現在の業務で必要な機能がオールインワンとなっています。  
+**コンポーネント化**: 変更、修正もすぐに行えます。  
+**簡単操作**:　入力はほぼ不要で、マウス操作（iPadならタップ操作）だけで操作可能です。  
+  
+## 追加予定
+- レスポンシブ対応
+- notionとのAPI連携
+- 業務開始/終了ボタン
+- タクシー案内画面実装
+  
+## 技術スタック
+  
+| 項目 | 利用言語･フレームワーク |
+| ---- | ---- |
+| 利用言語 | TypeScript |
+| フレームワーク | React, Next.js |
+| CSS | tailwindCSS |
+| データベース | postgreSQL, supabase, prisma |
+| 実行環境 | Vercel |  
+  
+  
+  
+## デモ
+[こちら](reception-system.vercel.app){:target="_blank"}からデモサイトにアクセスできます。

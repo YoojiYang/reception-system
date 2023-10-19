@@ -67,4 +67,4 @@
   
   
 ## デモ
-[こちら](reception-system.vercel.app){:target="_blank"}からデモサイトにアクセスできます。
+[こちら](https://reception-system.vercel.app)からデモサイトにアクセスできます。

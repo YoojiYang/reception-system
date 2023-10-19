@@ -21,7 +21,6 @@ export const PUT = async (req: NextRequest, res: NextResponse) => {
   return genericPUT(req, res, async (id, data) => {
     return await prisma.vipTaxi.update({
       data: {
-        needOrNot: data.needOrNot,
         taxi: {
           update: {
             peopleCount: data.peopleCount,

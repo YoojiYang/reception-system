@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from 'next/server';
 import { genericGET, main } from '../utils/utils';
 import { RoomType } from '../../../../types/types';
 import prisma from '../../../../prisma';
-import { NextApiRequest, NextApiResponse } from 'next';
 
 // export default withCORS(async (req: NextApiRequest, res: NextApiResponse) => {
 //   if (req.method === "GET") {
@@ -48,7 +47,7 @@ const updateMultipleRooms = async (roomsData: Record<number, RoomType>) => {
           reserveAdultsCount: roomData.reserveAdultsCount,
           reserveChildrenCount: roomData.reserveChildrenCount,
           scheduledArrival: roomData.scheduledArrival,
-          // 他のフィールドも必要に応じて追加
+          taxiReservation: roomData.taxiReservation,
         },
       })
     );

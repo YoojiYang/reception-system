@@ -1,16 +1,24 @@
-import { data } from "autoprefixer";
+import { needOrNotStatus } from "@prisma/client";
 import React from "react";
 
 export type RoomType = {
   id: number;
   name: string;
-  company: string;
-  scheduledArrival: Date;
+  company?: string;
+  scheduledArrival?: Date;
   reserveAdultsCount: number;
   reserveChildrenCount: number;
   changedAdultsCount: number;
   changedChildrenCount: number;
+  taxiReservation: needOrNotStatus;
 };
+
+export enum NeedOrNotStatus {
+  Need = "必要",
+  Not = "不要",
+  Unconfirmed = "未確認",
+};
+
 
 export type ArrivalType = {
   id: number;
@@ -52,7 +60,6 @@ export type TaxiType = {
 
 export type VipTaxiType = {
   id: number;
-  NeedOrNot: string;
   taxiId: number;
   roomId: number;
   taxi?: TaxiType;
@@ -190,13 +197,6 @@ export type HandleEditDataProps = {
   onError?: (error: any) => void;
 };
 
-
-export enum NeedOrNotStatus {
-  "必要" = "必要",
-  "不要" = "不要",
-  "未確認" = "未確認",
-};
-
 export type ArrivalRecordCounts = {
   [key: number]: number;
 };
@@ -207,3 +207,7 @@ export type RoomsInfoProps = {
   arrivalRecordCounts: Record<number, number>;
   room: RoomType;
 };
+
+export type TaxiInfo = {
+  id: number;
+}

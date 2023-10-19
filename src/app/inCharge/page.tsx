@@ -11,12 +11,12 @@ import EditArrivalInfo from "./components/EditArrivalInfo";
 import { bgGrayCSS, indexFontCSS, pageTitleCSS, recordFontCSS } from "../utils/style";
 import Sidebar from "../utils/components/Sidebar";
 import { useVipTaxi } from "../VipTaxiContext";
-import { VipTaxiContextType, VipTaxiType } from "../../../types/types";
+import { RoomType, TaxiInfo, VipTaxiType } from "../../../types/types";
 
 function InCharge() {
   const { rooms, setRooms } = useRooms();
   const { arrivalCounts } = useArrival();
-  const { vipTaxis, setVipTaxis } = useVipTaxi();
+  const { vipTaxis } = useVipTaxi();
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [currentRoomId, setCurrentRoomId] = useState<number | null>(null);
 
@@ -31,37 +31,35 @@ function InCharge() {
   }
 
   // タクシーの利用状況を確認する
-  const getTaxiStatus = (vipTaxis: VipTaxiType[]) => {
-    const result: { [key: number]: any[] } = {};
+  const getTaxiInfoByRoom = (vipTaxis: VipTaxiType[]) => {
+    const taxiInfoByRoom: { [key: number]: TaxiInfo[] } = {};
 
     vipTaxis.forEach(item => {
       const roomId = item.roomId;
-      if (!result[roomId]) {
-        result[roomId] = [];
+      if (!taxiInfoByRoom[roomId]) {
+        taxiInfoByRoom[roomId] = [];
       }
-      result[roomId].push({
+      taxiInfoByRoom[roomId].push({
         id: item.id,
-        needOrNot: item.NeedOrNot,
       });
     });
-    return result;
+    return taxiInfoByRoom;
   }
 
-  
-  const getTaxiReservationStatus = (roomId: number) => {
-    const taxiStatus = getTaxiStatus(vipTaxis);
-    console.log('taxiStatus: ', taxiStatus);
-    const roomTaxis = taxiStatus[roomId];
-    if (!roomTaxis || roomTaxis.length === 0) {
-      return "No Reservation";
+  // タクシー情報を表示する条件分岐
+  const getTaxiStatus = (room: RoomType) => {
+    if (room.taxiReservation === "Unconfirmed") {
+      return "未確認";
+    } else if (room.taxiReservation === "Not") {
+      return "不要";
     }
-  
-    const taxiCount = roomTaxis.filter(taxi => taxi.needOrNot === "Need").length;
-    if (taxiCount > 0) {
-      return `${taxiCount}台`;
-    }
-  
-    return roomTaxis[0].needOrNot; // Unconfirmed or other status
+
+    const taxiInfoByRoom = getTaxiInfoByRoom(vipTaxis);
+    const roomTaxis = taxiInfoByRoom[room.id];
+    if (!roomTaxis) {
+      return `0台`
+    } 
+    return `${roomTaxis.length}台`
   }
   
 
@@ -106,7 +104,7 @@ function InCharge() {
                   <p className={ `${recordFontCSS} col-span-3` }>{ room.company }</p>
                   <p className={ recordFontCSS }>{ room.reserveAdultsCount + room.changedChildrenCount + room.changedAdultsCount + room.changedChildrenCount }名</p>
                   <p className={ recordFontCSS }>{ getCurrentArrivalCount(room.id) }名</p>
-                  <p className={ recordFontCSS }>{ getTaxiReservationStatus(room.id) }</p>
+                  <p className={ recordFontCSS }>{ getTaxiStatus(room) }</p>
                 </div>
             ))}
           </div>

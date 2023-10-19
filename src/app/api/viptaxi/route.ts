@@ -15,7 +15,6 @@ export const POST = async (req: NextRequest, res: NextResponse) => {
   return genericPOST(req, res, (data) => {
     return prisma.vipTaxi.create({
       data: {
-        needOrNot: data.needOrNot,
         room: {
           connect: {
             id: data.roomId,

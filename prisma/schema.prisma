@@ -19,6 +19,7 @@ model Room {
   reserveChildrenCount    Int      @default(0)
   changedAdultsCount      Int      @default(0)
   changedChildrenCount    Int      @default(0)
+  taxiReservation         String @default("Unconfirmed")
   arrivals  Arrival[]
   meal      Meal?
   taxis     VipTaxi[]
@@ -73,11 +74,6 @@ model Meal {
   roomId         Int               @unique
 }
 
-enum needOrNotStatus {
-  Need
-  Not
-  Unconfirmed
-}
 
 model Taxi {
   id              Int      @id @default(autoincrement())
@@ -95,7 +91,6 @@ model VipTaxi {
   id      Int   @id @default(autoincrement())
   taxiId  Int   @unique
   taxi    Taxi  @relation(fields: [taxiId], references: [id], onDelete: Cascade)
-  needOrNot  needOrNotStatus @default(Unconfirmed)
   room    Room  @relation(fields: [roomId], references: [id])
   roomId  Int
 }

@@ -24,6 +24,7 @@ export const PUT = async (req: NextRequest, res: NextResponse) => {
         changedAdultsCount: data.changedAdultsCount,
         changedChildrenCount: data.changedChildrenCount,
         scheduledArrival: data.scheduledArrival,
+        taxiReservation: data.taxiReservation,
       },
       where: { id },
     });

@@ -96,7 +96,7 @@ const EditReserveList = ({ setEditing }: EditReserveListProps) => {
                   <input
                     type='text'
                     name='scheduledArrival'
-                    defaultValue={ formatTime(room.scheduledArrival) }
+                    defaultValue={ room.scheduledArrival ? formatTime(room.scheduledArrival) : "" }
                     onChange={ (e) => {
                       const timeValue = e.target.value;
                       const [hours, minutes] = timeValue.split(':').map(Number);

@@ -1,6 +1,5 @@
 import { PrismaClient } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
-import type { NextApiRequest, NextApiResponse } from 'next';
 
 type FetchFunction = () => Promise<any>;
 type ResponseKey = string;
@@ -10,30 +9,6 @@ type FindFunction = (id: number) => Promise<any>;
 type DeleteFunction = (id: number) => Promise<any>;
 
 const prisma = new PrismaClient({ log: ["info"] });
-
-// api/utils/utils.ts
-
-// export const withCORS = (handler: (req: NextApiRequest, res: NextApiResponse) => void) => {
-//   return async (req: NextApiRequest, res: NextApiResponse) => {
-//     // CORS ヘッダーを設定
-//     res.setHeader('Access-Control-Allow-Origin', '*');
-//     res.setHeader('Access-Control-Allow-Methods', 'POST, GET, PUT, DELETE, OPTIONS');
-//     res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-
-//     // OPTIONS メソッドのハンドリング
-//     if (req.method === 'OPTIONS') {
-//       res.status(200).end();
-//       return;
-//     }
-
-//     // 実際のリクエストハンドラを呼び出す
-//     return handler(req, res);
-//   };
-// };
-
-
-
-
 
 export async function main() {
   try {

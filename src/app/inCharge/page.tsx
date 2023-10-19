@@ -48,9 +48,9 @@ function InCharge() {
 
   // タクシー情報を表示する条件分岐
   const getTaxiStatus = (room: RoomType) => {
-    if (room.taxiReservation === "Unconfirmed") {
+    if (room.taxiReservation === "未確認") {
       return "未確認";
-    } else if (room.taxiReservation === "Not") {
+    } else if (room.taxiReservation === "不要") {
       return "不要";
     }
 

@@ -6,7 +6,7 @@ import { formatTime } from '../../utils/utils';
 import CustomButton from '@/app/utils/components/CustomButton';
 import { useRooms } from '@/app/RoomsContext';
 import ReserveIndex from './ReserveIndex';
-import { receptionIndexCSS } from '@/app/utils/style';
+import { receptionListCSS } from '@/app/utils/style';
 
 export function ReserveList({ setEditing }: ReserveListProps) {
   const { rooms, setRooms } = useRooms();
@@ -22,18 +22,18 @@ export function ReserveList({ setEditing }: ReserveListProps) {
       </div>  
       <ReserveIndex />
       {sortedRooms.map((room: RoomType) => (
-        <div key={room.id} className={ receptionIndexCSS.outside1 }>
-          <div className={ receptionIndexCSS.outside21 }>
-            <p className={ receptionIndexCSS.roomName }>{ room.name }</p>
-            <p className={ receptionIndexCSS.companyName }>{ room.company }</p>
+        <div key={room.id} className={ receptionListCSS.outside1 }>
+          <div className={ receptionListCSS.outside21 }>
+            <p className={ receptionListCSS.roomName }>{ room.name }</p>
+            <p className={ receptionListCSS.companyName }>{ room.company }</p>
           </div>
-          <div className={ receptionIndexCSS.outside22 }>
-            <div className={ receptionIndexCSS.outside3 }>
-              <p className={ receptionIndexCSS.adults }>{ room.reserveAdultsCount }</p>
-              <p className={ receptionIndexCSS.children }>{ room.reserveChildrenCount }</p>
-              <p className={ receptionIndexCSS.arrivalTime }>{ formatTime(room.scheduledArrival) }</p>
+          <div className={ receptionListCSS.outside22 }>
+            <div className={ receptionListCSS.outside3 }>
+              <p className={ receptionListCSS.number }>{ room.reserveAdultsCount }</p>
+              <p className={ receptionListCSS.number }>{ room.reserveChildrenCount }</p>
+              <p className={ receptionListCSS.arrivalTime }>{ room.scheduledArrival ? formatTime(room.scheduledArrival) : "" }</p>
             </div>
-            <p className={ receptionIndexCSS.staff }></p>
+            <p className={ receptionListCSS.staff }></p>
           </div>
         </div>
       ))}

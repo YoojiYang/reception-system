@@ -6,15 +6,28 @@ export const receptionIndexCSS = {
   outside21: 'h-auto flex grid grid-cols-3',
   outside22: 'h-auto flex grid grid-cols-2',
   outside3: 'flex grid grid-cols-4',
-  roomName: 'h-auto m-2 flex items-center justify-center bg-white rounded-xl',
-  companyName: 'm-2 col-span-2 flex items-center justify-center bg-white rounded-xl',
-  adults: 'my-2 mx-1 flex items-center justify-center bg-white rounded-xl',
-  children: 'my-2 mx-1 flex items-center justify-center bg-white rounded-xl',
-  arrivalTime: 'm-2 col-span-2 flex items-center justify-center bg-white rounded-xl',
-  staff: 'm-2 flex items-center justify-center bg-white rounded-xl',
+  roomName: 'h-auto m-2 flex items-center justify-center rounded-xl',
+  companyName: 'm-2 col-span-2 flex items-center justify-center rounded-xl',
+  adults: 'my-2 mx-1 flex items-center justify-center rounded-xl',
+  children: 'my-2 mx-1 flex items-center justify-center rounded-xl',
+  arrivalTime: 'm-2 col-span-2 flex items-center justify-center rounded-xl',
+  staff: 'm-2 flex items-center justify-center rounded-xl',
 }
 
-export const receptionEditIndexCSS = {
+export const receptionListCSS = {
+  outside1: 'h-12 m-2 py-1 flex grid grid-cols-2 bg-white rounded-xl',
+  outside21: 'h-auto flex grid grid-cols-3',
+  outside22: 'h-auto flex grid grid-cols-2',
+  outside3: 'flex grid grid-cols-4',
+  roomName: 'h-auto flex items-center justify-center',
+  companyName: 'col-span-2 flex items-center justify-center',
+  number: 'mx-1 flex items-center justify-center',
+  arrivalTime: 'col-span-2 flex items-center justify-center',
+  staff: 'flex items-center justify-center',
+}
+
+
+export const receptionEditCSS = {
   outside1: ' h-16 flex grid grid-cols-2',
   outside21: 'h-auto flex grid grid-cols-3',
   outside22: 'h-auto flex grid grid-cols-2',

@@ -4,7 +4,7 @@ import ReserveIndex from './ReserveIndex';
 import { formatTime, handleEditReserveList } from '../../utils/utils';
 import CustomButton from "@/app/utils/components/CustomButton";
 import { fetchRooms, useRooms } from "@/app/RoomsContext";
-import { borderBlueCSS, receptionEditIndexCSS } from "@/app/utils/style";
+import { borderBlueCSS, receptionEditCSS } from "@/app/utils/style";
 
 const EditReserveList = ({ setEditing }: EditReserveListProps) => {
   const { rooms, setRooms } = useRooms();
@@ -63,26 +63,26 @@ const EditReserveList = ({ setEditing }: EditReserveListProps) => {
       <div>
         {sortedRooms.map((room: RoomType) => (
           <form key={room.id}>
-            <div className={ receptionEditIndexCSS.outside1 }>
-              <div className={ receptionEditIndexCSS.outside21 }>
-                <p className={ receptionEditIndexCSS.roomName }>{ room.name }</p>
+            <div className={ receptionEditCSS.outside1 }>
+              <div className={ receptionEditCSS.outside21 }>
+                <p className={ receptionEditCSS.roomName }>{ room.name }</p>
                 <input
                   type='text'
                   name='company'
                   defaultValue={ room.company }
                   onChange={ (e) => handleInputChange(room.id, 'company', e.target.value) }
-                  className={ `${receptionEditIndexCSS.companyName} ${borderBlueCSS}` }
+                  className={ `${receptionEditCSS.companyName} ${borderBlueCSS}` }
                   />
               </div>
-              <div className={ receptionEditIndexCSS.outside22 }>
-                <div className={ receptionEditIndexCSS.outside3 }>
+              <div className={ receptionEditCSS.outside22 }>
+                <div className={ receptionEditCSS.outside3 }>
                   {/* 大人の人数 */}
                   <input
                     type='number'
                     name='adultsCount'
                     defaultValue={ room.reserveAdultsCount }
                     onChange={ (e) => handleInputChange(room.id, 'reserveAdultsCount', parseInt(e.target.value)) }
-                    className={ `${receptionEditIndexCSS.number} ${borderBlueCSS}` }
+                    className={ `${receptionEditCSS.number} ${borderBlueCSS}` }
                     />
                   {/* 子供の予約人数 */}
                   <input
@@ -90,7 +90,7 @@ const EditReserveList = ({ setEditing }: EditReserveListProps) => {
                     name='childrenCount'
                     defaultValue={ room.reserveChildrenCount }
                     onChange={ (e) => handleInputChange(room.id, 'reserveChildrenCount', parseInt(e.target.value)) }
-                    className={ `${receptionEditIndexCSS.number} ${borderBlueCSS}` }
+                    className={ `${receptionEditCSS.number} ${borderBlueCSS}` }
                     />
                   {/* 到着予定時刻 */}
                   <input
@@ -107,13 +107,13 @@ const EditReserveList = ({ setEditing }: EditReserveListProps) => {
                       
                       handleInputChange(room.id, 'scheduledArrival', isoString);
                     }}
-                    className={ `${receptionEditIndexCSS.arrivalTime} ${borderBlueCSS}` }
+                    className={ `${receptionEditCSS.arrivalTime} ${borderBlueCSS}` }
                     />
                 </div>
                 {/* 担当者 */}
                 <select
                   name="inCharge"
-                  className={ `${receptionEditIndexCSS.staff} ${borderBlueCSS}` }
+                  className={ `${receptionEditCSS.staff} ${borderBlueCSS}` }
                   multiple
                   >
                   {/* TODO */}

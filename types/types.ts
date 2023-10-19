@@ -1,4 +1,3 @@
-import { needOrNotStatus } from "@prisma/client";
 import React from "react";
 
 export type RoomType = {
@@ -13,7 +12,7 @@ export type RoomType = {
   taxiReservation: needOrNotStatus;
 };
 
-export enum NeedOrNotStatus {
+export enum needOrNotStatus {
   Need = "必要",
   Not = "不要",
   Unconfirmed = "未確認",

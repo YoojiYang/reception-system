@@ -1,4 +1,4 @@
-import { GeneralTaxiData, GeneralTaxiType, HandleEditDataProps, RoomType } from "../../../types/types";
+import { ArrivalRecordCounts, ArrivalType, GeneralTaxiData, GeneralTaxiType, HandleEditDataProps, RoomType } from "../../../types/types";
 import { Dispatch, SetStateAction } from "react";
 
 
@@ -354,4 +354,5 @@ export const createOptionsArray = (start: number, end: number) => {
   }
   return options;
 }
+
 

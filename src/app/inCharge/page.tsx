@@ -10,13 +10,60 @@ import VipTaxiReserve from "./components/VipTaxiReserve";
 import EditArrivalInfo from "./components/EditArrivalInfo";
 import { bgGrayCSS, indexFontCSS, pageTitleCSS, recordFontCSS } from "../utils/style";
 import Sidebar from "../utils/components/Sidebar";
+import { useVipTaxi } from "../VipTaxiContext";
+import { VipTaxiContextType, VipTaxiType } from "../../../types/types";
 
 function InCharge() {
-  const { rooms, setRooms,  } = useRooms();
+  const { rooms, setRooms } = useRooms();
+  const { arrivalCounts } = useArrival();
+  const { vipTaxis, setVipTaxis } = useVipTaxi();
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [currentRoomId, setCurrentRoomId] = useState<number | null>(null);
 
   const currentRoom = rooms.find(room => room.id === currentRoomId) || rooms[0];
+  
+  // 現在の部屋の到着者数を計算する
+  const getCurrentArrivalCount = (roomId: number): number => {
+    const currentAdultsCount = arrivalCounts[roomId]?.adultsTotal || 0;
+    const currentChildrenCount = arrivalCounts[roomId]?.childrenTotal || 0;
+    const currentArrivalCount = currentAdultsCount + currentChildrenCount;
+    return currentArrivalCount;
+  }
+
+  // タクシーの利用状況を確認する
+  const getTaxiStatus = (vipTaxis: VipTaxiType[]) => {
+    const result: { [key: number]: any[] } = {};
+
+    vipTaxis.forEach(item => {
+      const roomId = item.roomId;
+      if (!result[roomId]) {
+        result[roomId] = [];
+      }
+      result[roomId].push({
+        id: item.id,
+        needOrNot: item.NeedOrNot,
+      });
+    });
+    return result;
+  }
+
+  
+  const getTaxiReservationStatus = (roomId: number) => {
+    const taxiStatus = getTaxiStatus(vipTaxis);
+    console.log('taxiStatus: ', taxiStatus);
+    const roomTaxis = taxiStatus[roomId];
+    if (!roomTaxis || roomTaxis.length === 0) {
+      return "No Reservation";
+    }
+  
+    const taxiCount = roomTaxis.filter(taxi => taxi.needOrNot === "Need").length;
+    if (taxiCount > 0) {
+      return `${taxiCount}台`;
+    }
+  
+    return roomTaxis[0].needOrNot; // Unconfirmed or other status
+  }
+  
 
   const closeModal = () => {
     setIsModalOpen(false);
@@ -40,25 +87,26 @@ function InCharge() {
           <div className="grid grid-cols-8">
             <p className={ `${indexFontCSS} col-span-2` }>部屋名</p>
             <p className={ `${indexFontCSS} col-span-3` }>会社名</p>
-            <p className={ indexFontCSS }>合計</p>
-            <p className={ indexFontCSS }>現在</p>
+            <p className={ indexFontCSS }>予約合計</p>
+            <p className={ indexFontCSS }>現在の人数</p>
             <p className={ indexFontCSS }>タクシー</p>
           </div>
           <div className="flex flex-col">
             {rooms
               .sort((a, b) => a.id - b.id)
               .map(room => (
-                <div key={room.id} className="h-12 my-1 grid grid-cols-8 items-center">
+                
+                <div key={room.id} className="h-16 my-1 grid grid-cols-8 items-center">
                   <button 
                     onClick={() => { handleSetIdModalOpen(room.id, setCurrentRoomId, setIsModalOpen) }}
-                    className={ `${recordFontCSS} mx-4 p-2 col-span-2 bg-blue-500 hover:bg-blue-700 text-white rounded-full` }
+                    className={ `${recordFontCSS} mx-4 py-4 p-2 col-span-2 bg-blue-500 hover:bg-blue-700 text-white rounded-full` }
                   >
                     { room.name }
                   </button>
                   <p className={ `${recordFontCSS} col-span-3` }>{ room.company }</p>
-                  <p className={ recordFontCSS }>{ room.reserveAdultsCount + room.changedChildrenCount + room.changedAdultsCount + room.changedChildrenCount }</p>
-                  <p className={ recordFontCSS }>{ room.id }</p>
-                  <p className={ recordFontCSS }>{ room.id }</p>
+                  <p className={ recordFontCSS }>{ room.reserveAdultsCount + room.changedChildrenCount + room.changedAdultsCount + room.changedChildrenCount }名</p>
+                  <p className={ recordFontCSS }>{ getCurrentArrivalCount(room.id) }名</p>
+                  <p className={ recordFontCSS }>{ getTaxiReservationStatus(room.id) }</p>
                 </div>
             ))}
           </div>

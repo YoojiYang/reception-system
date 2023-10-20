@@ -1,6 +1,6 @@
 import CustomButton from "@/app/utils/components/CustomButton";
 import { EditArrivalInfoProps } from "../../../../types/types";
-import { fetchAllData, postArrival, setRoomsMap } from "@/app/utils/utils";
+import { fetchAllData, postData, setRoomsMap } from "@/app/utils/utils";
 import { useRooms } from "@/app/RoomsContext";
 import { useState } from "react";
 import IncrementButton from "@/app/utils/components/IncrementButton";
@@ -34,7 +34,13 @@ function EditArrivalInfo({ currentRoom, setModalOpen }: EditArrivalInfoProps) {
 
   const handleRegister = async () => {
     try {
-      await postArrival(currentRoom.id, localArrivalAdultsCount, localArrivalChildrenCount);
+      const data = {
+        roomId: currentRoom.id,
+        adultsCount: localArrivalAdultsCount,
+        childrenCount: localArrivalChildrenCount,
+      }
+
+      await postData("arrival", data);
 
       const fetchedArrivals = await fetchAllData("arrival");
       setArrivals(fetchedArrivals);

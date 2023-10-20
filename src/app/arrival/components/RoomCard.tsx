@@ -57,9 +57,9 @@ const RoomCard = ({ startRoomId, endRoomId }: RoomCardProps) => {
           } else if (currentCount > totalReserveCount) {
             colorClass = 'bg-red-50 border-red-300 border-4';
           } else if (currentCount === 0 && arrivalRecordCounts[room.id] > 0) {
-            colorClass = 'bg-gray-500 text-gray-300 border-gray-400 border-4';
+            colorClass = 'bg-gray-500 text-gray-300 border-gray-500 border-4';
           } else if (currentCount === 0 && totalReserveCount === 0) {
-            colorClass = 'bg-gray-500 text-gray-300 border-gray-400 border-4';
+            colorClass = 'bg-gray-100 text-gray-300 border-gray-300 border-4';
           }
 
           return (

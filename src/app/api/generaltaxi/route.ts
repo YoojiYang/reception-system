@@ -10,29 +10,6 @@ export const GET = (req: NextRequest, res: NextResponse) => {
   }), "generaltaxi");
 }
 
-// VIPタクシーの全情報の取得
-
-
-// export const GET = async (req: NextApiRequest, res: NextApiResponse) => {
-//   // cors(req, res);
-//   try {
-//     await main();
-
-//     const generalTaxis = await prisma.generalTaxi.findMany({
-//       include: {
-//         taxi: true,
-//       },
-//       orderBy: { id: "asc" },
-//     });
-
-//     res.status(200).json({ message: "Success", generalTaxis });
-//   } catch (error) {
-//     res.status(500).json({ message: "Error", error });
-//   } finally {
-//     await prisma.$disconnect();
-//   }
-// };
-
 export const POST = async (req: NextRequest, res: NextResponse) => {
   return genericPOST(req, res, (data) => {
     return prisma.generalTaxi.create({

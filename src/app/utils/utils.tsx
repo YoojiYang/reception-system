@@ -13,95 +13,26 @@ export function formatTimeToJTV(isoDateString: Date) {
 }
 
 export function formatTime(isoDateString: Date) {
-    const date = new Date(isoDateString);
-    const hours = String(date.getUTCHours()).padStart(2, '0');
-    const minutes = String(date.getUTCMinutes()).padStart(2, '0');
+  const date = new Date(isoDateString);
+  const hours = String(date.getUTCHours()).padStart(2, '0');
+  const minutes = String(date.getUTCMinutes()).padStart(2, '0');
     return `${hours}:${minutes}`;
-}
-
-// ＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
-// API関連
-// ＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
-
-export async function fetchAllGeneralTaxis() {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/api/generaltaxi`, {
-    cache: 'no-store',
-  });
-
-  const json = await res.json()
+  }
   
-  return json.generalTaxis;
-}
-
+  // ＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
+  // CRUDメソッド
+  // ＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
+  
 export async function fetchAllData(route: string) {
   const res = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/api/${route}`, {
-    cache: 'no-store',
+  cache: 'no-store',
   });
-
+  
   const json = await res.json()
   return json[route];
 }
 
-export async function fetchAllInCharges() {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/api/inCharge`, {
-    cache: 'no-store',
-  });
-
-  const json = await res.json()
-  
-  return json.inCharges;
-}
-
-export const fetchGeneralTaxis = async (setGeneralTaxis: Dispatch<SetStateAction<GeneralTaxiType[]>>) => {
-  try {
-    const fetchedGeneraltaxis = await fetchAllData("generaltaxi");
-    setGeneralTaxis(fetchedGeneraltaxis);
-  } catch (error) {
-    console.error(error);
-  }
-};
-
-
-// 個別情報の取得
-
-export async function fetchArrivalsForRoom(roomId: number) {
-  const response = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/api/arrival/${roomId}`);
-  const data = await response.json();
-  return data;
-}
-
-// 新規登録
-export async function postArrival(roomId: number, adultsCount: number, childrenCount: number) {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/api/arrival`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ roomId, adultsCount, childrenCount }),
-  });  
-  const json = await res.json();
-  
-  return json.arrival;
-}
-
-export async function postGeneralTaxi(data: GeneralTaxiData) {
-
-  const { section, column, index, peopleCount, carCount } = data;
-
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/api/generaltaxi`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ section, column, index, peopleCount, carCount }),
-  });  
-  const json = await res.json();
-  
-  return json.generalTaxi;
-}
-
 export async function postData(route: string, data: Record<string, any>) {
-  console.log(data);
   const res = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/api/${route}`, {
     method: 'POST',
     headers: {
@@ -110,10 +41,8 @@ export async function postData(route: string, data: Record<string, any>) {
     body: JSON.stringify(data),
   });  
   const json = await res.json()
-  console.log(JSON.stringify(json));
   return json[route];
 }
-
 
 export async function handleEditData(props: HandleEditDataProps){
   const { route, data, editingId, onSuccess, onError } = props;
@@ -143,6 +72,18 @@ export async function handleEditData(props: HandleEditDataProps){
     }
   }
 }
+
+// taxi
+export const fetchGeneralTaxis = async (setGeneralTaxis: Dispatch<SetStateAction<GeneralTaxiType[]>>) => {
+  try {
+    const fetchedGeneraltaxis = await fetchAllData("generaltaxi");
+    setGeneralTaxis(fetchedGeneraltaxis);
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+
 
 export function setRoomsMap(rooms: RoomType[]) {
   const roomsMap: Record<number, RoomType> = {};

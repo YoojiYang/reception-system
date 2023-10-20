@@ -1,4 +1,4 @@
-import { deleteGeneralTaxi, fetchGeneralTaxis, postGeneralTaxi, updateTaxi } from "@/app/utils/utils";
+import { deleteGeneralTaxi, fetchGeneralTaxis, postData, updateTaxi } from "@/app/utils/utils";
 import { FormatedGeneralTaxiType, GeneralTaxiData, GeneralTaxiProps, GeneralTaxiType } from "../../../../../types/types";
 import { useEffect, useState } from "react";
 import CustomButton from "@/app/utils/components/CustomButton";
@@ -103,8 +103,14 @@ const GeneralTaxi = ({ generalTaxis, setGeneralTaxis }: GeneralTaxiProps) => {
               <TaxiReservation
                 operationType="create"
                 onSubmit={ async ( section, column, index, peopleCount, carCount ) => {
-                  const data: GeneralTaxiData = { section, column, index, peopleCount, carCount };
-                  await postGeneralTaxi(data);
+                  const data: GeneralTaxiData = {
+                    section: section,
+                    column: column,
+                    index: index,
+                    peopleCount: peopleCount,
+                    carCount: carCount,
+                  };
+                  await postData("generaltaxi", data);
                   fetchGeneralTaxis(setGeneralTaxis);
                 }}
                 setEditing={ setIsNewPost }

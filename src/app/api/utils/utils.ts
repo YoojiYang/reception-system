@@ -90,6 +90,29 @@ export const genericPUT = async (
 export const genericDELETE = async (
   req: NextRequest,
   res: NextResponse,
+  deleteFn: DeleteFunction,
+  endpoint: string
+) => {
+  if (!req.url) {
+    throw new Error("URL is not defined");
+  }
+
+  try {
+    const id: number = parseInt(req.url.split(`/${endpoint}/`)[1]);
+
+    await deleteFn(id);
+
+    return NextResponse.json({ message: "Success" }, { status: 200, headers: { "Access-Control-Allow-Origin": "*" } });
+
+    } catch (error) {
+      console.error(`Error in DELETE method for ${endpoint}:`, error);
+      return NextResponse.json({ message: "Error", error }, { status: 500, headers: { "Access-Control-Allow-Origin": "*" } });
+    }
+  };
+
+export const taxiDELETE = async (
+  req: NextRequest,
+  res: NextResponse,
   findfn: FindFunction,
   deleteFn: DeleteFunction,
   endpoint: string
@@ -104,9 +127,9 @@ export const genericDELETE = async (
     await main();
 
     const record = await findfn(id);
-    console.log("record:", record);
+
     if (!record || !record.taxiId) {
-      return NextResponse.json({ message: `Taxi not found for the given ${endpoint} ID: ${record}`, error: " No such taxi" }, { status: 404 });
+      return NextResponse.json({ message: `Taxi not found for the given ${endpoint} ID: ${record}`, error: ` No such ${endpoint}` }, { status: 404 });
     }
 
     await deleteFn(record.taxiId);

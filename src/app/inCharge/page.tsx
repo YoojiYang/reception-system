@@ -73,11 +73,11 @@ function InCharge() {
   }, [setRooms]);
     
   return (
-    <div>
+    <div className="mx-8">
       <div className="m-8">
         <Sidebar />
       </div>
-      <div className="m-8 pl-8">
+      <div className="">
         <div>
           <h1 className={ pageTitleCSS }>個室担当用</h1>
         </div>

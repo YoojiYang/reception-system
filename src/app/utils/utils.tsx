@@ -44,6 +44,28 @@ export async function postData(route: string, data: Record<string, any>) {
   return json[route];
 }
 
+export async function updateData(route: string, data: Record<string, any>, id?: number) {
+  try {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/api/${route}/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(data),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });  
+    
+    const json = await res.json()
+
+    if (!res.ok) {
+      throw new Error(json.message || `Failed to update ${route} .`);
+    }
+  }catch (error) {
+    console.log(`Error updating ${route}:`, error);
+  }
+}
+
+
+
 export async function handleEditData(props: HandleEditDataProps){
   const { route, data, editingId, onSuccess, onError } = props;
 
@@ -72,17 +94,6 @@ export async function handleEditData(props: HandleEditDataProps){
     }
   }
 }
-
-// taxi
-export const fetchGeneralTaxis = async (setGeneralTaxis: Dispatch<SetStateAction<GeneralTaxiType[]>>) => {
-  try {
-    const fetchedGeneraltaxis = await fetchAllData("generaltaxi");
-    setGeneralTaxis(fetchedGeneraltaxis);
-  } catch (error) {
-    console.error(error);
-  }
-};
-
 
 
 export function setRoomsMap(rooms: RoomType[]) {
@@ -239,6 +250,22 @@ export const deleteGeneralTaxi = async (id: number) => {
   }
 };
 
+export const deleteData = async (route: string, id: number) => {
+  try {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/api/${route}/${id}`, {
+      method: 'DELETE',
+    });
+    const responseData = await res.json();
+    if (!res.ok) {
+      throw new Error(responseData.message || `Failed to delete ${route}.`);
+    }
+    return responseData;
+  } catch (error) {
+    console.error(`Error deleting ${route}:`, error);
+    throw error;
+  }
+};
+
 export async function deleteVipTaxi (
   route: string,
   id: number,
@@ -296,4 +323,15 @@ export const createOptionsArray = (start: number, end: number) => {
   return options;
 }
 
+
+
+// taxi
+export const fetchGeneralTaxis = async (setGeneralTaxis: Dispatch<SetStateAction<GeneralTaxiType[]>>) => {
+  try {
+    const fetchedGeneraltaxis = await fetchAllData("generaltaxi");
+    setGeneralTaxis(fetchedGeneraltaxis);
+  } catch (error) {
+    console.error(error);
+  }
+};
 

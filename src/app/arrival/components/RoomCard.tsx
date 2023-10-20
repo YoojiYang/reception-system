@@ -1,3 +1,5 @@
+'use client';
+
 import { useRooms } from "@/app/RoomsContext";
 import { ArrivalRecordCounts, ArrivalType, RoomCardProps, RoomType } from "../../../../types/types";
 import { fetchArrival, useArrival } from "@/app/ArrivalContext";

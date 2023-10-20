@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { genericDELETE, genericGET, genericPUT } from '../../utils/utils';
+import { genericGET, genericPUT, taxiDELETE } from '../../utils/utils';
 import prisma from '../../../../../prisma';
 
 export const GET = async (req: NextRequest, res: NextResponse) => {
@@ -49,7 +49,7 @@ export const PUT = async (req: NextRequest, res: NextResponse) => {
 };
 
 export const DELETE = async (req: NextRequest, res: NextResponse) => {
-  return genericDELETE(req, res,
+  return taxiDELETE(req, res,
     async (id) => {
       const generalTaxiRecord = await prisma.generalTaxi.findUnique({
         where: { id },

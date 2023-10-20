@@ -23,13 +23,18 @@ export const SidebarData = [
     link: "/desk",
   },
   {
-    Title: "個室担当者",
+    Title: "BAL/BOX",
     icon:<MeetingRoomIcon fontSize={ fontSize } />,
     link: "/inCharge",
   },
   {
-    Title: "タクシー受付",
+    Title: "Taxi Reception",
     icon:<HailIcon fontSize={ fontSize } />,
     link: "/taxi/reception",
+  },
+  {
+    Title: "個室担当登録",
+    icon:<PersonAddIcon fontSize={ fontSize } />,
+    link: "/addInCharge",
   },
 ];

@@ -9,9 +9,6 @@ const RoomsInfo = ({ totalReserveCount, currentCount, arrivalRecordCounts, room}
 
   if (totalReserveCount === currentCount && currentReserveCount(room) > 0) {
 
-  console.log('room: ', room); 
-  console.log('currentReserveCount(room): ', currentReserveCount(room));
-
     return (
       <div className='flex mt-2'>
         <p className="font-bold text-2xl">
@@ -20,9 +17,6 @@ const RoomsInfo = ({ totalReserveCount, currentCount, arrivalRecordCounts, room}
       </div>
     );
   } else if (currentCount === 0 && currentReserveCount(room) === 0) {
-
-  console.log('room: ', room); 
-  console.log('currentReserveCount(room): ', currentReserveCount(room));
   
     return (
       <div className="mt-2">
@@ -30,9 +24,6 @@ const RoomsInfo = ({ totalReserveCount, currentCount, arrivalRecordCounts, room}
       </div>
     );
   } else if (currentCount === 0 && arrivalRecordCounts[room.id] > 0) {
-
-  console.log('room: ', room); 
-  console.log('currentReserveCount(room): ', currentReserveCount(room));
   
     return (
       <div className="mt-2">

@@ -23,11 +23,11 @@ function Desk() {
   }
 
   return (
-    <div>
+    <div className="mx-8">
       <div className="m-8">
         <Sidebar />
       </div>
-      <div className="m-8 pl-8">
+      <div className="">
         <div>
           <h1 className={ pageTitleCSS }>来場者登録</h1>
         </div>

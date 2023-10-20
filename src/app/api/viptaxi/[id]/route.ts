@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import prisma from '../../../../../prisma';
-import { genericDELETE, genericGET, genericPUT, main } from '../../utils/utils';
+import { genericGET, genericPUT, main, taxiDELETE } from '../../utils/utils';
 
 // 各予約情報の取得
 export const GET = async (req: NextRequest, res: NextResponse) => {
@@ -36,7 +36,7 @@ export const PUT = async (req: NextRequest, res: NextResponse) => {
 
 
 export const DELETE = async (req: NextRequest, res: NextResponse) => {
-  return genericDELETE(req, res,
+  return taxiDELETE(req, res,
     async (id) => {
       const vipTaxiRecord = await prisma.vipTaxi.findUnique({
         where: { id },

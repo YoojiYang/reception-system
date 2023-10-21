@@ -10,6 +10,21 @@ type CustomSelectProps = {
   styles?: StylesConfig<{ value: string; label: string }, false>;
 };
 
+const customStyls = {
+  container: (provided: any) => ({
+    ...provided,
+    width: '100%',
+  }),
+  control: (provided: any) => ({
+    ...provided,
+    width: '100%',
+  }),
+  menu: (provided: any) => ({
+    ...provided,
+    width: '100%',
+  }),
+};
+
 const CustomStringSelect: React.FC<CustomSelectProps> = ({ options, name, value, onChange, className, styles }) => {
   
   const handleChange = (selectedOption: any) => {
@@ -27,8 +42,9 @@ const CustomStringSelect: React.FC<CustomSelectProps> = ({ options, name, value,
       name={ name }
       value={ options.find(option => option.value === value) }
       onChange={ handleChange }
-      className={ `text-center h-full w-full flex items-center justify-center text-xl bg-inherit z-30 ${className}` }
-      styles={ styles }
+      className={ `h-full w-full flex items-center justify-center text-center  text-xl bg-inherit z-3 ${className}` }
+      classNamePrefix={ "react-select" }
+      styles={{ ...customStyls, ...styles }}
     />
   );
 };

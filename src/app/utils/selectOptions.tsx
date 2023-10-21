@@ -5,6 +5,16 @@ export const sectionOptions = createOptionsArray(122, 128);
 export const columnOptions = createOptionsArray(1, 11);
 export const indexOptions = createOptionsArray(1, 20);
 
+export const taxiCompanyOptions = [
+  { value: "NULL", label: "" },
+  { value: "金星", label: "金星" },
+  { value: "つばめ", label: "つばめ" },
+  { value: "ウイング", label: "ウイング" },
+  { value: "第一交通", label: "第一交通" },
+  { value: "リスコ", label: "リスコ" },
+  { value: "MK", label: "MK" },
+  { value: "三和交通", label: "三和交通" },
+];
 
 export const needOrNotOptions = [
   { value: "Need", label: "必要" },
@@ -28,7 +38,7 @@ export const roomNameOptions = (rooms: RoomType[]) => {
 
 
 
-export const deskSelectStyles = {
+export const deMKSelectStyles = {
   control: (provided: any) => ({
     ...provided,
     height: 100,

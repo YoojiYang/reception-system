@@ -1,3 +1,5 @@
+import { SvgIconTypeMap } from "@mui/material";
+import { OverridableComponent } from "@mui/material/OverridableComponent";
 import React from "react";
 
 export type RoomType = {
@@ -51,8 +53,8 @@ export type TaxiType = {
   id: number;
   peopleCount: number;
   carCount: number;
-  reservationTime: Date | string | null;
-  taxiCompany: string | null;
+  reservationTime: Date | string;
+  taxiCompany: string;
   isCompleted: boolean;
   isCancel: boolean;
 };
@@ -61,8 +63,8 @@ export type VipTaxiType = {
   id: number;
   taxiId: number;
   roomId: number;
-  taxi?: TaxiType;
-  room?: RoomType;
+  taxi: TaxiType;
+  room: RoomType;
 };
 
 export type ReserveListProps = {
@@ -186,6 +188,7 @@ export type GeneralTaxiData = {
   index: number;
   peopleCount: number;
   carCount: number;
+  reservationTime: string;
 }
 
 export type HandleEditDataProps = {
@@ -210,3 +213,33 @@ export type RoomsInfoProps = {
 export type TaxiInfo = {
   id: number;
 }
+
+export type ReserveTaxiListType = {
+  id: number;
+  name: string;
+  carCount: number;
+  peopleCount: number;
+  reservationTime: string | Date;
+  isCompleted: boolean;
+  isCancel: boolean;
+  taxiCompany: string | null;
+  route: string;
+  [key: string]: any;
+};
+
+export type CompleteListProps = {
+  title: string;
+  filterLogic: (taxi: ReserveTaxiListType) => boolean;
+  reserveTaxiList: ReserveTaxiListType[];
+  handleOnSubmit: (target: string, taxi: ReserveTaxiListType) => void;
+  icon: OverridableComponent<SvgIconTypeMap<{}, "svg">> & { muiName: string; };
+};
+
+export type NotCompleteListProps = {
+  setReserveTaxiList: React.Dispatch<React.SetStateAction<ReserveTaxiListType[]>>;
+  filterLogic: (taxi: ReserveTaxiListType) => boolean;
+  reserveTaxiList: ReserveTaxiListType[];
+  handleOnSubmit: (target: string, taxi: ReserveTaxiListType) => void;
+  editIcon: OverridableComponent<SvgIconTypeMap<{}, "svg">> & { muiName: string; };
+  cancelIcon: OverridableComponent<SvgIconTypeMap<{}, "svg">> & { muiName: string; };
+};

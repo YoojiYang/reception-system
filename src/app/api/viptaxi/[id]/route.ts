@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import prisma from '../../../../../prisma';
-import { genericGET, genericPUT, main, taxiDELETE } from '../../utils/utils';
+import { genericGET, genericPUT, taxiDELETE } from '../../utils/utils';
+import { updateData } from '@/app/utils/utils';
 
 // 各予約情報の取得
 export const GET = async (req: NextRequest, res: NextResponse) => {
@@ -19,18 +20,26 @@ export const GET = async (req: NextRequest, res: NextResponse) => {
 // タクシーの各予約情報の更新
 export const PUT = async (req: NextRequest, res: NextResponse) => {
   return genericPUT(req, res, async (id, data) => {
-    return await prisma.vipTaxi.update({
+    const updateData = await prisma.vipTaxi.update({
+      where: { id },
       data: {
         taxi: {
           update: {
             peopleCount: data.peopleCount,
             carCount: data.carCount,
             reservationTime: data.reservationTime,
+            taxiCompany: data.taxiCompany,
+            isCompleted: data.isCompleted,
+            isCancel: data.isCancel,
           }
         }
       },
-      where: { id },
+      include: {
+        taxi: true,
+        room: true,
+      },
     });
+    return updateData;
   }, "viptaxi");
 };
 

@@ -32,6 +32,9 @@ export const PUT = async (req: NextRequest, res: NextResponse) => {
           peopleCount: data.peopleCount,
           carCount: data.carCount,
           reservationTime: data.reservationTime,
+          taxiCompany: data.taxiCompany,
+          isCompleted: data.isCompleted,
+          isCancel: data.isCancel,
         }
       });
 
@@ -41,7 +44,10 @@ export const PUT = async (req: NextRequest, res: NextResponse) => {
           section: data.section,
           column: data.column,
           index: data.index,
-        }
+        },
+        include: {
+          taxi: true
+        },
       });
     },
     "generaltaxi"

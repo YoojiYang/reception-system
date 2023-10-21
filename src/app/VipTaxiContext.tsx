@@ -6,12 +6,13 @@ import { fetchAllData } from "./utils/utils";
 
 const VipTaxiContext = createContext<VipTaxiContextType | null>(null);
 
-export const fetchVipTaxis = async (setVipTaxi: Dispatch<SetStateAction<VipTaxiType[]>>) => {
+export const fetchVipTaxis = async (): Promise<VipTaxiType[]> => {
   try {
     const fetchedVipTaxis = await fetchAllData("viptaxi");
-    setVipTaxi(fetchedVipTaxis);
+    return fetchedVipTaxis;
   } catch (error) {
     console.error(error);
+    return [];
   }
 };
 
@@ -20,8 +21,12 @@ export const VipTaxiProvider: React.FC<VipTaxiProviderProps> = ({ children }) =>
   const [lastUpdated, setLastUpdated] = useState<number>(Date.now());
   
   useEffect(() => {
-    fetchVipTaxis(setVipTaxis);
-  }, [lastUpdated]);
+    const fetchData = async () => {
+      const fetchVipTaxisData = await fetchVipTaxis();
+      setVipTaxis(fetchVipTaxisData);
+    }
+    fetchData();
+  }, []);
 
   return (
     <VipTaxiContext.Provider value={{ vipTaxis, setVipTaxis, lastUpdated, setLastUpdated }}>

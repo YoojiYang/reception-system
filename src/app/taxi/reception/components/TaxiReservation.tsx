@@ -2,7 +2,7 @@ import CustomButton from "@/app/utils/components/CustomButton";
 import { useState } from "react";
 import { TaxiReservationProps } from "../../../../../types/types";
 import CustomSelect from "@/app/utils/components/CustomSelect";
-import { carCountOptions, columnOptions, deskSelectStyles, inChargeTaxiSelectStyles, indexOptions, peopleCountOptions, sectionOptions, taxiReceptoinLargeSelectStyles, taxiReceptoinSelectStyles } from "@/app/utils/selectOptions";
+import { carCountOptions, columnOptions, indexOptions, peopleCountOptions, sectionOptions, taxiReceptoinLargeSelectStyles, taxiReceptoinSelectStyles } from "@/app/utils/selectOptions";
 import CustomSmallSelect from "@/app/utils/components/CustomSmallSelect";
 import { indexFontCSS } from "@/app/utils/style";
 

@@ -79,8 +79,8 @@ model Taxi {
   id              Int      @id @default(autoincrement())
   peopleCount     Int      @default(2)
   carCount        Int      @default(1)
-  reservationTime String?
-  taxiCompany     String?
+  reservationTime String   @default("未定")
+  taxiCompany     String   @default("")
   isCompleted     Boolean  @default(false)
   isCancel        Boolean  @default(false)
   vipTaxi         VipTaxi?

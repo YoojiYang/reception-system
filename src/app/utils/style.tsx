@@ -53,10 +53,11 @@ export const deskIndexCSS = {
 }
 
 export const indexFontCSS = 'text-xl text-center font-bold'
-export const recordFontCSS = 'text-xl text-center justify-center'
+export const recordFontCSS = 'flex items-center text-xl text-center justify-center'
 export const recordFontLgCSS = 'text-lg text-center justify-center'
 export const numberFontCSS = 'text-4xl text-center font-bold'
 export const bigNumberFontCSS = 'text-5xl text-center font-bold'
 export const bgGrayCSS = 'p-4 bg-gray-200 rounded-2xl'
+export const bgDarkGrayCSS = 'p-4 bg-gray-500 rounded-2xl'
 export const bgEditCSS = 'p-4 bg-blue-100 rounded-2xl'
 export const borderBlueCSS= 'border border-4 border-blue-500'

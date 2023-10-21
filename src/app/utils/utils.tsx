@@ -200,12 +200,15 @@ export async function handleReserveCountChangeUpdate(
 export async function updateTaxi(
   route: string,
   data: {
-    peopleCount: number,
-    carCount: number,
+    peopleCount?: number,
+    carCount?: number,
     section?: number,
     column?: number,
     index?: number,
     reservationTime?: string,
+    isCompleted?: boolean,
+    isCancel?: boolean,
+    taxiCompany?: string,
   },
   editingTaxiId: number,
 ) {
@@ -223,6 +226,8 @@ export async function updateTaxi(
     if (!res.ok) {
       throw new Error(responseData.message || "Failed to update taxi .");
     }
+
+    return responseData.result;
 
   } catch (error) {
     console.log("Error updating taxi;", error);
@@ -326,12 +331,13 @@ export const createOptionsArray = (start: number, end: number) => {
 
 
 // taxi
-export const fetchGeneralTaxis = async (setGeneralTaxis: Dispatch<SetStateAction<GeneralTaxiType[]>>) => {
+export const fetchGeneralTaxis = async (): Promise<GeneralTaxiType[]> => {
   try {
     const fetchedGeneraltaxis = await fetchAllData("generaltaxi");
-    setGeneralTaxis(fetchedGeneraltaxis);
+    return fetchedGeneraltaxis;
   } catch (error) {
     console.error(error);
+    return [];
   }
 };
 

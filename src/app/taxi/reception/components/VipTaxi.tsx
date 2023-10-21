@@ -1,15 +1,15 @@
 import { VipTaxiType } from "../../../../../types/types";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { deleteVipTaxi, formatTime, updateTaxi } from "@/app/utils/utils";
 import CustomButton from "@/app/utils/components/CustomButton";
 import { carCountOptions, peopleCountOptions, reservationTimeOptions } from "@/app/utils/selectOptions";
 import CustomSelect from "@/app/utils/components/CustomSelect";
 import CustomStringSelect from "@/app/utils/components/CustomStringSelect";
-import { fetchVipTaxis, useVipTaxi } from "@/app/VipTaxiContext";
+import { useVipTaxi } from "@/app/VipTaxiContext";
 import { indexFontCSS, recordFontCSS, recordFontLgCSS } from "@/app/utils/style";
 
 const VipTaxi = () => {
-  const { vipTaxis, setVipTaxis, lastUpdated, setLastUpdated } = useVipTaxi();
+  const { vipTaxis, setVipTaxis } = useVipTaxi();
   const [editingTaxiId, setEditingTaxiId] = useState<number | null>(null);
   const [editPeopleCount, setEditPeopleCount] = useState<number>(0);
   const [editCarCount, setEditCarCount] = useState<number>(0);
@@ -22,17 +22,11 @@ const VipTaxi = () => {
   const handleDelete = async (taxiId: number) => {
     try {
       await deleteVipTaxi("viptaxi", taxiId);
-      fetchVipTaxis(setVipTaxis);
-      setLastUpdated(Date.now());
+      setVipTaxis(prevTaxis => prevTaxis.filter(taxi => taxi.id !== taxiId));
     } catch (error) {
       console.error("Failed to delete taxi:", error);
     }  
   };  
-  console.log('lastUpdated: ', lastUpdated);
-
-  useEffect(() => {
-    fetchVipTaxis(setVipTaxis);
-  }, [setVipTaxis, lastUpdated]);
 
   return (
     <div>
@@ -108,9 +102,10 @@ const VipTaxi = () => {
                       carCount: editCarCount,
                       reservationTime: editReservationTime,
                     };
-                    await updateTaxi("viptaxi", data, editingTaxiId);
-                    await fetchVipTaxis(setVipTaxis);
-                    setLastUpdated(Date.now());
+                    const updatedTaxi = await updateTaxi("viptaxi", data, editingTaxiId);
+                    setVipTaxis(prevTaxis => 
+                      prevTaxis.map(taxi => taxi.id === editingTaxiId ? updatedTaxi : taxi)
+                    );
                     setEditingTaxiId(null);
                   } else {
                     setEditPeopleCount(taxi.taxi?.peopleCount || 0);

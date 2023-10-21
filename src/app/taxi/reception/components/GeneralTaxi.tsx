@@ -13,7 +13,7 @@ const GeneralTaxi = ({ generalTaxis, setGeneralTaxis }: GeneralTaxiProps) => {
   const [editingTaxiId, setEditingTaxiId] = useState<number | null>(null);
 
   
-  
+  // idをkeyとしたオブジェクトに変換
   const formatedGeneralTaxis= generalTaxis.reduce<FormatedGeneralTaxiType>((acc, item) => {
     acc[String(item.id)] = item;
     return acc;
@@ -27,15 +27,24 @@ const GeneralTaxi = ({ generalTaxis, setGeneralTaxis }: GeneralTaxiProps) => {
   const handleDelete = async (taxiId: number) => {
     try {
       await deleteGeneralTaxi(taxiId);
-      fetchGeneralTaxis(setGeneralTaxis);
+      setGeneralTaxis(prevTaxis => prevTaxis.filter(taxi => taxi.id !== taxiId));
     } catch (error) {
       console.error("Failed to delete taxi:", error);
     }
   };
-
+  
   useEffect(() => {
-    fetchGeneralTaxis(setGeneralTaxis);
-  }, [setGeneralTaxis]);
+    const fetchData = async () => {
+      const fetchGeneralTaxisData = await fetchGeneralTaxis();
+      setGeneralTaxis(fetchGeneralTaxisData);
+    }
+    
+    fetchData();
+  }, []);
+  
+  
+  console.log('general: ',generalTaxis)
+  
 
   return (
     <div>
@@ -109,9 +118,10 @@ const GeneralTaxi = ({ generalTaxis, setGeneralTaxis }: GeneralTaxiProps) => {
                     index: index,
                     peopleCount: peopleCount,
                     carCount: carCount,
+                    reservationTime: "試合終了後"
                   };
-                  await postData("generaltaxi", data);
-                  fetchGeneralTaxis(setGeneralTaxis);
+                  const addedTaxi = await postData("generaltaxi", data);
+                  setGeneralTaxis(prevTaxis => [...prevTaxis, addedTaxi]);
                 }}
                 setEditing={ setIsNewPost }
                 setGeneralTaxis={ setGeneralTaxis }
@@ -132,8 +142,10 @@ const GeneralTaxi = ({ generalTaxis, setGeneralTaxis }: GeneralTaxiProps) => {
                   peopleCount: peopleCount,
                   carCount: carCount,
                 };
-                await updateTaxi("generaltaxi", data, editingTaxiId);
-                fetchGeneralTaxis(setGeneralTaxis);
+                const updatedTaxi = await updateTaxi("generaltaxi", data, editingTaxiId);
+                setGeneralTaxis(prevTaxis => 
+                  prevTaxis.map(taxi => taxi.id === editingTaxiId ? updatedTaxi : taxi)
+                );
               }}
               setEditing={ setIsEditing }
               setGeneralTaxis={ setGeneralTaxis }

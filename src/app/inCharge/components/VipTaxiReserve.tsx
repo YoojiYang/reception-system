@@ -13,8 +13,8 @@ import Select from 'react-select';
 
 const VipTaxiReserve = ({ currentRoom }: VipTaxiReservationProps) => {
   const { rooms, setRooms } = useRooms();
-  const { vipTaxis, setVipTaxis, lastUpdated, setLastUpdated } = useVipTaxi();
-  const [needOrNot, setNeedOrNot] = useState<string>("Unconfirmed");
+  const { vipTaxis, setVipTaxis } = useVipTaxi();
+  const [taxiReservation, setTaxiReservation] = useState<string>("Unconfirmed");
   const [peopleCount, setPeopleCount] = useState<number>(0);
   const [carCount, setCarCount] = useState<number>(0);
   const [reservationTime, setReservationTime] = useState<string>("試合終了後");
@@ -28,17 +28,14 @@ const VipTaxiReserve = ({ currentRoom }: VipTaxiReservationProps) => {
     e.preventDefault();
     
     try {
-      await postData(
-        "viptaxi",
-        {
-          roomId: currentRoom.id,
-          peopleCount: peopleCount,
-          carCount: carCount,
-          reservationTime: reservationTime,
-        },
-      );
-      fetchVipTaxis(setVipTaxis);
-      setLastUpdated(Date.now());
+      const data = {
+        roomId: currentRoom.id,
+        peopleCount: peopleCount,
+        carCount: carCount,
+        reservationTime: reservationTime,
+      };
+    const newTaxi = await postData("viptaxi", data);
+    setVipTaxis(prevTaxis => [...prevTaxis, newTaxi]);
     } catch (error) {
       console.error(error);
       return;
@@ -46,7 +43,7 @@ const VipTaxiReserve = ({ currentRoom }: VipTaxiReservationProps) => {
   };
 
   const submitTaxiStatus = (selectedOption: any) => {
-    setNeedOrNot(selectedOption.value);
+    setTaxiReservation(selectedOption.value);
 
     handleEditData({
       route: "rooms",
@@ -66,8 +63,7 @@ const VipTaxiReserve = ({ currentRoom }: VipTaxiReservationProps) => {
   const handleDelete = async (taxiId: number) => {
     try {
       await deleteVipTaxi("viptaxi", taxiId);
-      fetchVipTaxis(setVipTaxis);
-      setLastUpdated(Date.now());
+      setVipTaxis(prevTaxis => prevTaxis.filter(taxi => taxi.id !== taxiId));
     } catch (error) {
       console.error("Failed to delete taxi:", error);
     }
@@ -75,8 +71,8 @@ const VipTaxiReserve = ({ currentRoom }: VipTaxiReservationProps) => {
 
   // タクシーの予約状況を最新に更新する
   useEffect(() => {
-    fetchVipTaxis(setVipTaxis);
-  }, [setVipTaxis, lastUpdated]);
+    fetchVipTaxis();
+  }, []);
 
   console.log(currentRoom.taxiReservation)
     
@@ -102,7 +98,7 @@ const VipTaxiReserve = ({ currentRoom }: VipTaxiReservationProps) => {
               </div>
             </div>
           </div>
-        { needOrNot === "Need" && (
+        { taxiReservation === "Need" && (
           <form onSubmit={ handleSubmit }>
             <div className="h-auto">
               <div className="pt-2 grid grid-cols-6 items-center justify-center">
@@ -217,8 +213,10 @@ const VipTaxiReserve = ({ currentRoom }: VipTaxiReservationProps) => {
                               carCount: editCarCount,
                               reservationTime: editReservationTime,
                             };
-                            await updateTaxi("viptaxi", data, editingTaxiId);
-                            await fetchVipTaxis(setVipTaxis);
+                            const updatedTaxi = await updateTaxi("viptaxi", data, editingTaxiId);
+                            setVipTaxis(prevTaxis =>
+                              prevTaxis.map(taxi => taxi.id === updatedTaxi.id ? updatedTaxi : taxi
+                            ));
                             setEditingTaxiId(null);
                           } else {
                             setEditPeopleCount(taxi.taxi?.peopleCount || 0);

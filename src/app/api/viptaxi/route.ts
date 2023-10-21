@@ -27,7 +27,11 @@ export const POST = async (req: NextRequest, res: NextResponse) => {
             reservationTime: data.reservationTime,
           }
         }
-      }
+      },
+      include: {
+        taxi: true,
+        room: true,
+      },
     });
   }, "viptaxi");
 };

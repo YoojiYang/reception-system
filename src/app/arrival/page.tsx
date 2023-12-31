@@ -10,12 +10,11 @@ export default function Arrival() {
             </div>
             <div className={`${bgGrayCSS} mt-8`}>
               <div className="h-full w-full flex space-x-4 lg:space-x-8">
+                {/* BALCONYのみを表示 */}
                 <div>
-                  <RoomCard startRoomId={ 101 } endRoomId={ 107 } />
+                  <RoomCard startRoomId={ 101 } endRoomId={ 114 } />
                 </div>
-                <div>
-                  <RoomCard startRoomId={ 108 } endRoomId={ 114 } />
-                </div>
+                {/* BOXのみを表示 */}
                 <div>
                   <RoomCard startRoomId={ 201 } endRoomId={ 208 } />
                 </div>

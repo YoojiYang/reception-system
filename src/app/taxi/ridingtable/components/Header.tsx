@@ -5,6 +5,7 @@ type HeaderProps = {
   reserveTaxiList: ReserveTaxiListType[];
 };
 
+// TODO: 列の幅を調整する　
 const Header = ({ reserveTaxiList }: HeaderProps) => {
   return (
     <div>

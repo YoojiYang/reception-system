@@ -1,8 +1,8 @@
 'use client';
 
 import { Dispatch, SetStateAction, createContext, useContext, useEffect, useState } from "react";
-import { ArrivalContextType, ArrivalProviderProps, ArrivalType } from "../../types/types";
-import { fetchAllData } from "./utils/utils";
+import { ArrivalContextType, ArrivalProviderProps, ArrivalType } from "../../../types/types";
+import { fetchAllData } from "../utils/utils";
 
 const ArrivalContext = createContext<ArrivalContextType | null>(null);
 

@@ -4,10 +4,10 @@ import { useEffect, useState } from "react";
 import { VipTaxiReservationProps, VipTaxiType } from "../../../../types/types";
 import CustomStringSelect from "@/app/utils/components/CustomStringSelect";
 import { carCountOptions, inChargeTaxiSelectStyles, inChargeTaxiStringSelectStyles, needOrNotOptions, peopleCountOptions, reservationTimeOptions } from "@/app/utils/selectOptions";
-import { fetchVipTaxis, useVipTaxi } from "@/app/VipTaxiContext";
+import { fetchVipTaxis, useVipTaxi } from "@/app/context/VipTaxiContext";
 import { bgGrayCSS, indexFontCSS, recordFontCSS } from "@/app/utils/style";
 import CustomSmallSelect from "@/app/utils/components/CustomSmallSelect";
-import { fetchRooms, useRooms } from "@/app/RoomsContext";
+import { fetchRooms, useRooms } from "@/app/context/RoomsContext";
 import Select from 'react-select';
 
 

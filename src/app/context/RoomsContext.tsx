@@ -1,8 +1,8 @@
 'use client';
 
 import { Dispatch, SetStateAction, createContext, useContext, useEffect, useState } from "react";
-import { RoomType, RoomsContextType, RoomsProviderProps } from "../../types/types";
-import { fetchAllData } from "./utils/utils";
+import { RoomType, RoomsContextType, RoomsProviderProps } from "../../../types/types";
+import { fetchAllData } from "../utils/utils";
 
 const RoomsContext = createContext<RoomsContextType | null>(null);
 

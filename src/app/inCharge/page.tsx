@@ -3,14 +3,14 @@
 import { useEffect, useState } from "react"
 import { handleSetIdModalOpen } from "../utils/utils";
 import EditReserveCount from "./components/EditReserveCount";
-import { fetchRooms, useRooms } from "../RoomsContext";
-import { useArrival } from "../ArrivalContext";
+import { fetchRooms, useRooms } from "../context/RoomsContext";
+import { useArrival } from "../context/ArrivalContext";
 import Modal from "../utils/components/Modal";
 import VipTaxiReserve from "./components/VipTaxiReserve";
 import EditArrivalInfo from "./components/EditArrivalInfo";
 import { bgGrayCSS, indexFontCSS, pageTitleCSS, recordFontCSS } from "../utils/style";
 import Sidebar from "../utils/components/Sidebar";
-import { useVipTaxi } from "../VipTaxiContext";
+import { useVipTaxi } from "../context/VipTaxiContext";
 import { RoomType, TaxiInfo, VipTaxiType } from "../../../types/types";
 
 function InCharge() {

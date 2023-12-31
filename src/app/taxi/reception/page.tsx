@@ -3,7 +3,7 @@
 import { useState } from "react";
 import GeneralTaxi from "./components/GeneralTaxi";
 import VipTaxi from "./components/VipTaxi";
-import { GeneralTaxiType, VipTaxiType } from "../../../../types/types";
+import { GeneralTaxiType } from "../../../../types/types";
 import Sidebar from "@/app/utils/components/Sidebar";
 import { bgGrayCSS, pageTitleCSS } from "@/app/utils/style";
 

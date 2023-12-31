@@ -37,7 +37,7 @@ export const SidebarData = [
   {
     Title: "タクシー案内",
     icon:<LocalTaxiIcon fontSize={ fontSize } />,
-    link: "/taxi/usageinfo",
+    link: "/taxi/ridingtable",
   },
   {
     Title: "個室担当登録",

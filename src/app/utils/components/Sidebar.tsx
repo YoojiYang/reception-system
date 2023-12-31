@@ -28,7 +28,7 @@ function Sidebar({ alwaysOpen = false}) {
         { !alwaysOpen && (
           <div>
             <button
-              className="m-2 p-1 z-10 absolute top-0 left-0 border border-4 border-gray-500 rounded-lg"
+              className="m-2 p-1 z-10 absolute top-0 left-0 border-4 border-gray-500 rounded-lg"
               onClick={ handleSidebarToggle }
               >
               <MenuIcon fontSize="large" />

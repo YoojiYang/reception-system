@@ -6,8 +6,8 @@ import { AcceptProps } from "../../../../types/types";
 import IncrementButton from "@/app/utils/components/IncrementButton";
 import { useEffect, useState } from "react";
 import CustomButton from "@/app/utils/components/CustomButton";
-import { useRooms } from "@/app/RoomsContext";
-import { fetchArrival } from "@/app/ArrivalContext";
+import { useRooms } from "@/app/context/RoomsContext";
+import { fetchArrival } from "@/app/context/ArrivalContext";
 import { deskSelectStyles, roomNameOptions } from "@/app/utils/selectOptions";
 import CustomSelect from "@/app/utils/components/CustomSelect";
 

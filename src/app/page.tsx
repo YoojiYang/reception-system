@@ -6,6 +6,8 @@ import { postData } from "./utils/utils";
 
 export default function Home() {
 
+  // データの初期化と、ノーションへの連携
+  // Todo： ノーションへの連携機能を実装する
   const handleResetClick = () => {
     const isConfirmed = window.confirm("今日のデータを初期化します。よろしいですか？");
     if (isConfirmed) {

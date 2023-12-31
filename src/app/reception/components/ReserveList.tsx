@@ -4,7 +4,7 @@ import { useMemo } from 'react';
 import { RoomType, ReserveListProps } from '../../../../types/types';
 import { formatTime } from '../../utils/utils';
 import CustomButton from '@/app/utils/components/CustomButton';
-import { useRooms } from '@/app/RoomsContext';
+import { useRooms } from '@/app/context/RoomsContext';
 import ReserveIndex from './ReserveIndex';
 import { receptionListCSS } from '@/app/utils/style';
 

@@ -1,8 +1,8 @@
 'use client';
 
 import { Dispatch, SetStateAction, createContext, useContext, useEffect, useState } from "react";
-import { VipTaxiContextType, VipTaxiProviderProps, VipTaxiType } from "../../types/types";
-import { fetchAllData } from "./utils/utils";
+import { VipTaxiContextType, VipTaxiProviderProps, VipTaxiType } from "../../../types/types";
+import { fetchAllData } from "../utils/utils";
 
 const VipTaxiContext = createContext<VipTaxiContextType | null>(null);
 

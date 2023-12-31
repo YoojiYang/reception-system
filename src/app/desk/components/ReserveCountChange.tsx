@@ -3,7 +3,7 @@ import DecrementButton from "@/app/utils/components/DecrementButton"
 import IncrementButton from "@/app/utils/components/IncrementButton"
 import { ReserveCountChangeProps, RoomType } from "../../../../types/types"
 import { useEffect, useState } from "react";
-import { fetchRooms, useRooms } from "@/app/RoomsContext";
+import { fetchRooms, useRooms } from "@/app/context/RoomsContext";
 import { handleEditData } from "@/app/utils/utils";
 import { deskSelectStyles, roomNameOptions } from "@/app/utils/selectOptions";
 import CustomSelect from "@/app/utils/components/CustomSelect";

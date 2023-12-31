@@ -3,7 +3,7 @@ import { CompleteListProps, ReserveTaxiListType } from "../../../../../types/typ
 import CustomIconButton from "@/app/utils/components/CustomIcomButton"
 import { formatTime } from "@/app/utils/utils"
 
-const CompleteList = ({ title, filterLogic, reserveTaxiList, handleOnSubmit, icon: IconComponent }: CompleteListProps) => {
+const CompleteList = ({ title, filterLogic, reserveTaxiList, handleOnSubmit, onClickTarget, icon: IconComponent }: CompleteListProps) => {
   return (
     <div>
       <div className={`${bgDarkGrayCSS} mt-8`}>
@@ -31,7 +31,7 @@ const CompleteList = ({ title, filterLogic, reserveTaxiList, handleOnSubmit, ico
             </p>
             <div className="flex justify-center items-center space-x-2">
               <CustomIconButton
-                onClick={ () => handleOnSubmit("isCancel", taxi) }
+                onClick={ () => handleOnSubmit(onClickTarget, taxi) }
                 className="bg-gray-300 hover:bg-gray-700 "
               >
                 <IconComponent />

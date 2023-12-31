@@ -5,7 +5,7 @@ import CustomButton from "@/app/utils/components/CustomButton";
 import { carCountOptions, peopleCountOptions, reservationTimeOptions } from "@/app/utils/selectOptions";
 import CustomSelect from "@/app/utils/components/CustomSelect";
 import CustomStringSelect from "@/app/utils/components/CustomStringSelect";
-import { useVipTaxi } from "@/app/VipTaxiContext";
+import { useVipTaxi } from "@/app/context/VipTaxiContext";
 import { indexFontCSS, recordFontCSS, recordFontLgCSS } from "@/app/utils/style";
 
 const VipTaxi = () => {

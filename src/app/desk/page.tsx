@@ -6,7 +6,7 @@ import ReserveCountChange from "./components/ReserveCountChange";
 import { formatTimeToJTV } from "../utils/utils";
 import { ArrivalType } from "../../../types/types";
 import CustomButton from "../utils/components/CustomButton";
-import { useArrival } from "../ArrivalContext";
+import { useArrival } from "../context/ArrivalContext";
 import Modal from "../utils/components/Modal";
 import Sidebar from "../utils/components/Sidebar";
 import { deskIndexCSS, pageTitleCSS } from "../utils/style";

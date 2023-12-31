@@ -1,7 +1,8 @@
 import { GeneralTaxiType, ReserveTaxiListType, VipTaxiType } from "../../../../../types/types";
 
+// gerMargeTaxiListで使用
 const formatGeneralTaxi = (item: GeneralTaxiType) => ({
-  id: item.id,
+  id: item.taxiId,
   name: `T${ item.id >= 3 ? item.id + 1 : item.id }`,
   carCount: item.taxi.carCount,
   peopleCount: item.taxi.peopleCount,
@@ -12,8 +13,9 @@ const formatGeneralTaxi = (item: GeneralTaxiType) => ({
   route: "generaltaxi",
 });
 
+// gerMargeTaxiListで使用
 const formatVipTaxi = (item: VipTaxiType) => ({
-  id: item.id,
+  id: item.taxiId,
   name:item.room.name,
   carCount:item.taxi.carCount,
   peopleCount:item.taxi.peopleCount,
@@ -22,8 +24,10 @@ const formatVipTaxi = (item: VipTaxiType) => ({
   isCancel:item.taxi.isCancel,
   taxiCompany: item.taxi.taxiCompany,
   route: "viptaxi",
+
 });
 
+// getReserveTaxiListで使用
 // 一般タクシーとvipタクシーを結合
 const getMargeTaxiList = (generalTaxis: GeneralTaxiType[], vipTaxis: VipTaxiType[]) => {
   const margeTaxiList = [
@@ -34,6 +38,7 @@ const getMargeTaxiList = (generalTaxis: GeneralTaxiType[], vipTaxis: VipTaxiType
   return margeTaxiList;
 }
 
+// getRiserveTaxiListで使用
 const getExpandedTaxiList = (margeTaxiList: ReserveTaxiListType[]) => {
   let uniqueId = margeTaxiList.length + 1;
 
@@ -48,6 +53,7 @@ const getExpandedTaxiList = (margeTaxiList: ReserveTaxiListType[]) => {
   return expandedList;
 }
 
+// getReserveTaxiListで使用
 const getSortedReserveTaxiList = (expandedTaxiList: ReserveTaxiListType[]) => {
   const sortedReserveTaxiList = expandedTaxiList.sort((a, b) => {
     // Date型の場合
@@ -69,6 +75,7 @@ const getSortedReserveTaxiList = (expandedTaxiList: ReserveTaxiListType[]) => {
   return sortedReserveTaxiList;
 }
 
+// タクシー予約情報を取得し、案内用のリストを作成する
 export const getReserveTaxiList = (generalTaxis: GeneralTaxiType[], vipTaxis: VipTaxiType[]) => {
   // 一般タクシーとvipタクシーを結合
   const margeTaxiList = getMargeTaxiList(generalTaxis, vipTaxis);
@@ -87,7 +94,9 @@ export const updateTaxiList = (taxi: ReserveTaxiListType, updatedTaxi: any, setR
     setReserveTaxiList((prevTaxis: GeneralTaxiType[]) =>
       prevTaxis.map(item => item.id === taxi.id ? formatGeneralTaxiData : item)
     );
-  } else if (taxi.route === "viptaxi") {
+  }
+
+  if (taxi.route === "viptaxi") {
     const formatVipTaxiData = formatVipTaxi(updatedTaxi);
     setReserveTaxiList((prevTaxis: VipTaxiType[]) => 
       prevTaxis.map(item => item.id === taxi.id ? formatVipTaxiData : item)

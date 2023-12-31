@@ -205,6 +205,7 @@ export type ArrivalRecordCounts = {
 
 export type RoomsInfoProps = {
   totalReserveCount: number;
+  
   currentCount: number;
   arrivalRecordCounts: Record<number, number>;
   room: RoomType;
@@ -232,6 +233,7 @@ export type CompleteListProps = {
   filterLogic: (taxi: ReserveTaxiListType) => boolean;
   reserveTaxiList: ReserveTaxiListType[];
   handleOnSubmit: (target: string, taxi: ReserveTaxiListType) => void;
+  onClickTarget: string;
   icon: OverridableComponent<SvgIconTypeMap<{}, "svg">> & { muiName: string; };
 };
 

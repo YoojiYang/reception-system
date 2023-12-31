@@ -1,11 +1,11 @@
 import CustomButton from "@/app/utils/components/CustomButton";
 import { EditArrivalInfoProps } from "../../../../types/types";
 import { fetchAllData, postData, setRoomsMap } from "@/app/utils/utils";
-import { useRooms } from "@/app/RoomsContext";
+import { useRooms } from "@/app/context/RoomsContext";
 import { useState } from "react";
 import IncrementButton from "@/app/utils/components/IncrementButton";
 import DecrementButton from "@/app/utils/components/DecrementButton";
-import { useArrival } from "@/app/ArrivalContext";
+import { useArrival } from "@/app/context/ArrivalContext";
 import { bgGrayCSS, indexFontCSS } from "@/app/utils/style";
 
 function EditArrivalInfo({ currentRoom, setModalOpen }: EditArrivalInfoProps) {

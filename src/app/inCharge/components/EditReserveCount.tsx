@@ -1,6 +1,6 @@
 import { handleReserveCountChangeUpdate, setRoomsMap } from "@/app/utils/utils";
 import { EditReserveCountProps } from "../../../../types/types"
-import { fetchRooms, useRooms } from "@/app/RoomsContext";
+import { fetchRooms, useRooms } from "@/app/context/RoomsContext";
 import { useEffect, useState } from "react";
 import CustomButton from "@/app/utils/components/CustomButton";
 import IncrementButton from "@/app/utils/components/IncrementButton";

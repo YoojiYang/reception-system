@@ -3,7 +3,7 @@ import { RoomType, EditReserveListProps } from '../../../../types/types';
 import ReserveIndex from './ReserveIndex';
 import { formatTime, handleEditReserveList } from '../../utils/utils';
 import CustomButton from "@/app/utils/components/CustomButton";
-import { fetchRooms, useRooms } from "@/app/RoomsContext";
+import { fetchRooms, useRooms } from "@/app/context/RoomsContext";
 import { borderBlueCSS, receptionEditCSS } from "@/app/utils/style";
 
 const EditReserveList = ({ setEditing }: EditReserveListProps) => {

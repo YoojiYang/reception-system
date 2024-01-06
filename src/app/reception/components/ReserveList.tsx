@@ -1,4 +1,4 @@
-"use strict";
+"use client";
 
 import { useMemo } from 'react';
 import { RoomType, ReserveListProps } from '../../../../types/types';
@@ -33,7 +33,13 @@ export function ReserveList({ setEditing }: ReserveListProps) {
               <p className={ receptionListCSS.number }>{ room.reserveChildrenCount }</p>
               <p className={ receptionListCSS.arrivalTime }>{ room.scheduledArrival ? formatTime(room.scheduledArrival) : "" }</p>
             </div>
-            <p className={ receptionListCSS.staff }></p>
+            <p className={ receptionListCSS.staff }>
+              <ul className='flex'>
+                {room.inCharges.map((inCharge) => (
+                  <li key={ inCharge.inChargeId }>{ inCharge.inCharge ? inCharge.inCharge.name : "" }</li>
+                ))}
+              </ul>
+            </p>
           </div>
         </div>
       ))}

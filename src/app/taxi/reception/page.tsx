@@ -3,12 +3,10 @@
 import { useState } from "react";
 import GeneralTaxi from "./components/GeneralTaxi";
 import VipTaxi from "./components/VipTaxi";
-import { GeneralTaxiType } from "../../../../types/types";
 import Sidebar from "@/app/utils/components/Sidebar";
 import { bgGrayCSS, pageTitleCSS } from "@/app/utils/style";
 
 function TaxiReception() {
-  const [generalTaxis, setGeneralTaxis] = useState<GeneralTaxiType[]>([]);
 
   return (
     <div className='mx-8'>
@@ -19,7 +17,7 @@ function TaxiReception() {
         <h1 className={ pageTitleCSS }>タクシー受付</h1>
       </div>
       <div className={`${bgGrayCSS} mt-8`}>
-        <GeneralTaxi generalTaxis={ generalTaxis } setGeneralTaxis={ setGeneralTaxis } />
+        <GeneralTaxi />
       </div>
       <div className={`${bgGrayCSS} mt-8`}>
         <VipTaxi />

@@ -1,33 +1,46 @@
 import { recordFontCSS } from "@/app/utils/style"
-import { NotCompleteListProps, ReserveTaxiListType } from "../../../../../types/types"
+import { NotCompleteListProps, TaxiType } from "../../../../../types/types"
 import CustomIconButton from "@/app/utils/components/CustomIcomButton"
-import { formatTime, updateTaxi } from "@/app/utils/utils"
+import { formatTime, updateData } from "@/app/utils/utils"
 import CustomStringSelect from "@/app/utils/components/CustomStringSelect"
 import { taxiCompanyOptions } from "@/app/utils/selectOptions"
-import { updateTaxiList } from "./utils"
+import { useTaxis } from "@/app/context/TaxiContext"
 
-const NotCompleteList = ({ setReserveTaxiList, filterLogic, reserveTaxiList, handleOnSubmit, editIcon: EditIconComponent, cancelIcon: CancelIconComponent }: NotCompleteListProps) => {
+const NotCompleteList = ({ handleOnSubmit, editIcon: EditIconComponent, cancelIcon: CancelIconComponent }: NotCompleteListProps) => {
+  const { taxis, setTaxis } = useTaxis();
 
-  const handleTaxiCompanySelect = async (value: string, taxi: ReserveTaxiListType) => {
+  const handleTaxiCompanySelect = async (value: string, taxi: TaxiType) => {
     const data = {
       taxiCompany: value,
     }
-    const updatedTaxi = await updateTaxi(taxi.route, data, taxi.id);
+    console.log("taxi", taxi);
+    const updatedTaxi = await updateData("taxi", data, taxi.id);
+    console.log(updatedTaxi);
 
-    updateTaxiList(taxi, updatedTaxi, setReserveTaxiList);
+    if (updatedTaxi) {
+      setTaxis(prevTaxis => prevTaxis.map(t => {
+        if (t.id === updatedTaxi.id) {
+          return { ...t, ...updatedTaxi, room: t.room };
+        }
+        return t;
+      }));
+    }
   }
 
   return (
     <div>
-      {reserveTaxiList
-      .filter(filterLogic)
-      .map((taxi: ReserveTaxiListType) => (
+      {taxis
+      .filter((taxi: TaxiType) => !taxi.isCompleted && !taxi.isCancel)
+      .map((taxi: TaxiType) => (
         <div 
         key={ taxi.id }
         className='h-12 w-full m-4 grid grid-cols-7 gap-2 items-center'
         >
-          <p className={ `${recordFontCSS} h-full py-2 bg-white rounded-xl` }>{ taxi.name }</p>
-          <p className={ `${recordFontCSS} h-full py-2 bg-white rounded-xl` }>{ taxi.reservationTime instanceof Date ? formatTime(taxi.reservationTime) : taxi.reservationTime }
+          <p className={ `${recordFontCSS} h-full py-2 bg-white rounded-xl` }>
+            { taxi.isGeneralTaxi ? "T" + taxi.generalTaxiId : taxi.room?.name }
+          </p>
+          <p className={ `${recordFontCSS} h-full py-2 bg-white rounded-xl` }>
+            { taxi.afterEvent ? "試合終了後" : formatTime(taxi.reservationTime) }
           </p>
           {/* TODO: 担当者を動的に変更する */}
           <p className={ `${recordFontCSS} col-span-2 h-full py-2 bg-white rounded-xl` }>担当者,</p>

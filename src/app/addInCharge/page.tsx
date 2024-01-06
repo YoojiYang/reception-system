@@ -1,11 +1,11 @@
 'use client';
 
-import { Dispatch, SetStateAction, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import Sidebar from '../utils/components/Sidebar';
 import { bgEditCSS, bgGrayCSS, indexFontCSS, pageTitleCSS, recordFontCSS } from '../utils/style';
 import CustomButton from '../utils/components/CustomButton';
 import { InChargeType } from '../../../types/types';
-import { deleteData, fetchAllData, handleEditData, postData, updateData } from '../utils/utils';
+import { deleteData, fetchInCharge, postData, updateData } from '../utils/utils';
 
 function Reception() {
   const [adding, setAdding] = useState<boolean>(false);
@@ -13,15 +13,6 @@ function Reception() {
   const [editingInChargeId, setEditingInChargeId] = useState<number | null>(null);
   const [editingInChargeName, setEditingInChargeName] = useState<string>("");
 
-  const fetchInCharge = async (setInCharge: Dispatch<SetStateAction<InChargeType[]>>) => {
-    try {
-      const fetchedInCharge = await fetchAllData("inCharge");
-      setInCharge(fetchedInCharge);
-    } catch (error) {
-      console.error(error);
-    }
-  }
-  
   const handleAddInCharge = async (name: string) => {
     const data = {
       name: name
@@ -56,7 +47,6 @@ function Reception() {
 
   useEffect(() => {
     fetchInCharge(setInCharge);
-    console.log(inCharge);
     }, [setInCharge]);
 
   return (
@@ -77,13 +67,13 @@ function Reception() {
           .map((inCharge: InChargeType) => (
           <div key={ inCharge.id } className='grid grid-cols-4 items-center'>
             { editingInChargeId === inCharge.id ? (
-              <div className='flex col-span-3 grid grid-cols-3'>
+              <div className='col-span-3 grid grid-cols-3'>
                 <input 
                   type="text"
                   name='name'
                   defaultValue={ inCharge.name }
                   onChange={ (e) => setEditingInChargeName(e.target.value)}
-                  className={`${recordFontCSS} mx-16 my-4 p-4 col-span-2 bg-white border border-4 border-blue-500 rounded-xl`}
+                  className={`${recordFontCSS} mx-16 my-4 p-4 col-span-2 bg-white border-4 border-blue-500 rounded-xl`}
                   />
                 <CustomButton
                   text='完了'
@@ -92,7 +82,7 @@ function Reception() {
                 />
               </div>
             ) : (
-              <div className='flex col-span-3 grid grid-cols-3'>
+              <div className='col-span-3 grid grid-cols-3'>
                 <p className={`${recordFontCSS} mx-16 my-4 p-4 col-span-2 bg-white rounded-xl`}>{ inCharge.name }</p>
                 <CustomButton
                 text='編集'
@@ -114,12 +104,12 @@ function Reception() {
         </div>
         { (adding) ? (
           <div className={`${bgEditCSS} h-auto w-full my-8 items-center`}>
-            <div className={`flex grid grid-cols-4`}>
+            <div className={`grid grid-cols-4`}>
               <input 
                 type="text"
                 name='name'
                 onChange={ (e) => setEditingInChargeName(e.target.value)}
-                className={`${recordFontCSS} mx-16 my-4 p-4 col-span-2 bg-white border border-4 border-blue-500 rounded-xl`}
+                className={`${recordFontCSS} mx-16 my-4 p-4 col-span-2 bg-white border-4 border-blue-500 rounded-xl`}
                 />
               <CustomButton
                 text='完了'

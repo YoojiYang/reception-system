@@ -1,246 +1,144 @@
+import { use, useEffect, useState } from "react";
+import { convertUTCToJST, deleteData, formatTime, updateData } from "@/app/utils/utils";
 import CustomButton from "@/app/utils/components/CustomButton";
-import { deleteVipTaxi, formatTime, handleEditData, postData, updateTaxi } from "@/app/utils/utils";
-import { useEffect, useState } from "react";
-import { VipTaxiReservationProps, VipTaxiType } from "../../../../types/types";
-import CustomStringSelect from "@/app/utils/components/CustomStringSelect";
-import { carCountOptions, inChargeTaxiSelectStyles, inChargeTaxiStringSelectStyles, needOrNotOptions, peopleCountOptions, reservationTimeOptions } from "@/app/utils/selectOptions";
-import { fetchVipTaxis, useVipTaxi } from "@/app/context/VipTaxiContext";
-import { bgGrayCSS, indexFontCSS, recordFontCSS } from "@/app/utils/style";
-import CustomSmallSelect from "@/app/utils/components/CustomSmallSelect";
-import { fetchRooms, useRooms } from "@/app/context/RoomsContext";
-import Select from 'react-select';
+import { deskSelectStyles, roomNameOptions } from "@/app/utils/selectOptions";
+import CustomSelect from "@/app/utils/components/CustomSelect";
+import { indexFontCSS, recordFontCSS, recordFontLgCSS } from "@/app/utils/style";
+import { useTaxis } from "@/app/context/TaxiContext";
+import { useRooms } from "@/app/context/RoomsContext";
+import SelectDigitalClock from "@/app/utils/components/SelectDigitalClock";
+import { Dayjs } from "dayjs";
+import { TaxiType } from "../../../../types/types";
+import { IsAfterEventCheckBox } from "@/app/taxi/reception/components/IsAfterEventCheckBox";
 
+interface Props {
+  currentRoomId: number;
+}
 
-const VipTaxiReserve = ({ currentRoom }: VipTaxiReservationProps) => {
-  const { rooms, setRooms } = useRooms();
-  const { vipTaxis, setVipTaxis } = useVipTaxi();
-  const [taxiReservation, setTaxiReservation] = useState<string>("Unconfirmed");
-  const [peopleCount, setPeopleCount] = useState<number>(0);
-  const [carCount, setCarCount] = useState<number>(0);
-  const [reservationTime, setReservationTime] = useState<string>("試合終了後");
+const VipTaxiReserve = ({ currentRoomId }: Props ) => {
+  const { taxis, setTaxis } = useTaxis();
+  const { rooms } = useRooms();
   const [editingTaxiId, setEditingTaxiId] = useState<number | null>(null);
-  const [editPeopleCount, setEditPeopleCount] = useState<number>(0);
-  const [editCarCount, setEditCarCount] = useState<number>(0);
-  const [editReservationTime, setEditReservationTime] = useState<string>("試合終了後");
+  const [reservationTime, setReservationTime] = useState<Dayjs>();
+  const [roomId, setRoomId] = useState<number>();
+  const [company, setCompany] = useState<string>("");
+  const [memo, setMemo] = useState<string>("");
+  const [isAfterEvent, setIsAfterEvent] = useState<boolean>(false);
+  const [checked, setChecked] = useState<boolean>(false);
 
-  // タクシーの予約情報をデータベースに登録する
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    
-    try {
-      const data = {
-        roomId: currentRoom.id,
-        peopleCount: peopleCount,
-        carCount: carCount,
-        reservationTime: reservationTime,
-      };
-    const newTaxi = await postData("viptaxi", data);
-    setVipTaxis(prevTaxis => [...prevTaxis, newTaxi]);
-    } catch (error) {
-      console.error(error);
-      return;
-    }
-  };
-
-  const submitTaxiStatus = (selectedOption: any) => {
-    setTaxiReservation(selectedOption.value);
-
-    handleEditData({
-      route: "rooms",
-      data: { taxiReservation: selectedOption.value },
-      editingId: currentRoom.id,
-      onSuccess: () => {
-        fetchRooms(setRooms);
-      },
-      onError: (error) => {
-        console.error(error);
-      },
-    });
-  };
-
-
-  // タクシーの削除処理
-  const handleDelete = async (taxiId: number) => {
-    try {
-      await deleteVipTaxi("viptaxi", taxiId);
-      setVipTaxis(prevTaxis => prevTaxis.filter(taxi => taxi.id !== taxiId));
-    } catch (error) {
-      console.error("Failed to delete taxi:", error);
-    }
-  };
-
-  // タクシーの予約状況を最新に更新する
   useEffect(() => {
-    fetchVipTaxis();
-  }, []);
+    const selectedRoom = rooms.find(room => room.id === roomId);
+    if (selectedRoom && selectedRoom.company) {
+      setCompany(selectedRoom.company);
+    } else {
+      setCompany("No company");
+    }
+  }, [roomId, rooms]);
 
-  console.log(currentRoom.taxiReservation)
-    
   return (
     <div>
-      <div className={` ${bgGrayCSS} m-4`}>
-          <div className="m-2 flex justify-between items-center">
-            <h3 className={ indexFontCSS }>[ タクシー予約 ]</h3>
-          </div>
-          <div className="my-8 p-4 flex items-center bg-white rounded-2xl">
-            <p className="text-xl w-full text-center font-bold">必要 or 不要</p>
-            <div className="h-full w-full text-center">
-              <div className="w-full">
-                <Select
-                  options={ needOrNotOptions }
-                  isClearable={ false }
-                  name="needOrNot"
-                  value={ needOrNotOptions.find((option) => option.value === currentRoom.taxiReservation) }
-                  onChange={ submitTaxiStatus }
-                  className={ `text-center h-full w-full flex items-center justify-center text-xl bg-inherit z-30` }
-                  styles={ inChargeTaxiStringSelectStyles }
-                />
-              </div>
-            </div>
-          </div>
-        { taxiReservation === "Need" && (
-          <form onSubmit={ handleSubmit }>
-            <div className="h-auto">
-              <div className="pt-2 grid grid-cols-6 items-center justify-center">
-                  <p className={ indexFontCSS }>人数</p>
-                  <p className={ indexFontCSS }>台数</p>
-                  <p className={ `${indexFontCSS} col-span-3` }>予約時間</p>
-              </div>
-              <div className="pt-1 grid grid-cols-6 items-center justify-center">
-                <div className="">
-                  <div className="h-full w-full text-center">
-                    <div className="">
-                      <CustomSmallSelect
-                        options={ peopleCountOptions }
-                        name="peopleCount"
-                        value={ peopleCount }
-                        onChange={ setPeopleCount }
-                        styles={ inChargeTaxiSelectStyles }
-                        />
+      <div>
+        <div className="py-2 grid grid-cols-8">
+          <p className={ indexFontCSS }>予約時間</p>
+          <p className={ indexFontCSS }>memo</p>
+        </div>
+      </div>
+      <div>
+        <div className='h-full p-2 bg-white rounded-2xl'>
+          {taxis
+            .filter((taxi: TaxiType) => taxi.roomId === currentRoomId)
+            .sort((a: TaxiType, b: TaxiType) => a.id - b.id)
+            .map((taxi: TaxiType) => (
+            <div
+              key={taxi.id}
+              className='h-12 mt-4 grid grid-cols-8 gap-2 items-center'
+            >
+              { editingTaxiId === taxi.id ? (
+                // 編集モード
+                <div className="col-span-6 grid grid-cols-5">
+                  <div className="h-40 p-4 w-full">
+                    <div className="flex">
+                      <IsAfterEventCheckBox checked={ checked } setChecked={ setChecked } setIsAfterEvent={ setIsAfterEvent }/>
+                      <p>試合終了後</p>
                     </div>
-                  </div>
-                </div>
-                <div className="">
-                  <div className="h-full w-full text-center">
-                    <div className="">
-                      <CustomSmallSelect
-                        options={ carCountOptions }
-                        name="carCount"
-                        value={ carCount }
-                        onChange={ setCarCount }
-                        styles={ inChargeTaxiSelectStyles }
-                        />
+                    {!isAfterEvent &&
+                    <div className="h-40">
+                      <SelectDigitalClock setReservationTime={ setReservationTime }/>
                     </div>
+                    }
                   </div>
+                  <input
+                    type="text"
+                    value={ memo }
+                    onChange={ (e) => setMemo(e.target.value) }
+                    className="text-3xl w-full"
+                    placeholder="memo"
+                  />
                 </div>
-                <div className="col-span-3">
-                  <div className="h-full w-full text-center">
-                    <div className="">
-                      <CustomStringSelect
-                        options={ reservationTimeOptions }
-                        name="reservationTimevationTime"
-                        value={ reservationTime }
-                        onChange={ setReservationTime }
-                        styles={ inChargeTaxiStringSelectStyles }
-                        />
-                    </div>
-                  </div>
+              ) : (
+                // 非編集モード
+                <div className="col-span-6 grid grid-cols-5">
+                  <p className={ recordFontCSS }>
+                    { taxi.afterEvent ? "試合終了後" : formatTime(taxi.reservationTime) }</p>
+                  <p className={ recordFontCSS }>{ taxi.memo }</p>  
                 </div>
-                <div className="">
-                  <CustomButton text={ "登録" } type="submit" className={ "py-3 px-6 text-lg" }/>
-                </div>
-              </div>
-            </div>
-            <div className="h-auto mt-8 py-4 bg-white rounded-2xl">
-              <div className="grid grid-cols-6 items-center">
-                <div className="col-span-4 grid grid-cols-6">
-                  <p className='text-center h-full flex items-center justify-center text-xl font-bold'>台数</p>
-                  <p className='text-center h-full flex items-center justify-center text-xl font-bold'>人数</p>
-                  <p className='text-center h-full flex items-center justify-center text-xl font-bold col-span-4'>予約時間</p>
-                </div>
-              </div>
-              {vipTaxis
-                .filter((taxi: VipTaxiType) => taxi.roomId === currentRoom.id)
-                .sort((a: VipTaxiType, b: VipTaxiType) => a.id - b.id)
-                .map((taxi: VipTaxiType, index: number) => (
-                  <div key={taxi.id} className='h-12 mt-4 grid grid-cols-6'>
-                    { editingTaxiId === taxi.id ? (
-                      <div className="col-span-4 grid grid-cols-4">
-                        <CustomSmallSelect
-                          options={ peopleCountOptions }
-                          name="peopleCount"
-                          value={ editPeopleCount }
-                          onChange={ setEditPeopleCount }
-                          className="h-full w-full"
-                          styles={ inChargeTaxiSelectStyles }
-                          />
-                        <CustomSmallSelect
-                          options={ carCountOptions }
-                          name="carCount"
-                          value={ editCarCount }
-                          onChange={ setEditCarCount }
-                          className="h-full w-full"
-                          styles={ inChargeTaxiSelectStyles }
-                          />
-                        <CustomStringSelect
-                          options={ reservationTimeOptions }
-                          name="reservationTime"
-                          value={ editReservationTime }
-                          onChange={ setEditReservationTime }
-                          className="col-span-2 h-full w-full"
-                          styles={ inChargeTaxiStringSelectStyles }
-                          />
-                      </div>
-                    ) : (
-                      <div className="col-span-4 grid grid-cols-6">
-                        <p className='text-center h-full flex items-center justify-center text-2xl'>{ taxi.taxi?.peopleCount}</p>
-                        <p className='text-center h-full flex items-center justify-center text-2xl'>{ taxi.taxi?.carCount}</p>
-                        <p className='text-center h-full flex items-center justify-center text-2xl col-span-4'>{
-                          taxi.taxi?.reservationTime  instanceof Date
-                          ? formatTime(taxi.taxi?.reservationTime)
-                          : taxi.taxi?.reservationTime
-                        }
-                        </p>
-                      </div>
-                    )}
-                    <div className="col-span-2 flex space-x-2 justify-center">
-                      <CustomButton
-                        text={ editingTaxiId === taxi.id ? "完了" : "編集" }
-                        onClick={ async () => {
-                          if (editingTaxiId === taxi.id) {
-                            const data = {
-                              peopleCount: editPeopleCount,
-                              carCount: editCarCount,
-                              reservationTime: editReservationTime,
-                            };
-                            const updatedTaxi = await updateTaxi("viptaxi", data, editingTaxiId);
-                            setVipTaxis(prevTaxis =>
-                              prevTaxis.map(taxi => taxi.id === updatedTaxi.id ? updatedTaxi : taxi
-                            ));
-                            setEditingTaxiId(null);
-                          } else {
-                            setEditPeopleCount(taxi.taxi?.peopleCount || 0);
-                            setEditCarCount(taxi.taxi?.carCount || 0);
-                            setEditReservationTime("試合終了後");
-                            setEditingTaxiId(taxi.id);
+              )}
+              <CustomButton
+                text={ editingTaxiId === taxi.id ? "完了" : "編集" }
+                onClick={ async () => {
+                  if (editingTaxiId === taxi.id) {
+                    let jstTime: Date | undefined = undefined;
+                    if (reservationTime) {
+                      jstTime = convertUTCToJST(reservationTime);
+                    }
+                    const data = {
+                      roomId: roomId,
+                      reservationTime: jstTime,
+                      afterEvent: isAfterEvent,
+                      memo: memo,
+                    };
+
+                    console.log("data", data);
+                    try {
+                      const updateTaxi = await updateData("taxi", data, taxi.id);
+
+                      setTaxis(prevTaxis =>
+                        prevTaxis.map(t => {
+                          if (t.id === taxi.id) {
+                            const relatedRoom = rooms.find(room => room.id === updateTaxi.roomId);
+                            return { ...updateTaxi, room: relatedRoom || t.room};
                           }
-                        }}
-                        className={ "py-3 px-6 text-md" }
-                      />
-                      <CustomButton
-                        text={ "削除" }
-                        onClick={ () => handleDelete(taxi.id) }
-                        className={ "py-3 px-6 text-md"}
-                      />
-                    </div>
-                  </div>
-              ))}
+                          return t;
+                        })
+                      );
+                    } catch (error) {
+                      console.error("Error updating taxi: ", error);
+                    }
+
+                    setEditingTaxiId(null);
+                    } else {
+                      setRoomId(taxi.roomId)
+                      setReservationTime(reservationTime);
+                      setEditingTaxiId(taxi.id);
+                      setMemo(taxi.memo);
+                    }
+                  }}
+                className={ "py-2 px-2 text-lg" }
+              />
+              <CustomButton
+                text={ "削除" }
+                onClick={ () => {
+                  deleteData("taxi", taxi.id)
+                  setTaxis(prevTaxis => prevTaxis.filter(t => t.id !== taxi.id));
+                }}
+                className={ "py-2 px-2 text-lg"}
+              />
             </div>
-          </form>
-        )}
+          ))}
+        </div>
       </div>
     </div>
   );
 }
 
-export default VipTaxiReserve
+export default VipTaxiReserve;

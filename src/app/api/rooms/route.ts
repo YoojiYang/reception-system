@@ -3,34 +3,22 @@ import { genericGET, main } from '../utils/utils';
 import { RoomType } from '../../../../types/types';
 import prisma from '../../../../prisma';
 
-// export default withCORS(async (req: NextApiRequest, res: NextApiResponse) => {
-//   if (req.method === "GET") {
-//     return genericGET(req, res, () => prisma.room.findMany(), "rooms");
-//   }
-
-//   if (req.method === "PUT") {
-//     try {
-//       await main();
-//        // req.bodyの内容を文字列として読み取る
-//       const rawData = await req.text();
-  
-//       const roomsData: Record<number, RoomType> = JSON.parse(rawData);
-//       console.log("roomsData:", roomsData);
-//       const results = await updateMultipleRooms(roomsData);
-  
-//       return NextResponse.json({ message: "Success", results }, { status: 200 });
-//     } catch (error) {
-//       console.error("Error in PUT method for rooms:", error);
-//       return NextResponse.json({ message: "Error", error }, { status: 500 });
-//     }
-//   }
-// });
-
-
-
 // 全部屋の情報の取得
 export const GET = (req: NextRequest, res: NextResponse) => {
-  return genericGET(req, res, () => prisma.room.findMany(), "rooms");
+  return genericGET(
+    req,
+    res,
+    () => prisma.room.findMany({
+      include: {
+        inCharges: {
+          include: {
+            inCharge: true
+          }
+        }
+      }
+    }),
+    "rooms"
+    );
 }
 
 // 1. updateAllRooms関数の修正
@@ -60,11 +48,9 @@ const updateMultipleRooms = async (roomsData: Record<number, RoomType>) => {
 export const PUT = async (req: NextRequest, res: NextResponse) => {
   try {
     await main();
-     // req.bodyの内容を文字列として読み取る
     const rawData = await req.text();
 
     const roomsData: Record<number, RoomType> = JSON.parse(rawData);
-    console.log("roomsData:", roomsData);
     const results = await updateMultipleRooms(roomsData);
 
     return NextResponse.json({ message: "Success", results }, { status: 200 });

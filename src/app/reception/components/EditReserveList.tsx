@@ -1,14 +1,18 @@
 import { useState, useEffect, useCallback, useMemo, use } from "react";
-import { RoomType, EditReserveListProps } from '../../../../types/types';
+import { RoomType, EditReserveListProps, InChargeType, RoomInChargeType } from '../../../../types/types';
 import ReserveIndex from './ReserveIndex';
-import { formatTime, handleEditReserveList } from '../../utils/utils';
+import { deleteAllData, fetchInCharge, formatTime, handleEditReserveList, postData } from '../../utils/utils';
 import CustomButton from "@/app/utils/components/CustomButton";
 import { fetchRooms, useRooms } from "@/app/context/RoomsContext";
 import { borderBlueCSS, receptionEditCSS } from "@/app/utils/style";
+import SelectInCharge from "./SelectInCharge";
+import SelectReserveTime from "./SelectedReserveTime";
 
 const EditReserveList = ({ setEditing }: EditReserveListProps) => {
   const { rooms, setRooms } = useRooms();
   const[editedRooms, setEditedRooms] = useState<Record<number, RoomType>>({});
+  const [inCharges, setInCharges] = useState<InChargeType[]>([]);
+  const [updateInChargesList, setUpdateInChargesList] = useState<RoomInChargeType[]>([]);
 
   // 変更内容を記録
   const handleInputChange = useCallback((roomId: number, key: keyof RoomType, value: any) => {
@@ -21,20 +25,40 @@ const EditReserveList = ({ setEditing }: EditReserveListProps) => {
     }));
   }, []);
   
+  // async function updateInCharge(updateInChargesList: RoomInChargeType[]) {
+  //   try {
+  //     // トランザクションを開始
+  //     await prisma.$transaction(async (prisma) => {
+  //       // 全てのレコードを削除
+  //       await prisma.roomInCharge.deleteMany();
+        
+  //       // 新しいレコードを登録
+  //       await postData("roomInCharge", updateInChargesList);
+  //     });
+  //   } catch (error) {
+  //     console.error("An error occurred during the update process:", error);
+  //   }
+  // }
   
-  const handleRegister = () => {
-    console.log("handleRegister");
+
+  const handleRegister = async () => {
+    // roomテーブルの更新
     handleEditReserveList(
       editedRooms, 
       rooms, 
-      (response) => {
+      () => {
         fetchRooms(setRooms);
       }, 
       (error) => {
         console.error(error);
       }
-      );
-      setEditing(false);
+    );
+    
+    // roomInChargeテーブルの更新
+    await deleteAllData("roomInCharge");
+    await postData("roomInCharge", updateInChargesList);
+
+    setEditing(false);
     };
   
     // roomsが更新されるたびに、editedRoomsを更新する
@@ -49,6 +73,10 @@ const EditReserveList = ({ setEditing }: EditReserveListProps) => {
       fetchRooms(setRooms);
     }, [setRooms]);
     
+    useEffect(() => {
+      fetchInCharge(setInCharges);
+      }, [setInCharges]);
+
     const sortedRooms = useMemo(() => {
     return [...rooms].sort((a: RoomType, b: RoomType) => a.id - b.id);
   }, [rooms]);
@@ -63,7 +91,7 @@ const EditReserveList = ({ setEditing }: EditReserveListProps) => {
       <div>
         {sortedRooms.map((room: RoomType) => (
           <form key={room.id}>
-            <div className={ receptionEditCSS.outside1 }>
+            <div className={ receptionEditCSS.outside1 }> 
               <div className={ receptionEditCSS.outside21 }>
                 <p className={ receptionEditCSS.roomName }>{ room.name }</p>
                 <input
@@ -93,34 +121,16 @@ const EditReserveList = ({ setEditing }: EditReserveListProps) => {
                     className={ `${receptionEditCSS.number} ${borderBlueCSS}` }
                     />
                   {/* 到着予定時刻 */}
-                  <input
-                    type='text'
-                    name='scheduledArrival'
-                    defaultValue={ room.scheduledArrival ? formatTime(room.scheduledArrival) : "" }
-                    onChange={ (e) => {
-                      const timeValue = e.target.value;
-                      const [hours, minutes] = timeValue.split(':').map(Number);
-                      
-                      const currentDate = new Date();
-                      currentDate.setUTCHours(hours, minutes, 0, 0);
-                      const isoString = currentDate.toISOString();
-                      
-                      handleInputChange(room.id, 'scheduledArrival', isoString);
-                    }}
-                    className={ `${receptionEditCSS.arrivalTime} ${borderBlueCSS}` }
+                  <div className="h-16">
+                    <SelectReserveTime
+                      roomId={ room.id }
+                      handleInputChange={ handleInputChange }
+                      defaultTime={ room.scheduledArrival }
                     />
+                  </div>
                 </div>
                 {/* 担当者 */}
-                <select
-                  name="inCharge"
-                  className={ `${receptionEditCSS.staff} ${borderBlueCSS}` }
-                  multiple
-                  >
-                  {/* TODO */}
-                  {/* {inCharges.map((inCharge: InChargeType) => (
-                    <option key={ inCharge.id } value={ inCharge.id }>{ inCharge.name }</option>
-                  ))} */}
-                </select>
+                <SelectInCharge updateInChargesList={ updateInChargesList } setUpdateInChargesList={ setUpdateInChargesList } roomId={ room.id }/>
               </div>
             </div>
           </form>

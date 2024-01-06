@@ -22,7 +22,6 @@ export const needOrNotOptions = [
   { value: "Unconfirmed", label: "未確認" },
 ];
 
-export const peopleCountOptions = createOptionsArray(0, 4);
 export const carCountOptions = createOptionsArray(0, 5);
 export const reservationTimeOptions = [
   { value: "試合終了後", label: "試合終了後" },
@@ -38,7 +37,7 @@ export const roomNameOptions = (rooms: RoomType[]) => {
 
 
 
-export const deMKSelectStyles = {
+export const deskSelectStyles = {
   control: (provided: any) => ({
     ...provided,
     height: 100,

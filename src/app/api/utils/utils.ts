@@ -5,7 +5,6 @@ type FetchFunction = () => Promise<any>;
 type ResponseKey = string;
 type CreateFunction = (data: any) => Promise<any>;
 type UpdateFunction = (id: number, data: any) => Promise<any>;
-type FindFunction = (id: number) => Promise<any>;
 type DeleteFunction = (id: number) => Promise<any>;
 
 const prisma = new PrismaClient({ log: ["info"] });
@@ -101,38 +100,6 @@ export const genericDELETE = async (
     const id: number = parseInt(req.url.split(`/${endpoint}/`)[1]);
 
     await deleteFn(id);
-
-    return NextResponse.json({ message: "Success" }, { status: 200, headers: { "Access-Control-Allow-Origin": "*" } });
-
-    } catch (error) {
-      console.error(`Error in DELETE method for ${endpoint}:`, error);
-      return NextResponse.json({ message: "Error", error }, { status: 500, headers: { "Access-Control-Allow-Origin": "*" } });
-    }
-  };
-
-export const taxiDELETE = async (
-  req: NextRequest,
-  res: NextResponse,
-  findfn: FindFunction,
-  deleteFn: DeleteFunction,
-  endpoint: string
-) => {
-  if (!req.url) {
-    throw new Error("URL is not defined");
-  }
-
-  try {
-    const id: number = parseInt(req.url.split(`/${endpoint}/`)[1]);
-
-    await main();
-
-    const record = await findfn(id);
-
-    if (!record || !record.taxiId) {
-      return NextResponse.json({ message: `Taxi not found for the given ${endpoint} ID: ${record}`, error: ` No such ${endpoint}` }, { status: 404 });
-    }
-
-    await deleteFn(record.taxiId);
 
     return NextResponse.json({ message: "Success" }, { status: 200, headers: { "Access-Control-Allow-Origin": "*" } });
 

@@ -3,7 +3,6 @@ import { NextRequest, NextResponse } from 'next/server';
 import prisma from '../../../../../prisma';
 
 // 各部屋情報の取得
-
 export const GET = async (req: NextRequest, res: NextResponse) => {
   const roomId: number = parseInt(req.url.split("/arrival/")[1]);
 

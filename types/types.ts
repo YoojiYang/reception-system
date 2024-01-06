@@ -12,6 +12,7 @@ export type RoomType = {
   changedAdultsCount: number;
   changedChildrenCount: number;
   taxiReservation: needOrNotStatus;
+  inCharges: RoomInChargeType[]
 };
 
 export enum needOrNotStatus {
@@ -40,31 +41,28 @@ export type InChargeType = {
   name: string;
 };
 
-export type GeneralTaxiType = {
-  id: number;
-  taxiId: number;
-  section: number;
-  column: number;
-  index: number;
-  taxi: TaxiType;
+export type RoomInChargeType = {
+  roomId: number;
+  inChargeId: number;
+  inCharge?: InChargeType;
 };
 
 export type TaxiType = {
   id: number;
-  peopleCount: number;
-  carCount: number;
-  reservationTime: Date | string;
-  taxiCompany: string;
+  peopleCount?: number;
+  reservationTime?: Date;
+  afterEvent: boolean;
+  taxiCompany?: string;
+  memo: string;
   isCompleted: boolean;
   isCancel: boolean;
-};
-
-export type VipTaxiType = {
-  id: number;
-  taxiId: number;
-  roomId: number;
-  taxi: TaxiType;
-  room: RoomType;
+  isGeneralTaxi: boolean;
+  generalTaxiId?: number;
+  room?: RoomType;
+  roomId?: number;
+  section?: number;
+  column?: number;
+  index?: number;
 };
 
 export type ReserveListProps = {
@@ -76,7 +74,6 @@ export type EditReserveListProps = {
 };
 
 export type AcceptProps = {
-  setAccepting: React.Dispatch<React.SetStateAction<boolean>>;
   setArrivals: React.Dispatch<React.SetStateAction<ArrivalType[]>>;
   lastUpdated: number;
   setLastUpdated: React.Dispatch<React.SetStateAction<number>>;
@@ -122,9 +119,9 @@ export type ArrivalProviderProps = {
   children: React.ReactNode;
 };
 
-export type VipTaxiContextType = {
-  vipTaxis: VipTaxiType[];
-  setVipTaxis: React.Dispatch<React.SetStateAction<VipTaxiType[]>>;
+export type TaxiContextType = {
+  taxis:TaxiType[];
+  setTaxis: React.Dispatch<React.SetStateAction<TaxiType[]>>;
   lastUpdated: number;
   setLastUpdated: React.Dispatch<React.SetStateAction<number>>;
 };
@@ -144,32 +141,22 @@ export type EditReserveCountProps = {
   setModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-export type GeneralTaxiProps = {
-  generalTaxis: GeneralTaxiType[];
-  setGeneralTaxis: React.Dispatch<React.SetStateAction<GeneralTaxiType[]>>;
-};
+// export type GeneralTaxiProps = {
+//   generalTaxis: GeneralTaxiType[];
+//   setGeneralTaxis: React.Dispatch<React.SetStateAction<GeneralTaxiType[]>>;
+// };
 
-export type FormatedGeneralTaxiType = {
-  [key: string]: GeneralTaxiType | undefined;
-};
+// export type FormatedGeneralTaxiType = {
+//   [key: string]: GeneralTaxiType | undefined;
+// };
 
-export type VipTaxiProps = {
-  vipTaxis: VipTaxiType[];
-  setVipTaxis: React.Dispatch<React.SetStateAction<VipTaxiType[]>>;
-};
+// export type VipTaxiProps = {
+//   vipTaxis: VipTaxiType[];
+//   setVipTaxis: React.Dispatch<React.SetStateAction<VipTaxiType[]>>;
+// };
 
-export type TaxiReservationProps = {
-  operationType: "create" | "update";
-  onSubmit: (
-    section: number,
-    column: number,
-    index: number,
-    peopleCount: number,
-    carCount: number,
-    ) => void;
-  setEditing: React.Dispatch<React.SetStateAction<boolean>>;
-  setGeneralTaxis: React.Dispatch<React.SetStateAction<GeneralTaxiType[]>>;
-  initialValues?: GeneralTaxiType| undefined;
+export type AddTaxiProps = {
+  setTaxis: React.Dispatch<React.SetStateAction<TaxiType[]>>;
 };
 
 export type VipTaxiReservationProps = {
@@ -183,12 +170,19 @@ export type ModalProps = {
 };
 
 export type GeneralTaxiData = {
-  section: number;
-  column: number;
-  index: number;
-  peopleCount: number;
-  carCount: number;
-  reservationTime: string;
+  section?: number;
+  column?: number;
+  index?: number;
+  memo?: string;
+  afterEvent: boolean;
+  isGeneralTaxi: boolean;
+}
+
+export type VipTaxiData = {
+  roomId?: number;
+  reservationTime?: Date;
+  memo?: string;
+  afterEvent: boolean;
 }
 
 export type HandleEditDataProps = {
@@ -218,8 +212,6 @@ export type TaxiInfo = {
 export type ReserveTaxiListType = {
   id: number;
   name: string;
-  carCount: number;
-  peopleCount: number;
   reservationTime: string | Date;
   isCompleted: boolean;
   isCancel: boolean;
@@ -230,18 +222,14 @@ export type ReserveTaxiListType = {
 
 export type CompleteListProps = {
   title: string;
-  filterLogic: (taxi: ReserveTaxiListType) => boolean;
-  reserveTaxiList: ReserveTaxiListType[];
-  handleOnSubmit: (target: string, taxi: ReserveTaxiListType) => void;
+  filterLogic: (taxi: TaxiType) => boolean;
+  handleOnSubmit: (target: string, taxi: TaxiType) => void;
   onClickTarget: string;
   icon: OverridableComponent<SvgIconTypeMap<{}, "svg">> & { muiName: string; };
 };
 
 export type NotCompleteListProps = {
-  setReserveTaxiList: React.Dispatch<React.SetStateAction<ReserveTaxiListType[]>>;
-  filterLogic: (taxi: ReserveTaxiListType) => boolean;
-  reserveTaxiList: ReserveTaxiListType[];
-  handleOnSubmit: (target: string, taxi: ReserveTaxiListType) => void;
+  handleOnSubmit: (target: string, taxi: TaxiType) => void;
   editIcon: OverridableComponent<SvgIconTypeMap<{}, "svg">> & { muiName: string; };
   cancelIcon: OverridableComponent<SvgIconTypeMap<{}, "svg">> & { muiName: string; };
 };

@@ -1,12 +1,15 @@
 import { indexFontCSS } from "@/app/utils/style";
 import { ReserveTaxiListType } from "../../../../../types/types";
+import { useTaxis } from "@/app/context/TaxiContext";
 
 type HeaderProps = {
   reserveTaxiList: ReserveTaxiListType[];
 };
 
 // TODO: 列の幅を調整する　
-const Header = ({ reserveTaxiList }: HeaderProps) => {
+const Header = () => {
+  const { taxis } = useTaxis();
+
   return (
     <div>
       <div className="flex mx-8 my-4 justify-between">
@@ -15,7 +18,7 @@ const Header = ({ reserveTaxiList }: HeaderProps) => {
           <h2 className="text-center text-2xl font-bold space-x-2">
             <span>残り</span> 
             <span className="text-4xl font-black">
-            {reserveTaxiList
+            {taxis
               .filter(taxi => taxi.isCompleted === false && taxi.isCancel === false)
               .length}
             </span>

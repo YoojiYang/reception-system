@@ -3,7 +3,6 @@
 import { useState } from "react";
 import Accept from "./components/Accept";
 import ReserveCountChange from "./components/ReserveCountChange";
-import { formatTimeToJTV } from "../utils/utils";
 import { ArrivalType } from "../../../types/types";
 import CustomButton from "../utils/components/CustomButton";
 import { useArrival } from "../context/ArrivalContext";
@@ -11,14 +10,13 @@ import Modal from "../utils/components/Modal";
 import Sidebar from "../utils/components/Sidebar";
 import { deskIndexCSS, pageTitleCSS } from "../utils/style";
 import DeskIndex from "./components/DeskIndex";
+import { formatTimeToJTV } from "../utils/utils";
 
 function Desk() {
   const { arrivals, setArrivals, lastUpdated, setLastUpdated } = useArrival();
-  const [accepting, setAccepting] = useState<boolean>(false);
   const [countChange, setCountChange] = useState<boolean>(false);
 
   const closeModal = () => {
-    setAccepting(false);
     setCountChange(false);
   }
 
@@ -31,8 +29,8 @@ function Desk() {
         <div>
           <h1 className={ pageTitleCSS }>来場者登録</h1>
         </div>
+        <Accept setArrivals={ setArrivals } lastUpdated={ lastUpdated } setLastUpdated={ setLastUpdated }/>
         <div className='pb-4 h-auto flex items-center justify-end space-x-8'>
-          <CustomButton text={ "新規登録" } onClick={ () => { setAccepting(true) }} className={ "py-4 px-8 text-xl" } />
           <CustomButton text={ "予約人数変更" } onClick={ () => { setCountChange(true) }} className={ "py-4 px-8 text-xl" } />
         </div>
         <div className="p-4 bg-gray-200 rounded-2xl">
@@ -58,11 +56,6 @@ function Desk() {
               ))}
           </div>
         </div>
-        { accepting && (
-          <Modal isVisible={ accepting } onClose={ closeModal }>
-            <Accept setAccepting={ setAccepting } setArrivals={ setArrivals } lastUpdated={ lastUpdated } setLastUpdated={ setLastUpdated }/>
-          </Modal>
-        )}
         { countChange && (
           <Modal isVisible={ countChange } onClose={ closeModal }>
             <ReserveCountChange setCountChange={ setCountChange }/>

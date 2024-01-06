@@ -60,8 +60,6 @@ model Meal {
   hasLostItem    Boolean           @default(false)
   room           Room              @relation(fields: [roomId], references: [id])
   roomId         Int               @unique
-
-
 }
 
 
@@ -74,6 +72,8 @@ model Taxi {
   memo            String       @default("")
   isCompleted     Boolean      @default(false)
   isCancel        Boolean      @default(false)
+  isGeneralTaxi   Boolean      @default(false)
+  generalTaxiId   Int?         @unique
   room            Room?        @relation(fields: [roomId], references: [id])
   roomId          Int?
   section         Int?

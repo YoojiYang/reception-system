@@ -10,13 +10,14 @@ import VipTaxiReserve from "./components/VipTaxiReserve";
 import EditArrivalInfo from "./components/EditArrivalInfo";
 import { bgGrayCSS, indexFontCSS, pageTitleCSS, recordFontCSS } from "../utils/style";
 import Sidebar from "../utils/components/Sidebar";
-import { useVipTaxi } from "../context/VipTaxiContext";
-import { RoomType, TaxiInfo, VipTaxiType } from "../../../types/types";
+import { RoomType, TaxiInfo, TaxiType } from "../../../types/types";
+import { useTaxis } from "../context/TaxiContext";
+import AddVipTaxiReserve from "./components/AddVipTaxiReserve";
 
 function InCharge() {
   const { rooms, setRooms } = useRooms();
   const { arrivalCounts } = useArrival();
-  const { vipTaxis } = useVipTaxi();
+  const { taxis, setTaxis } = useTaxis();
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [currentRoomId, setCurrentRoomId] = useState<number | null>(null);
 
@@ -31,10 +32,14 @@ function InCharge() {
   }
 
   // タクシーの利用状況を確認する
-  const getTaxiInfoByRoom = (vipTaxis: VipTaxiType[]) => {
+  const getTaxiInfoByRoom = (taxis: TaxiType[]) => {
     const taxiInfoByRoom: { [key: number]: TaxiInfo[] } = {};
 
-    vipTaxis.forEach(item => {
+    taxis.forEach(item => {
+      if (!item.roomId) {
+        return;
+      }
+
       const roomId = item.roomId;
       if (!taxiInfoByRoom[roomId]) {
         taxiInfoByRoom[roomId] = [];
@@ -54,7 +59,7 @@ function InCharge() {
       return "不要";
     }
 
-    const taxiInfoByRoom = getTaxiInfoByRoom(vipTaxis);
+    const taxiInfoByRoom = getTaxiInfoByRoom(taxis);
     const roomTaxis = taxiInfoByRoom[room.id];
     if (!roomTaxis) {
       return `0台`
@@ -118,7 +123,12 @@ function InCharge() {
             </div>
             <EditArrivalInfo currentRoom={ currentRoom } closeModal={ closeModal } setModalOpen={ setIsModalOpen }/>
             <EditReserveCount currentRoom={ currentRoom } setModalOpen={ setIsModalOpen }/>
-            <VipTaxiReserve currentRoom={ currentRoom } />
+            { currentRoomId && (
+            <div>
+              <AddVipTaxiReserve setTaxis={ setTaxis } currentRoomId={ currentRoomId }/>
+              <VipTaxiReserve currentRoomId={ currentRoomId }/>
+            </div>
+            )}
           </Modal>
         )}
       </div>

@@ -36,7 +36,7 @@ function Sidebar({ alwaysOpen = false}) {
           </div>
         )}
         <div
-          className={`transition-all duration-300 transform ${isOpened ? 'translate-x-0' : '-translate-x-full'} w-52 fixed top-0 left-0 h-full overflow-x-hidden`}
+          className={`z-50 transition-all duration-300 transform ${isOpened ? 'translate-x-0' : '-translate-x-full'} w-52 fixed top-0 left-0 h-full overflow-x-hidden`}
           >
           <div className="h-screen w-full bg-gray-200/80">
             <div className="p-5 text-center text-2xl">

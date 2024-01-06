@@ -1,6 +1,6 @@
-import { ArrivalRecordCounts, ArrivalType, GeneralTaxiData, GeneralTaxiType, HandleEditDataProps, RoomType } from "../../../types/types";
+import { Dayjs } from "dayjs";
+import { HandleEditDataProps, InChargeType, RoomType } from "../../../types/types";
 import { Dispatch, SetStateAction } from "react";
-
 
 export function formatTimeToJTV(isoDateString: Date) {
   const date = new Date(isoDateString);
@@ -12,12 +12,34 @@ export function formatTimeToJTV(isoDateString: Date) {
   return `${String(hours).padStart(2, '0')}:${minutes}`;
 }
 
-export function formatTime(isoDateString: Date) {
+export function convertUTCToJST(dayjsDate: Dayjs | null | undefined) {
+  console.log("dayjsDate", dayjsDate);
+  if (!dayjsDate || !dayjsDate.isValid()) return undefined;
+  const date = dayjsDate.toDate();
+  const jstTime = new Date(date.getTime() + 9 * 60 * 60 * 1000);
+  console.log("jstTime", jstTime);
+  return jstTime;
+}
+
+export function formatTime(isoDateString: Date | undefined) {
+  if (!isoDateString) return '';
+  
   const date = new Date(isoDateString);
   const hours = String(date.getUTCHours()).padStart(2, '0');
   const minutes = String(date.getUTCMinutes()).padStart(2, '0');
     return `${hours}:${minutes}`;
   }
+
+
+  export const fetchInCharge = async (setInCharge: Dispatch<SetStateAction<InChargeType[]>>) => {
+    try {
+      const fetchedInCharge = await fetchAllData("inCharge");
+      setInCharge(fetchedInCharge);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+  
   
   // ＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
   // CRUDメソッド
@@ -52,51 +74,86 @@ export async function updateData(route: string, data: Record<string, any>, id?: 
       headers: {
         'Content-Type': 'application/json',
       },
-    });  
+    });
     
     const json = await res.json()
-
+    
     if (!res.ok) {
       throw new Error(json.message || `Failed to update ${route} .`);
     }
+    
+    return json.result;
+    
   }catch (error) {
     console.log(`Error updating ${route}:`, error);
+    throw error;
   }
 }
 
-
-
-export async function handleEditData(props: HandleEditDataProps){
-  const { route, data, editingId, onSuccess, onError } = props;
-
+export const deleteData = async (route: string, id: number) => {
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/api/${route}/${editingId}`, {
-    method: 'PUT',
-    body: JSON.stringify(data),
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  });
-  const responseData = await res.json();
-  
-  if (!res.ok) {
-    throw new Error(responseData.message || "Failed to update data.");
-  }
-  
-  if (onSuccess) {
-    onSuccess(responseData);
-  }
-  
-  } catch (error) {
-    console.log(`Error updating ${route}:`, error);
-    if (onError) {
-      onError(error);
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/api/${route}/${id}`, {
+      method: 'DELETE',
+    });
+    const responseData = await res.json();
+    if (!res.ok) {
+      throw new Error(responseData.message || `Failed to delete ${route}.`);
     }
+    return responseData;
+  } catch (error) {
+    console.error(`Error deleting ${route}:`, error);
+    throw error;
+  }
+};
+
+export const deleteAllData = async (route: string) => {
+  try {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/api/${route}`, {
+      method: 'DELETE',
+    });
+    const responseData = await res.json();
+    if (!res.ok) {
+      throw new Error(responseData.message || `Failed to delete ${route}.`);
+    }
+    return responseData;
+  } catch (error) {
+    console.error(`Error deleting ${route}:`, error);
+    throw error;
   }
 }
 
 
-export function setRoomsMap(rooms: RoomType[]) {
+// export async function handleEditData(props: HandleEditDataProps){
+  //   const { route, data, editingId, onSuccess, onError } = props;
+
+//   try {
+//     const res = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/api/${route}/${editingId}`, {
+//     method: 'PUT',
+//     body: JSON.stringify(data),
+//     headers: {
+//       'Content-Type': 'application/json',
+//     },
+//   });
+//   const responseData = await res.json();
+  
+//   if (!res.ok) {
+//     throw new Error(responseData.message || "Failed to update data.");
+//   }
+  
+//   if (onSuccess) {
+//     onSuccess(responseData);
+//   }
+  
+//   } catch (error) {
+//     console.log(`Error updating ${route}:`, error);
+//     if (onError) {
+//       onError(error);
+//     }
+//   }
+// }
+
+
+function setRoomsMap(rooms: RoomType[]) {
   const roomsMap: Record<number, RoomType> = {};
   rooms.forEach(room => {
     roomsMap[room.id] = room;
@@ -105,7 +162,7 @@ export function setRoomsMap(rooms: RoomType[]) {
 }
 
 // 情報の更新
-export function deepEqual(obj1: any, obj2: any): boolean {
+function deepEqual(obj1: any, obj2: any): boolean {
   if (obj1 === obj2) return true;
 
   if (typeof obj1 !== "object" || obj1 === null || typeof obj2 !== "object" || obj2 === null) return false;
@@ -122,6 +179,27 @@ export function deepEqual(obj1: any, obj2: any): boolean {
   return true;
 }
 
+async function updateRoomInCharges(roomId: number, inChargesIds: number[]) {
+  // 既存のリレーションを削除
+  await prisma.roomInCharge.deleteMany({
+    where: {
+      roomId: roomId,
+    }
+  });
+
+  // 新しいリレーションを作成
+  const createMany = inChargesIds.map(id => {
+    return prisma.roomInCharge.create({
+      data: {
+        roomId: roomId,
+        inChargeId: id,
+      }
+    });
+  });
+
+  await Promise.all(createMany);
+}
+
 export async function handleEditReserveList(
   editedRooms: Record<number, RoomType>,
   rooms: RoomType[],
@@ -129,18 +207,19 @@ export async function handleEditReserveList(
   onError: (error: any) => void
   ) {
     const roomsMap = setRoomsMap(rooms);
-    
     const changes: Record<number, RoomType> = {};
+
     for (const id in editedRooms) {
-      const originalRoom = roomsMap[parseInt(id)];
-      if (originalRoom && !deepEqual(editedRooms[id], originalRoom)) {
-        changes[id] = editedRooms[id];
+      const roomId = parseInt(id);
+      
+      console.log("roomId", roomId);
+
+      const originalRoom = roomsMap[roomId];
+      if (originalRoom && !deepEqual(editedRooms[roomId], originalRoom)) {
+        changes[roomId] = editedRooms[roomId];
       }
+
     }
-  if (Object.keys(changes).length === 0) {
-    console.log('No changes detected.');
-    return;
-  }
 
   try {
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/api/rooms`, {
@@ -161,136 +240,121 @@ export async function handleEditReserveList(
 }
 
 
-export async function handleReserveCountChangeUpdate(
-  selectedRoom: RoomType | undefined,
-  changeAdultsCount: number,
-  changeChildrenCount: number,
-  onSuccess: (response: any) => void,
-  onError: (error: any) => void
-) {
-  if (!selectedRoom) {
-    console.error("Room not found.");
-    return;
-  }
+// export async function handleReserveCountChangeUpdate(
+//   selectedRoom: RoomType | undefined,
+//   changeAdultsCount: number,
+//   changeChildrenCount: number,
+//   onSuccess: (response: any) => void,
+//   onError: (error: any) => void
+// ) {
+//   if (!selectedRoom) {
+//     console.error("Room not found.");
+//     return;
+//   }
 
-  const updatedRoom = {
-    ...selectedRoom,
-    changedAdultsCount: selectedRoom.changedAdultsCount + changeAdultsCount,
-    changedChildrenCount: selectedRoom.changedChildrenCount + changeChildrenCount,
-  };
+//   const updatedRoom = {
+//     ...selectedRoom,
+//     changedAdultsCount: selectedRoom.changedAdultsCount + changeAdultsCount,
+//     changedChildrenCount: selectedRoom.changedChildrenCount + changeChildrenCount,
+//   };
 
-  try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/api/rooms/${selectedRoom.id}`, {
-      method: 'PUT',
-      body: JSON.stringify(updatedRoom),
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
-    const responseData = await res.json();
-    if (!res.ok) {
-      throw new Error(responseData.message || "Failed to update room.");
-    }
-    onSuccess(responseData);
-  } catch (error) {
-    onError(error);
-  }
-}
+//   try {
+//     const res = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/api/rooms/${selectedRoom.id}`, {
+//       method: 'PUT',
+//       body: JSON.stringify(updatedRoom),
+//       headers: {
+//         'Content-Type': 'application/json',
+//       },
+//     });
+//     const responseData = await res.json();
+//     if (!res.ok) {
+//       throw new Error(responseData.message || "Failed to update room.");
+//     }
+//     onSuccess(responseData);
+//   } catch (error) {
+//     onError(error);
+//   }
+// }
 
-export async function updateTaxi(
-  route: string,
-  data: {
-    peopleCount?: number,
-    carCount?: number,
-    section?: number,
-    column?: number,
-    index?: number,
-    reservationTime?: string,
-    isCompleted?: boolean,
-    isCancel?: boolean,
-    taxiCompany?: string,
-  },
-  editingTaxiId: number,
-) {
-  try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/api/${route}/${editingTaxiId}`, {
-      method: 'PUT',
-      body: JSON.stringify(data),
-      headers: {
-        'Content-Type': 'application/json'
-      },
-    });
+// export async function updateTaxi(
+//   route: string,
+//   data: {
+//     peopleCount?: number,
+//     carCount?: number,
+//     section?: number,
+//     column?: number,
+//     index?: number,
+//     reservationTime?: string,
+//     isCompleted?: boolean,
+//     isCancel?: boolean,
+//     taxiCompany?: string,
+//   },
+//   editingTaxiId: number,
+// ) {
+//   try {
+//     const res = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/api/${route}/${editingTaxiId}`, {
+//       method: 'PUT',
+//       body: JSON.stringify(data),
+//       headers: {
+//         'Content-Type': 'application/json'
+//       },
+//     });
 
-    const responseData = await res.json();
+//     const responseData = await res.json();
 
-    if (!res.ok) {
-      throw new Error(responseData.message || "Failed to update taxi .");
-    }
+//     if (!res.ok) {
+//       throw new Error(responseData.message || "Failed to update taxi .");
+//     }
 
-    return responseData.result;
+//     return responseData.result;
 
-  } catch (error) {
-    console.log("Error updating taxi;", error);
-  }
-}
-
-
+//   } catch (error) {
+//     console.log("Error updating taxi;", error);
+//   }
+// }
 
 
-// DELETEメソッド
 
-export const deleteGeneralTaxi = async (id: number) => {
-  try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/api/generaltaxi/${id}`, {
-      method: 'DELETE',
-    });
-    const responseData = await res.json();
-    if (!res.ok) {
-      throw new Error(responseData.message || "Failed to delete taxi.");
-    }
-    return responseData;
-  } catch (error) {
-    console.error("Error deleting taxi:", error);
-    throw error;
-  }
-};
 
-export const deleteData = async (route: string, id: number) => {
-  try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/api/${route}/${id}`, {
-      method: 'DELETE',
-    });
-    const responseData = await res.json();
-    if (!res.ok) {
-      throw new Error(responseData.message || `Failed to delete ${route}.`);
-    }
-    return responseData;
-  } catch (error) {
-    console.error(`Error deleting ${route}:`, error);
-    throw error;
-  }
-};
+// // DELETEメソッド
 
-export async function deleteVipTaxi (
-  route: string,
-  id: number,
-  ) {
-    console.log(route);
-    console.log(id);
-  try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/api/${route}/${id}`, {
-      method: 'DELETE',
-    });
-    const responseData = await res.json();
-    if (!res.ok) {
-      throw new Error(responseData.message || "Failed to delete taxi.");
-    }
-    return responseData;
-  } catch (error) {
-    console.error("Error deleting taxi:", error);
-    throw error;
-  }
-};
+// export const deleteGeneralTaxi = async (id: number) => {
+//   try {
+//     const res = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/api/generaltaxi/${id}`, {
+//       method: 'DELETE',
+//     });
+//     const responseData = await res.json();
+//     if (!res.ok) {
+//       throw new Error(responseData.message || "Failed to delete taxi.");
+//     }
+//     return responseData;
+//   } catch (error) {
+//     console.error("Error deleting taxi:", error);
+//     throw error;
+//   }
+// };
+
+
+// export async function deleteVipTaxi (
+//   route: string,
+//   id: number,
+//   ) {
+//     console.log(route);
+//     console.log(id);
+//   try {
+//     const res = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/api/${route}/${id}`, {
+//       method: 'DELETE',
+//     });
+//     const responseData = await res.json();
+//     if (!res.ok) {
+//       throw new Error(responseData.message || "Failed to delete taxi.");
+//     }
+//     return responseData;
+//   } catch (error) {
+//     console.error("Error deleting taxi:", error);
+//     throw error;
+//   }
+// };
 
 
 // ========================================================
@@ -305,19 +369,19 @@ export function handleSetIdModalOpen (
   setIsModalOpen(true);
 };
 
-export async function handleTaxiDelete (
-  taxiId: number,
-  deleteTaxi: (taxiId: number) => Promise<void>,
-  fetchTaxis: (setTaxis: Dispatch<SetStateAction<GeneralTaxiType[]>>) => Promise<void>,
-  setTaxis: Dispatch<SetStateAction<GeneralTaxiType[]>>
-  ) {
-  try {
-    await deleteTaxi(taxiId);
-    fetchTaxis(setTaxis);
-  } catch (error) {
-    console.error("Failed to delete taxi:", error);
-  }
-};
+// export async function handleTaxiDelete (
+//   taxiId: number,
+//   deleteTaxi: (taxiId: number) => Promise<void>,
+//   fetchTaxis: (setTaxis: Dispatch<SetStateAction<GeneralTaxiType[]>>) => Promise<void>,
+//   setTaxis: Dispatch<SetStateAction<GeneralTaxiType[]>>
+//   ) {
+//   try {
+//     await deleteTaxi(taxiId);
+//     fetchTaxis(setTaxis);
+//   } catch (error) {
+//     console.error("Failed to delete taxi:", error);
+//   }
+// };
 
 
 export const createOptionsArray = (start: number, end: number) => {
@@ -327,17 +391,3 @@ export const createOptionsArray = (start: number, end: number) => {
   }
   return options;
 }
-
-
-
-// taxi
-export const fetchGeneralTaxis = async (): Promise<GeneralTaxiType[]> => {
-  try {
-    const fetchedGeneraltaxis = await fetchAllData("generaltaxi");
-    return fetchedGeneraltaxis;
-  } catch (error) {
-    console.error(error);
-    return [];
-  }
-};
-

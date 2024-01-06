@@ -11,7 +11,7 @@ import { fetchArrival } from "@/app/context/ArrivalContext";
 import { deskSelectStyles, roomNameOptions } from "@/app/utils/selectOptions";
 import CustomSelect from "@/app/utils/components/CustomSelect";
 
-export function Accept({ setAccepting, setArrivals, lastUpdated, setLastUpdated }: AcceptProps) {
+export function Accept({ setArrivals, lastUpdated, setLastUpdated }: AcceptProps) {
   const { rooms } = useRooms();
   const [selectedRoomId, setSelectedRoomId] = useState<number>(0);
   const [localAdultsCount, setLocalAdultsCount] = useState<number>(0);
@@ -39,8 +39,6 @@ export function Accept({ setAccepting, setArrivals, lastUpdated, setLastUpdated 
       console.error(error);
       return;
     }
-
-    setAccepting(false);
   };
 
 

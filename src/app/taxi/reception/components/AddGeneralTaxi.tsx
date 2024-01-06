@@ -1,28 +1,40 @@
 import CustomButton from "@/app/utils/components/CustomButton";
 import { useState } from "react";
-import { TaxiReservationProps } from "../../../../../types/types";
+import { GeneralTaxiData, AddTaxiProps } from "../../../../../types/types";
 import CustomSelect from "@/app/utils/components/CustomSelect";
-import { carCountOptions, columnOptions, indexOptions, peopleCountOptions, sectionOptions, taxiReceptoinLargeSelectStyles, taxiReceptoinSelectStyles } from "@/app/utils/selectOptions";
+import { carCountOptions, columnOptions, indexOptions, sectionOptions, taxiReceptoinLargeSelectStyles, taxiReceptoinSelectStyles } from "@/app/utils/selectOptions";
 import CustomSmallSelect from "@/app/utils/components/CustomSmallSelect";
 import { indexFontCSS } from "@/app/utils/style";
+import { postData } from "@/app/utils/utils";
 
-const TaxiReservation = ({ operationType, onSubmit, setEditing, setGeneralTaxis, initialValues }: TaxiReservationProps) => {
-  const [section, setSection] = useState<number>(initialValues?.section || 0);
-  const [column, setColumn] = useState<number>(initialValues?.column || 0);
-  const [index, setIndex] = useState<number>(initialValues?.index || 0);
-  const [peopleCount, setPeopleCount] = useState<number>(initialValues?.taxi.peopleCount || 0);
-  const [carCount, setCarCount] = useState<number>(initialValues?.taxi.carCount || 0);
+const AddGeneralTaxi = ({ setTaxis }: AddTaxiProps) => {
+  const [section, setSection] = useState<number>(122);
+  const [column, setColumn] = useState<number>(1);
+  const [index, setIndex] = useState<number>(1);
+  const [carCount, setCarCount] = useState<number>(1);
+  const [memo, setMemo] = useState<string>("");
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     
     try {
-      onSubmit(section, column, index, peopleCount, carCount);
+      for (let i = 0; i < carCount; i++) {
+        const data: GeneralTaxiData = {
+          section,
+          column,
+          index,
+          memo,
+          afterEvent: true,
+          isGeneralTaxi: true,
+        };
+        
+        const addedTaxi = await postData("taxi", data);
+        setTaxis(prevTaxis => [...prevTaxis, addedTaxi]);
+      }
     } catch (error) {
       console.error(error);
       return;
     }
-  setEditing(false);
   };
 
   return (
@@ -76,21 +88,6 @@ const TaxiReservation = ({ operationType, onSubmit, setEditing, setGeneralTaxis,
               </div>
             </div>
             <div className="w-full">
-              <p className={ indexFontCSS }>人数</p>
-              <div className="h-full w-full text-center">
-                <div className="p-4 w-full">
-                  <CustomSmallSelect
-                    options={ peopleCountOptions }
-                    name="peopleCount"
-                    value={ peopleCount }
-                    onChange={ setPeopleCount }
-                    className="text-3xl w-full"
-                    styles={ taxiReceptoinSelectStyles }
-                    />
-                </div>
-              </div>
-            </div>
-            <div className="w-full">
               <p className={ indexFontCSS }>台数</p>
               <div className="h-full w-full text-center">
                 <div className="p-4 w-full">
@@ -105,6 +102,20 @@ const TaxiReservation = ({ operationType, onSubmit, setEditing, setGeneralTaxis,
                 </div>
               </div>
             </div>
+            <div className="w-full">
+              <p className={ indexFontCSS }>memo</p>
+              <div className="h-full w-full text-center">
+                <div className="p-4 w-full">
+                  <input
+                    type="text"
+                    value={ memo }
+                    onChange={ (e) => setMemo(e.target.value) }
+                    className="text-3xl w-full"
+                    placeholder="memo"
+                  />
+                </div>
+              </div>
+            </div>
           </div>
           <div className="mt-8 h-auto flex items-center justify-center">
             <CustomButton text={ "登録" } type={ "submit" } className={ "py-6 px-10 text-4xl" }/>
@@ -115,4 +126,4 @@ const TaxiReservation = ({ operationType, onSubmit, setEditing, setGeneralTaxis,
   );
 };
 
-export default TaxiReservation;
+export default AddGeneralTaxi;

@@ -1,158 +1,176 @@
-import { deleteGeneralTaxi, fetchGeneralTaxis, postData, updateTaxi } from "@/app/utils/utils";
-import { FormatedGeneralTaxiType, GeneralTaxiData, GeneralTaxiProps, GeneralTaxiType } from "../../../../../types/types";
+import { deleteData, updateData } from "@/app/utils/utils";
+import { GeneralTaxiData, TaxiType } from "../../../../../types/types";
 import { useEffect, useState } from "react";
 import CustomButton from "@/app/utils/components/CustomButton";
-import Modal from "@/app/utils/components/Modal";
-import TaxiReservation from "./TaxiReservation";
+import AddGeneralTaxi from "./AddGeneralTaxi";
 import { indexFontCSS, recordFontCSS } from "@/app/utils/style";
+import { fetchTaxis, useTaxis } from "@/app/context/TaxiContext";
+import CustomSelect from "@/app/utils/components/CustomSelect";
+import { columnOptions, indexOptions, sectionOptions, taxiReceptoinLargeSelectStyles, taxiReceptoinSelectStyles } from "@/app/utils/selectOptions";
+import CustomSmallSelect from "@/app/utils/components/CustomSmallSelect";
 
 
-const GeneralTaxi = ({ generalTaxis, setGeneralTaxis }: GeneralTaxiProps) => {
-  const [isNewPost, setIsNewPost] = useState<boolean>(false);
-  const [isEditing, setIsEditing] = useState<boolean>(false);
+const GeneralTaxi = () => {
+  const { taxis, setTaxis } = useTaxis();
   const [editingTaxiId, setEditingTaxiId] = useState<number | null>(null);
+  const [section, setSection] = useState<number>(122);
+  const [column, setColumn] = useState<number>(1);
+  const [index, setIndex] = useState<number>(1);
+  const [memo, setMemo] = useState<string>("");
 
-  
-  // idをkeyとしたオブジェクトに変換
-  const formatedGeneralTaxis= generalTaxis.reduce<FormatedGeneralTaxiType>((acc, item) => {
-    acc[String(item.id)] = item;
-    return acc;
-  }, {});
-  
-  const totalCarCount = generalTaxis.reduce((acc: number, generalTaxi: GeneralTaxiType) => {
-    return acc + (generalTaxi.taxi?.carCount || 0);
+  const totalCarCount = taxis.reduce((acc: number, taxi: TaxiType) => {
+    return taxi.isGeneralTaxi ? acc + 1 : acc;
   }, 0);
-  
-  
-  const handleDelete = async (taxiId: number) => {
-    try {
-      await deleteGeneralTaxi(taxiId);
-      setGeneralTaxis(prevTaxis => prevTaxis.filter(taxi => taxi.id !== taxiId));
-    } catch (error) {
-      console.error("Failed to delete taxi:", error);
-    }
-  };
-  
+
   useEffect(() => {
-    const fetchData = async () => {
-      const fetchGeneralTaxisData = await fetchGeneralTaxis();
-      setGeneralTaxis(fetchGeneralTaxisData);
-    }
-    
-    fetchData();
-  }, []);
-  
-  
-  console.log('general: ',generalTaxis)
-  
+    fetchTaxis(setTaxis);
+  }, [setTaxis]);
 
   return (
     <div>
       <div>
-        <div className="flex justify-between">
-          <div className="h-auto m-4 py-4 flex space-x-12 items-end">
-            <h2 className="text-2xl font-bold">一般タクシー</h2>
-            <p className="text-xl">
-              予約合計
-              <span className="mx-2 text-3xl font-bold">
-                { totalCarCount }
-              </span>
-              台
-            </p>
-          </div>
-          <div className=' flex items-center justify-center space-x-8'>
-            <div>
-              <CustomButton text={ "追加" } onClick={ () => { setIsNewPost(true) }} className={ "py-4 px-8 text-xl" } />
-            </div>
+        <div className="h-auto m-4 py-4 flex space-x-12 items-end">
+          <h2 className="text-2xl font-bold">一般タクシー</h2>
+          <p className="text-xl">
+            予約合計
+            <span className="mx-2 text-3xl font-bold">
+              { totalCarCount }
+            </span>
+            台
+          </p>
         </div>
+        <div className='h-full p-2 bg-white rounded-2xl'>
+          <AddGeneralTaxi setTaxis={ setTaxis }/>
         </div>
         <div className='h-8 mt-4 grid grid-cols-8 gap-2 items-center'>
           <p className={ indexFontCSS }>タグ</p>
           <p className={ indexFontCSS }>Section</p>
           <p className={ indexFontCSS }>列</p>
           <p className={ indexFontCSS }>番</p>
-          <p className={ indexFontCSS }>人数</p>
-          <p className={ indexFontCSS }>台数</p>
+          <p className={ indexFontCSS }>memo</p>
         </div>
       </div>
       <div>
         <div className='h-full p-2 bg-white rounded-2xl'>
-          {generalTaxis
-            .sort((a: GeneralTaxiType, b: GeneralTaxiType) => a.id - b.id)
-            .map((taxi: GeneralTaxiType) => (
-              <div
-                  key={taxi.id}
-                  className='h-12 mt-4 grid grid-cols-8 gap-2 items-center'
-              >
-                <p className={ recordFontCSS }>T{ taxi.id >= 3 ? taxi.id + 1 : taxi.id }</p>
-                <p className={ recordFontCSS }>{ taxi.section }</p>
-                <p className={ recordFontCSS }>{ taxi.column }</p>
-                <p className={ recordFontCSS }>{ taxi.index }</p>
-                <p className={ recordFontCSS }>{ taxi.taxi?.peopleCount}</p>
-                <p className={ recordFontCSS }>{ taxi.taxi?.carCount}</p>
-                <CustomButton
-                  text={ "編集" }
-                  onClick={ () => {
-                    setEditingTaxiId(taxi.id);
-                    setIsEditing(true);
+          {taxis
+            .filter((taxi: TaxiType) => taxi.isGeneralTaxi)
+            .sort((a: TaxiType, b: TaxiType) => a.id - b.id)
+            .map((taxi: TaxiType) => (
+              <div key={taxi.id} className=' mt-4 grid grid-cols-8 gap-2 items-center'>
+                {/* 編集モード */}
+                { editingTaxiId === taxi.id ? (
+                <div className="col-span-6 grid grid-cols-6">
+                  <p className={ recordFontCSS }>T{ taxi.generalTaxiId}</p>
+                  <div className="w-full">
+                    <div className="">
+                      <div className="p-4 w-full">
+                        <CustomSelect
+                          options={ sectionOptions }
+                          name="section"
+                          value={ section }
+                          onChange={ setSection }
+                          className="text-3xl w-full"
+                          styles={ taxiReceptoinLargeSelectStyles }
+                          />
+                      </div>
+                    </div>
+                  </div>
+                  <div className="w-full">
+                    <div className="">
+                      <div className="p-4 w-full">
+                        <CustomSmallSelect
+                          options={ columnOptions }
+                          name="column"
+                          value={ column }
+                          onChange={ setColumn }
+                          className="text-3xl w-full"
+                          styles={ taxiReceptoinSelectStyles }
+                          />
+                      </div>
+                    </div>
+                  </div>
+                  <div className="w-full">
+                    <div className="">
+                      <div className="p-4 w-full">
+                        <CustomSmallSelect
+                          options={ indexOptions }
+                          name="index"
+                          value={ index }
+                          onChange={ setIndex }
+                          className="text-3xl w-full"
+                          styles={ taxiReceptoinSelectStyles }
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  <div className="w-full">
+                    <div className="">
+                      <div className="p-4 w-full">
+                        <input
+                          type="text"
+                          value={ memo }
+                          onChange={ (e) => setMemo(e.target.value) }
+                          className="text-3xl w-full"
+                          placeholder="memo"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                ) : (
+                // 通常表示モード
+                <div className="col-span-6 grid grid-cols-8">
+                  <p className={ recordFontCSS }>T{ taxi.generalTaxiId}</p>
+                  <p className={ recordFontCSS }>{ taxi.section }</p>
+                  <p className={ recordFontCSS }>{ taxi.column }</p>
+                  <p className={ recordFontCSS }>{ taxi.index }</p>
+                  <p className={ recordFontCSS }>{ taxi.memo }</p>
+                </div>
+                )}
+                <div className="col-span-2">
+                  <CustomButton
+                  text={ editingTaxiId === taxi.id ? "完了" : "編集" }
+                  onClick={ async () => {
+                    if (editingTaxiId === taxi.id) {
+                      // 完了ボタンを押した時の処理
+                      const data: GeneralTaxiData = {
+                        section: section,
+                        column: column,
+                        index: index,
+                        memo: memo,
+                        afterEvent: true,
+                        isGeneralTaxi: true,
+                      };
+
+                      await updateData("taxi", data, taxi.id);
+
+                      setTaxis(prevTaxis =>
+                        prevTaxis.map(t => (t.id === taxi.id ? { ...t, ...data } : t))
+                      );
+                      setEditingTaxiId(null);
+                    } else {
+                      // 編集ボタンを押した時
+                      setEditingTaxiId(taxi.id);
+                      setSection(taxi.section || 122);
+                      setColumn(taxi.column || 1);
+                      setIndex(taxi.index || 1);
+                      setMemo(taxi.memo || "");
+                    }
                   }}
                   className={ "py-2 px-2 text-lg" }
-                />
-                <CustomButton
+                  />
+                  <CustomButton
                   text={ "削除" }
-                  onClick={ () => handleDelete(taxi.id) }
-                  className={ "py-2 px-2 text-lg"}
-                />
+                    onClick={ () => {
+                      deleteData("taxi", taxi.id);
+                      setTaxis(prevTaxis => prevTaxis.filter(t => t.id !== taxi.id));
+                    }}
+                    className={ "py-2 px-2 text-lg"}
+                  />
+                </div>
               </div>
           ))}
         </div>
-        { isNewPost && (
-          <div>
-            <Modal isVisible={ isNewPost } onClose={ () => setIsNewPost(false) }>
-              <TaxiReservation
-                operationType="create"
-                onSubmit={ async ( section, column, index, peopleCount, carCount ) => {
-                  const data: GeneralTaxiData = {
-                    section: section,
-                    column: column,
-                    index: index,
-                    peopleCount: peopleCount,
-                    carCount: carCount,
-                    reservationTime: "試合終了後"
-                  };
-                  const addedTaxi = await postData("generaltaxi", data);
-                  setGeneralTaxis(prevTaxis => [...prevTaxis, addedTaxi]);
-                }}
-                setEditing={ setIsNewPost }
-                setGeneralTaxis={ setGeneralTaxis }
-              />
-            </Modal>
-          </div>
-        )}
-
-        { isEditing && editingTaxiId && (
-          <Modal isVisible={ isEditing } onClose={ () => setIsEditing(false) }>
-            <TaxiReservation
-              operationType="update"
-              onSubmit={ async (section, column, index, peopleCount, carCount) => {
-                const data = {
-                  section: section,
-                  column: column,
-                  index: index,
-                  peopleCount: peopleCount,
-                  carCount: carCount,
-                };
-                const updatedTaxi = await updateTaxi("generaltaxi", data, editingTaxiId);
-                setGeneralTaxis(prevTaxis => 
-                  prevTaxis.map(taxi => taxi.id === editingTaxiId ? updatedTaxi : taxi)
-                );
-              }}
-              setEditing={ setIsEditing }
-              setGeneralTaxis={ setGeneralTaxis }
-              initialValues={ formatedGeneralTaxis[editingTaxiId] }
-            />
-          </Modal>
-        )}
       </div>
     </div>
   );

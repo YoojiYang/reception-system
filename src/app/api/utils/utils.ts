@@ -72,7 +72,6 @@ export const genericPUT = async (
 
   try {
     const id: number = parseInt(req.url.split(`/${endpoint}/`)[1]);
-    console.log(id);
     const data = await req.json();
 
     await main();

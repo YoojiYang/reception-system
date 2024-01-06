@@ -123,37 +123,37 @@ export const deleteAllData = async (route: string) => {
 }
 
 
-// export async function handleEditData(props: HandleEditDataProps){
-  //   const { route, data, editingId, onSuccess, onError } = props;
+export async function handleEditData(props: HandleEditDataProps){
+    const { route, data, editingId, onSuccess, onError } = props;
 
-//   try {
-//     const res = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/api/${route}/${editingId}`, {
-//     method: 'PUT',
-//     body: JSON.stringify(data),
-//     headers: {
-//       'Content-Type': 'application/json',
-//     },
-//   });
-//   const responseData = await res.json();
+  try {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/api/${route}/${editingId}`, {
+    method: 'PUT',
+    body: JSON.stringify(data),
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+  const responseData = await res.json();
   
-//   if (!res.ok) {
-//     throw new Error(responseData.message || "Failed to update data.");
-//   }
+  if (!res.ok) {
+    throw new Error(responseData.message || "Failed to update data.");
+  }
   
-//   if (onSuccess) {
-//     onSuccess(responseData);
-//   }
+  if (onSuccess) {
+    onSuccess(responseData);
+  }
   
-//   } catch (error) {
-//     console.log(`Error updating ${route}:`, error);
-//     if (onError) {
-//       onError(error);
-//     }
-//   }
-// }
+  } catch (error) {
+    console.log(`Error updating ${route}:`, error);
+    if (onError) {
+      onError(error);
+    }
+  }
+}
 
 
-function setRoomsMap(rooms: RoomType[]) {
+export function setRoomsMap(rooms: RoomType[]) {
   const roomsMap: Record<number, RoomType> = {};
   rooms.forEach(room => {
     roomsMap[room.id] = room;
@@ -240,41 +240,41 @@ export async function handleEditReserveList(
 }
 
 
-// export async function handleReserveCountChangeUpdate(
-//   selectedRoom: RoomType | undefined,
-//   changeAdultsCount: number,
-//   changeChildrenCount: number,
-//   onSuccess: (response: any) => void,
-//   onError: (error: any) => void
-// ) {
-//   if (!selectedRoom) {
-//     console.error("Room not found.");
-//     return;
-//   }
+export async function handleReserveCountChangeUpdate(
+  selectedRoom: RoomType | undefined,
+  changeAdultsCount: number,
+  changeChildrenCount: number,
+  onSuccess: (response: any) => void,
+  onError: (error: any) => void
+) {
+  if (!selectedRoom) {
+    console.error("Room not found.");
+    return;
+  }
 
-//   const updatedRoom = {
-//     ...selectedRoom,
-//     changedAdultsCount: selectedRoom.changedAdultsCount + changeAdultsCount,
-//     changedChildrenCount: selectedRoom.changedChildrenCount + changeChildrenCount,
-//   };
+  const updatedRoom = {
+    ...selectedRoom,
+    changedAdultsCount: selectedRoom.changedAdultsCount + changeAdultsCount,
+    changedChildrenCount: selectedRoom.changedChildrenCount + changeChildrenCount,
+  };
 
-//   try {
-//     const res = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/api/rooms/${selectedRoom.id}`, {
-//       method: 'PUT',
-//       body: JSON.stringify(updatedRoom),
-//       headers: {
-//         'Content-Type': 'application/json',
-//       },
-//     });
-//     const responseData = await res.json();
-//     if (!res.ok) {
-//       throw new Error(responseData.message || "Failed to update room.");
-//     }
-//     onSuccess(responseData);
-//   } catch (error) {
-//     onError(error);
-//   }
-// }
+  try {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/api/rooms/${selectedRoom.id}`, {
+      method: 'PUT',
+      body: JSON.stringify(updatedRoom),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    const responseData = await res.json();
+    if (!res.ok) {
+      throw new Error(responseData.message || "Failed to update room.");
+    }
+    onSuccess(responseData);
+  } catch (error) {
+    onError(error);
+  }
+}
 
 // export async function updateTaxi(
 //   route: string,

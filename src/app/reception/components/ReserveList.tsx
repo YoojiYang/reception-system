@@ -9,7 +9,7 @@ import ReserveIndex from './ReserveIndex';
 import { receptionListCSS } from '@/app/utils/style';
 
 export function ReserveList({ setEditing }: ReserveListProps) {
-  const { rooms, setRooms } = useRooms();
+  const { rooms } = useRooms();
 
   const sortedRooms = useMemo(() => {
     return [...rooms].sort((a: RoomType, b: RoomType) => a.id - b.id);

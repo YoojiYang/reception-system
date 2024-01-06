@@ -1,5 +1,5 @@
 import { bgDarkGrayCSS, recordFontCSS } from "@/app/utils/style"
-import { CompleteListProps, ReserveTaxiListType, TaxiType } from "../../../../../types/types"
+import { CompleteListProps, TaxiType } from "../../../../../types/types"
 import CustomIconButton from "@/app/utils/components/CustomIcomButton"
 import { formatTime } from "@/app/utils/utils"
 import { useTaxis } from "@/app/context/TaxiContext"

@@ -1,4 +1,4 @@
-import { bgGrayCSS, receptionIndexCSS } from "@/app/utils/style";
+import { receptionIndexCSS } from "@/app/utils/style";
 
 const ReserveIndex = () => {
   return (

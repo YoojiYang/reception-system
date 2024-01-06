@@ -1,7 +1,7 @@
 import CustomButton from "@/app/utils/components/CustomButton"
 import DecrementButton from "@/app/utils/components/DecrementButton"
 import IncrementButton from "@/app/utils/components/IncrementButton"
-import { ReserveCountChangeProps, RoomType } from "../../../../types/types"
+import { ReserveCountChangeProps } from "../../../../types/types"
 import { useEffect, useState } from "react";
 import { fetchRooms, useRooms } from "@/app/context/RoomsContext";
 import { handleEditData } from "@/app/utils/utils";

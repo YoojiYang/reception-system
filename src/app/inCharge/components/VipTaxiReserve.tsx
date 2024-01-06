@@ -1,8 +1,6 @@
-import { use, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { convertUTCToJST, deleteData, formatTime, updateData } from "@/app/utils/utils";
 import CustomButton from "@/app/utils/components/CustomButton";
-import { deskSelectStyles, roomNameOptions } from "@/app/utils/selectOptions";
-import CustomSelect from "@/app/utils/components/CustomSelect";
 import { indexFontCSS, recordFontCSS, recordFontLgCSS } from "@/app/utils/style";
 import { useTaxis } from "@/app/context/TaxiContext";
 import { useRooms } from "@/app/context/RoomsContext";

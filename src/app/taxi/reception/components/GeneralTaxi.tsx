@@ -45,23 +45,21 @@ const GeneralTaxi = () => {
       </div>
       <div>
         <div className='h-8 mt-4 grid grid-cols-7 gap-2 items-center'>
-          <div className="col-span-5 grid grid-cols-5">
-            <p className={ indexFontCSS }>タグ</p>
-            <p className={ indexFontCSS }>Section</p>
-            <p className={ indexFontCSS }>列</p>
-            <p className={ indexFontCSS }>番</p>
-            <p className={ indexFontCSS }>memo</p>
-          </div>
+          <p className={ indexFontCSS }>タグ</p>
+          <p className={ indexFontCSS }>Section</p>
+          <p className={ indexFontCSS }>列</p>
+          <p className={ indexFontCSS }>番</p>
+          <p className={ indexFontCSS }>memo</p>
         </div>
         <div className='h-full p-2 bg-white rounded-2xl'>
           {taxis
             .filter((taxi: TaxiType) => taxi.isGeneralTaxi)
             .sort((a: TaxiType, b: TaxiType) => a.id - b.id)
             .map((taxi: TaxiType) => (
-              <div key={taxi.id} className='p-2 grid grid-cols-7'>
+              <div key={taxi.id} className='p-2'>
                 {/* 編集モード */}
                 { editingTaxiId === taxi.id ? (
-                <div className="col-span-5 grid grid-cols-5 bg-blue-100 rounded-xl">
+                <div className="grid grid-cols-7 bg-blue-100 rounded-xl">
                   <p className={ recordFontCSS }>T{ taxi.generalTaxiId}</p>
                   <div className="p-4">
                     <CustomSelect
@@ -98,62 +96,73 @@ const GeneralTaxi = () => {
                       type="text"
                       value={ memo }
                       onChange={ (e) => setMemo(e.target.value) }
-                      className="w-full text-center text-2xl"
+                      className="w-full text-center text-2xl rounded-2xl"
                       placeholder="memo"
+                    />
+                  </div>
+                  <div className="w-fit px-4 flex gap-2" >
+                    <CustomButton
+                      text={ "完了" }
+                      className={ "w-24 my-auto py-2 px-6 text-lg" }
+                      onClick={ async () => {
+                        const data: GeneralTaxiData = {
+                          section: section,
+                          column: column,
+                          index: index,
+                          memo: memo,
+                          afterEvent: true,
+                          isGeneralTaxi: true,
+                        };
+
+                        await updateData("taxi", data, taxi.id);
+
+                        setTaxis(prevTaxis =>
+                          prevTaxis.map(t => (t.id === taxi.id ? { ...t, ...data } : t))
+                        );
+                        setEditingTaxiId(null);
+                      }}
+                    /> 
+                    <CustomButton
+                    text={ "削除" }
+                    className={ "w-24 my-auto py-2 px-6 text-lg"}
+                    onClick={ () => {
+                      deleteData("taxi", taxi.id);
+                      setTaxis(prevTaxis => prevTaxis.filter(t => t.id !== taxi.id));
+                    }}
                     />
                   </div>
                 </div>
                 ) : (
                 // 通常表示モード
-                <div className="col-span-5 grid grid-cols-5">
+                <div className="grid grid-cols-7">
                   <p className={ recordFontCSS }>T{ taxi.generalTaxiId}</p>
                   <p className={ recordFontCSS }>{ taxi.section }</p>
                   <p className={ recordFontCSS }>{ taxi.column }</p>
                   <p className={ recordFontCSS }>{ taxi.index }</p>
                   <p className={ recordFontCSS }>{ taxi.memo }</p>
+                  <div className="w-fit px-4 flex gap-2" >
+                    <CustomButton
+                      text={ "編集" }
+                      className={ "w-24 my-auto py-2 px-6 text-lg" }
+                      onClick={ async () => {
+                          setEditingTaxiId(taxi.id);
+                          setSection(taxi.section || 122);
+                          setColumn(taxi.column || 1);
+                          setIndex(taxi.index || 1);
+                          setMemo(taxi.memo || "");
+                      }}
+                    /> 
+                    <CustomButton
+                      text={ "削除" }
+                      className={ "w-24 my-auto py-2 px-6 text-lg"}
+                      onClick={ () => {
+                        deleteData("taxi", taxi.id);
+                        setTaxis(prevTaxis => prevTaxis.filter(t => t.id !== taxi.id));
+                      }}
+                    />
+                  </div>
                 </div>
                 )}
-                <div className="w-fit px-4 flex gap-2" >
-                  <CustomButton
-                  text={ editingTaxiId === taxi.id ? "完了" : "編集" }
-                  onClick={ async () => {
-                    if (editingTaxiId === taxi.id) {
-                      // 完了ボタンを押した時の処理
-                      const data: GeneralTaxiData = {
-                        section: section,
-                        column: column,
-                        index: index,
-                        memo: memo,
-                        afterEvent: true,
-                        isGeneralTaxi: true,
-                      };
-
-                      await updateData("taxi", data, taxi.id);
-
-                      setTaxis(prevTaxis =>
-                        prevTaxis.map(t => (t.id === taxi.id ? { ...t, ...data } : t))
-                      );
-                      setEditingTaxiId(null);
-                    } else {
-                      // 編集ボタンを押した時
-                      setEditingTaxiId(taxi.id);
-                      setSection(taxi.section || 122);
-                      setColumn(taxi.column || 1);
-                      setIndex(taxi.index || 1);
-                      setMemo(taxi.memo || "");
-                    }
-                  }}
-                  className={ "w-24 my-auto py-2 px-6 text-lg" }
-                  />
-                  <CustomButton
-                  text={ "削除" }
-                    onClick={ () => {
-                      deleteData("taxi", taxi.id);
-                      setTaxis(prevTaxis => prevTaxis.filter(t => t.id !== taxi.id));
-                    }}
-                    className={ "w-24 my-auto py-2 px-6 text-lg"}
-                  />
-                </div>
               </div>
           ))}
         </div>

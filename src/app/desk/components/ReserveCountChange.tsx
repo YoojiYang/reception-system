@@ -114,7 +114,7 @@ export function ReserveCountChange({ setCountChange }: ReserveCountChangeProps) 
               </div>
             </div>
           </div>
-          <div className="mt-8 grid grid-cols-9 flex">
+          <div className="mt-8 grid grid-cols-9">
             <h2 className={` ${indexFontCSS} col-span-4`}>変更前人数</h2>
             <div></div>
             <h2 className={` ${indexFontCSS} col-span-4`}>変更後人数</h2>

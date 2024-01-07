@@ -40,7 +40,7 @@ const VipTaxi = () => {
   return (
     <div>
       <div>
-        <div className="h-auto m-4 py-4 flex space-x-12 items-end">
+        <div className="m-4 py-4 flex space-x-12 items-end">
           <p className="text-2xl font-bold">VIPタクシー</p>
           <p className="text-xl">
               予約合計
@@ -54,115 +54,132 @@ const VipTaxi = () => {
           <AddVipTaxi setTaxis={ setTaxis }/>
         </div>
         <div className="py-2 grid grid-cols-8">
-          <p className={ indexFontCSS }>部屋番号</p>
+          <p className={ `${indexFontCSS} col-span-2` }>部屋番号</p>
           <p className={ `${indexFontCSS} col-span-2` }>会社名</p>
           <p className={ indexFontCSS }>予約時間</p>
           <p className={ indexFontCSS }>memo</p>
         </div>
       </div>
       <div>
-        <div className='h-full p-2 bg-white rounded-2xl'>
+        <div className='p-2 bg-white rounded-2xl'>
           {taxis
             .filter((taxi: TaxiType) => !taxi.isGeneralTaxi)
             .sort((a: TaxiType, b: TaxiType) => a.id - b.id)
             .map((taxi: TaxiType) => (
-            <div
-              key={taxi.id}
-              className='h-12 mt-4 grid grid-cols-8 gap-2 items-center'
-            >
+            <div key={taxi.id} className='p-2'>
               { editingTaxiId === taxi.id ? (
                 // 編集モード
-                <div className="col-span-6 grid grid-cols-5">
+                <div className="grid grid-cols-8 bg-blue-100 rounded-xl">
                   {roomId !== undefined && (
                   <CustomSelect
                     options={ roomNameOptions(rooms) }
                     name="roomName"
                     value={ roomId }
                     onChange={ setRoomId }
-                    className="text-2xl"
+                    className="text-xl p-4 col-span-2"
                     styles={ deskSelectStyles }
                   />
                   )}
-                  <p className={ `${recordFontLgCSS} col-span-2` }>{ company }</p>
-                  <div className="h-40 p-4 w-full">
-                    <div className="flex">
+                  <div className="col-span-2 p-4 flex items-center justify-center">
+                    <p className={ `${recordFontLgCSS}` }>{ company }</p>
+                  </div>
+                  <div className="p-4 h-full">
+                    <div className={`flex items-center justify-center ${ checked ? "h-full" : ""}`}>
                       <IsAfterEventCheckBox checked={ checked } setChecked={ setChecked } setIsAfterEvent={ setIsAfterEvent }/>
                       <p>試合終了後</p>
                     </div>
                     {!isAfterEvent &&
-                    <div className="h-40">
+                    <div className="bg-white">
                       <SelectDigitalClock setReservationTime={ setReservationTime }/>
                     </div>
                     }
                   </div>
-                  <input
-                    type="text"
-                    value={ memo }
-                    onChange={ (e) => setMemo(e.target.value) }
-                    className="text-3xl w-full"
-                    placeholder="memo"
+                  <div className="h-full p-4 flex justify-center items-center">
+                    <input
+                      type="text"
+                      value={ memo }
+                      onChange={ (e) => setMemo(e.target.value) }
+                      className="w-full h-20 text-center text-2xl rounded-2xl"
+                      placeholder="memo"
+                    />
+                  </div>
+                  <div className="w-fit px-4 flex gap-2" >
+                  <CustomButton
+                    text={ "完了" }
+                    onClick={ async () => {
+                      if (editingTaxiId === taxi.id) {
+                        let jstTime: Date | undefined = undefined;
+                        if (reservationTime) {
+                          jstTime = convertUTCToJST(reservationTime);
+                        }
+                        const data = {
+                          roomId: roomId,
+                          reservationTime: jstTime,
+                          afterEvent: isAfterEvent,
+                          memo: memo,
+                        };
+
+                        try {
+                          const updateTaxi = await updateData("taxi", data, taxi.id);
+
+                          setTaxis(prevTaxis =>
+                            prevTaxis.map(t => {
+                              if (t.id === taxi.id) {
+                                const relatedRoom = rooms.find(room => room.id === updateTaxi.roomId);
+                                return { ...updateTaxi, room: relatedRoom || t.room};
+                              }
+                              return t;
+                            })
+                          );
+                        } catch (error) {
+                          console.error("Error updating taxi: ", error);
+                        }
+
+                        setEditingTaxiId(null);
+                        } 
+                      }}
+                    className={ "w-24 my-auto py-2 px-6 text-lg" }
                   />
+                  <CustomButton
+                    text={ "削除" }
+                    onClick={ () => {
+                      deleteData("taxi", taxi.id)
+                      setTaxis(prevTaxis => prevTaxis.filter(t => t.id !== taxi.id));
+                    }}
+                    className={ "w-24 my-auto py-2 px-6 text-lg"}
+                  />
+                  </div>
                 </div>
               ) : (
-                // 
-                <div className="col-span-6 grid grid-cols-5">
-                  <p className={ recordFontCSS }>{ taxi.room?.name}</p>
-                  <p className={ recordFontCSS }>{ taxi.room?.company}</p>
+                // 非編集モード
+                <div className="grid grid-cols-8">
+                  <p className={ `${recordFontCSS} col-span-2` }>{ taxi.room?.name}</p>
+                  <p className={ `${recordFontCSS} col-span-2` }>{ taxi.room?.company}</p>
                   <p className={ recordFontCSS }>
                     { taxi.afterEvent ? "試合終了後" : formatTime(taxi.reservationTime) }</p>
-                  <p className={ recordFontCSS }>{ taxi.memo }</p>  
+                  <p className={ recordFontCSS }>{ taxi.memo }</p>
+                  <div className="w-fit px-4 flex gap-2">
+                    <CustomButton
+                      text={ "編集" }
+                      className={ "w-24 my-auto py-2 px-6 text-lg" }
+                      onClick={ async () => {
+                        setRoomId(taxi.roomId)
+                        setReservationTime(reservationTime);
+                        setEditingTaxiId(taxi.id);
+                        setMemo(taxi.memo);
+                      }}
+                      />
+                    <CustomButton
+                      text={ "削除" }
+                      onClick={ () => {
+                        deleteData("taxi", taxi.id)
+                        setTaxis(prevTaxis => prevTaxis.filter(t => t.id !== taxi.id));
+                      }}
+                      className={ "w-24 my-auto py-2 px-6 text-lg"}
+                      />
+                  </div>
                 </div>
               )}
-              <CustomButton
-                text={ editingTaxiId === taxi.id ? "完了" : "編集" }
-                onClick={ async () => {
-                  if (editingTaxiId === taxi.id) {
-                    let jstTime: Date | undefined = undefined;
-                    if (reservationTime) {
-                      jstTime = convertUTCToJST(reservationTime);
-                    }
-                    const data = {
-                      roomId: roomId,
-                      reservationTime: jstTime,
-                      afterEvent: isAfterEvent,
-                      memo: memo,
-                    };
-
-                    console.log("data", data);
-                    try {
-                      const updateTaxi = await updateData("taxi", data, taxi.id);
-
-                      setTaxis(prevTaxis =>
-                        prevTaxis.map(t => {
-                          if (t.id === taxi.id) {
-                            const relatedRoom = rooms.find(room => room.id === updateTaxi.roomId);
-                            return { ...updateTaxi, room: relatedRoom || t.room};
-                          }
-                          return t;
-                        })
-                      );
-                    } catch (error) {
-                      console.error("Error updating taxi: ", error);
-                    }
-
-                    setEditingTaxiId(null);
-                    } else {
-                      setRoomId(taxi.roomId)
-                      setReservationTime(reservationTime);
-                      setEditingTaxiId(taxi.id);
-                      setMemo(taxi.memo);
-                    }
-                  }}
-                className={ "py-2 px-2 text-lg" }
-              />
-              <CustomButton
-                text={ "削除" }
-                onClick={ () => {
-                  deleteData("taxi", taxi.id)
-                  setTaxis(prevTaxis => prevTaxis.filter(t => t.id !== taxi.id));
-                }}
-                className={ "py-2 px-2 text-lg"}
-              />
             </div>
           ))}
         </div>

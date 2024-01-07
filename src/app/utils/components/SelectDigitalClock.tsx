@@ -36,6 +36,7 @@ export const SelectDigitalClock: React.FC<SelectDigitalClockProps> = ({ setReser
           value={ value }
           onChange={ handleChange }
           ampm={ false }
+          className='text-center z-10'
         />
       </DemoItem>
     </div>

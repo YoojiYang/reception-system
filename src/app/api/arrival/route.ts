@@ -5,7 +5,17 @@ import prisma from "../../../../prisma";
 // 全到着情報の取得
 export const GET = (req: NextRequest, res: NextResponse) => {
   return genericGET(req, res, () => prisma.arrival.findMany({
-    include: { room: true },
+    include: {
+      room: {
+        include: {
+          inCharges: {
+            include: {
+              inCharge: true,
+            },
+          },
+        },
+      },
+    },
     orderBy: { id: "asc" },
   }), "arrival");
 }

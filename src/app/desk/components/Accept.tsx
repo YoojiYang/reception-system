@@ -51,13 +51,13 @@ export function Accept({ setArrivals, lastUpdated, setLastUpdated }: AcceptProps
   }, [setArrivals, lastUpdated]);
   
   return(
-    <div>
-    <div className="p-2 h-auto">
+    <div className="flex justify-center">
+    <div className="w-5/6 h-auto my-4 p-4 bg-white rounded-2xl">
       <form onSubmit={ handleRegister }>
-        <div className="flex h-56">
+        <div className="p-4 flex mb-4">
           <div className="w-1/2">
             <p className="text-3xl text-center">部屋名</p>
-            <div className="p-4 h-2/3">
+            <div className="p-4 h-2/3 justify-center">
               <CustomSelect
                 options={ roomNameOptions(rooms) }
                 name="roomName"
@@ -70,8 +70,8 @@ export function Accept({ setArrivals, lastUpdated, setLastUpdated }: AcceptProps
           </div>
           <div className="w-1/4">
             <p className="text-3xl text-center">大人</p>
-            <div className="h-full text-center">
-              <div className="p-4 h-2/3">
+            <div className="text-center">
+              <div className="p-4">
                 <input 
                   type="text"
                   inputMode="numeric"
@@ -81,7 +81,7 @@ export function Accept({ setArrivals, lastUpdated, setLastUpdated }: AcceptProps
                   className="text-center h-full w-full flex items-center justify-center text-5xl bg-inherit"
                   />
               </div>
-              <div className="h-1/3 w-full flex items-center justify-center space-x-8">
+              <div className="h-1/3 w-full flex items-center justify-center space-x-2">
                 <IncrementButton count={ localAdultsCount } setCount={ setLocalAdultsCount }/>
                 <DecrementButton count={ localAdultsCount } setCount={ setLocalAdultsCount }/>
               </div>
@@ -89,8 +89,8 @@ export function Accept({ setArrivals, lastUpdated, setLastUpdated }: AcceptProps
           </div>
           <div className="w-1/4">
             <p className="text-3xl text-center">子ども</p>
-            <div className="h-full text-center">
-              <div className="p-4 h-2/3">
+            <div className="text-center">
+              <div className="p-4">
                 <input 
                   type="text"
                   inputMode="numeric"
@@ -99,15 +99,15 @@ export function Accept({ setArrivals, lastUpdated, setLastUpdated }: AcceptProps
                   className="text-center h-full w-full flex items-center justify-center text-5xl bg-inherit"
                   />
               </div>
-              <div className="h-1/3 w-full flex items-center justify-center space-x-8">
+              <div className="h-1/3 w-full flex items-center justify-center space-x-2">
                 <IncrementButton count={ localChildrenCount } setCount={ setLocalChildrenCount }/>
                 <DecrementButton count={ localChildrenCount } setCount={ setLocalChildrenCount }/>
               </div>
             </div>
           </div>
         </div>
-        <div className="mt-20 h-40 flex items-center justify-center">
-          <CustomButton text={ "登録" } type={ "submit" } className={ "py-8 px-16 text-4xl" }/>
+        <div className="flex items-center justify-center">
+          <CustomButton text={ "登録" } type={ "submit" } className={ "py-4 px-16 text-4xl" }/>
         </div>
       </form>
     </div>

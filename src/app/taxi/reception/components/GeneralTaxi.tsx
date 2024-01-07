@@ -39,87 +39,73 @@ const GeneralTaxi = () => {
             台
           </p>
         </div>
-        <div className='h-full p-2 bg-white rounded-2xl'>
+        <div className='p-2'>
           <AddGeneralTaxi setTaxis={ setTaxis }/>
-        </div>
-        <div className='h-8 mt-4 grid grid-cols-8 gap-2 items-center'>
-          <p className={ indexFontCSS }>タグ</p>
-          <p className={ indexFontCSS }>Section</p>
-          <p className={ indexFontCSS }>列</p>
-          <p className={ indexFontCSS }>番</p>
-          <p className={ indexFontCSS }>memo</p>
         </div>
       </div>
       <div>
+        <div className='h-8 mt-4 grid grid-cols-7 gap-2 items-center'>
+          <div className="col-span-5 grid grid-cols-5">
+            <p className={ indexFontCSS }>タグ</p>
+            <p className={ indexFontCSS }>Section</p>
+            <p className={ indexFontCSS }>列</p>
+            <p className={ indexFontCSS }>番</p>
+            <p className={ indexFontCSS }>memo</p>
+          </div>
+        </div>
         <div className='h-full p-2 bg-white rounded-2xl'>
           {taxis
             .filter((taxi: TaxiType) => taxi.isGeneralTaxi)
             .sort((a: TaxiType, b: TaxiType) => a.id - b.id)
             .map((taxi: TaxiType) => (
-              <div key={taxi.id} className=' mt-4 grid grid-cols-8 gap-2 items-center'>
+              <div key={taxi.id} className='p-2 grid grid-cols-7'>
                 {/* 編集モード */}
                 { editingTaxiId === taxi.id ? (
-                <div className="col-span-6 grid grid-cols-6">
+                <div className="col-span-5 grid grid-cols-5 bg-blue-100 rounded-xl">
                   <p className={ recordFontCSS }>T{ taxi.generalTaxiId}</p>
-                  <div className="w-full">
-                    <div className="">
-                      <div className="p-4 w-full">
-                        <CustomSelect
-                          options={ sectionOptions }
-                          name="section"
-                          value={ section }
-                          onChange={ setSection }
-                          className="text-3xl w-full"
-                          styles={ taxiReceptoinLargeSelectStyles }
-                          />
-                      </div>
-                    </div>
+                  <div className="p-4">
+                    <CustomSelect
+                      options={ sectionOptions }
+                      name="section"
+                      value={ section }
+                      onChange={ setSection }
+                      className="text-2xl "
+                      styles={ taxiReceptoinLargeSelectStyles }
+                    />
                   </div>
-                  <div className="w-full">
-                    <div className="">
-                      <div className="p-4 w-full">
-                        <CustomSmallSelect
-                          options={ columnOptions }
-                          name="column"
-                          value={ column }
-                          onChange={ setColumn }
-                          className="text-3xl w-full"
-                          styles={ taxiReceptoinSelectStyles }
-                          />
-                      </div>
-                    </div>
+                  <div className="p-4 ">
+                    <CustomSmallSelect
+                      options={ columnOptions }
+                      name="column"
+                      value={ column }
+                      onChange={ setColumn }
+                      className="text-2xl "
+                      styles={ taxiReceptoinSelectStyles }
+                    />
                   </div>
-                  <div className="w-full">
-                    <div className="">
-                      <div className="p-4 w-full">
-                        <CustomSmallSelect
-                          options={ indexOptions }
-                          name="index"
-                          value={ index }
-                          onChange={ setIndex }
-                          className="text-3xl w-full"
-                          styles={ taxiReceptoinSelectStyles }
-                        />
-                      </div>
-                    </div>
+                  <div className="p-4">
+                    <CustomSmallSelect
+                      options={ indexOptions }
+                      name="index"
+                      value={ index }
+                      onChange={ setIndex }
+                      className="text-2xl "
+                      styles={ taxiReceptoinSelectStyles }
+                    />
                   </div>
-                  <div className="w-full">
-                    <div className="">
-                      <div className="p-4 w-full">
-                        <input
-                          type="text"
-                          value={ memo }
-                          onChange={ (e) => setMemo(e.target.value) }
-                          className="text-3xl w-full"
-                          placeholder="memo"
-                        />
-                      </div>
-                    </div>
+                  <div className="p-4 flex">
+                    <input
+                      type="text"
+                      value={ memo }
+                      onChange={ (e) => setMemo(e.target.value) }
+                      className="w-full text-center text-2xl"
+                      placeholder="memo"
+                    />
                   </div>
                 </div>
                 ) : (
                 // 通常表示モード
-                <div className="col-span-6 grid grid-cols-8">
+                <div className="col-span-5 grid grid-cols-5">
                   <p className={ recordFontCSS }>T{ taxi.generalTaxiId}</p>
                   <p className={ recordFontCSS }>{ taxi.section }</p>
                   <p className={ recordFontCSS }>{ taxi.column }</p>
@@ -127,7 +113,7 @@ const GeneralTaxi = () => {
                   <p className={ recordFontCSS }>{ taxi.memo }</p>
                 </div>
                 )}
-                <div className="col-span-2">
+                <div className="w-fit px-4 flex gap-2" >
                   <CustomButton
                   text={ editingTaxiId === taxi.id ? "完了" : "編集" }
                   onClick={ async () => {
@@ -157,7 +143,7 @@ const GeneralTaxi = () => {
                       setMemo(taxi.memo || "");
                     }
                   }}
-                  className={ "py-2 px-2 text-lg" }
+                  className={ "w-24 my-auto py-2 px-6 text-lg" }
                   />
                   <CustomButton
                   text={ "削除" }
@@ -165,7 +151,7 @@ const GeneralTaxi = () => {
                       deleteData("taxi", taxi.id);
                       setTaxis(prevTaxis => prevTaxis.filter(t => t.id !== taxi.id));
                     }}
-                    className={ "py-2 px-2 text-lg"}
+                    className={ "w-24 my-auto py-2 px-6 text-lg"}
                   />
                 </div>
               </div>

@@ -6,8 +6,7 @@ import { formatTime } from '../../utils/utils';
 import CustomButton from '@/app/utils/components/CustomButton';
 import { useRooms } from '@/app/context/RoomsContext';
 import ReserveIndex from './ReserveIndex';
-import { receptionListCSS } from '@/app/utils/style';
-
+import { receptionCSS } from '@/app/utils/style';
 export function ReserveList({ setEditing }: ReserveListProps) {
   const { rooms } = useRooms();
 
@@ -22,24 +21,31 @@ export function ReserveList({ setEditing }: ReserveListProps) {
       </div>  
       <ReserveIndex />
       {sortedRooms.map((room: RoomType) => (
-        <div key={room.id} className={ receptionListCSS.outside1 }>
-          <div className={ receptionListCSS.outside21 }>
-            <p className={ receptionListCSS.roomName }>{ room.name }</p>
-            <p className={ receptionListCSS.companyName }>{ room.company }</p>
+        <div key={room.id} className={ `${ receptionCSS.receptionBox } h-14 m-2 bg-white rounded-xl` }>
+          <div className={ `${ receptionCSS.roomCompanyBox }` }>
+            <p className={ `${ receptionCSS.font }` }>{ room.name }</p>
+            <p className={ `${ receptionCSS.font } col-span-2` }>{ room.company }</p>
           </div>
-          <div className={ receptionListCSS.outside22 }>
-            <div className={ receptionListCSS.outside3 }>
-              <p className={ receptionListCSS.number }>{ room.reserveAdultsCount }</p>
-              <p className={ receptionListCSS.number }>{ room.reserveChildrenCount }</p>
-              <p className={ receptionListCSS.arrivalTime }>{ room.scheduledArrival ? formatTime(room.scheduledArrival) : "" }</p>
+          <div className={ `${ receptionCSS.dataBox }` }>
+            <div className={ `${ receptionCSS.adultChirdrenBox }` }>
+              <p className={ `${ receptionCSS.font }` }>{ room.reserveAdultsCount }</p>
+              <p className={ `${ receptionCSS.font }` }>{ room.reserveChildrenCount }</p>
             </div>
-            <p className={ receptionListCSS.staff }>
+            <div className={ `${ receptionCSS.timeStaffBox }` }>
+              <p className={ `${ receptionCSS.font }` }>
+                { room.scheduledArrival ? formatTime(room.scheduledArrival) : "" }
+              </p>
+              <p className={ `${ receptionCSS.font } col-span-2` }>
               <ul className='flex'>
-                {room.inCharges.map((inCharge) => (
-                  <li key={ inCharge.inChargeId }>{ inCharge.inCharge ? inCharge.inCharge.name : "" }</li>
+                {room.inCharges.map((inCharge, index, array) => (
+                  <li key={ inCharge.inChargeId }>
+                    { inCharge.inCharge ? inCharge.inCharge.name : "" }
+                    { index < array.length - 1 ? "・" : ""}
+                  </li>
                 ))}
               </ul>
             </p>
+            </div>
           </div>
         </div>
       ))}

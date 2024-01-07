@@ -4,7 +4,7 @@ import ReserveIndex from './ReserveIndex';
 import { deleteAllData, fetchInCharge, handleEditReserveList, postData } from '../../utils/utils';
 import CustomButton from "@/app/utils/components/CustomButton";
 import { fetchRooms, useRooms } from "@/app/context/RoomsContext";
-import { borderBlueCSS, receptionEditCSS } from "@/app/utils/style";
+import { borderBlueCSS, receptionCSS, receptionEditCSS } from "@/app/utils/style";
 import SelectInCharge from "./SelectInCharge";
 import SelectReserveTime from "./SelectedReserveTime";
 
@@ -24,22 +24,6 @@ const EditReserveList = ({ setEditing }: EditReserveListProps) => {
       }
     }));
   }, []);
-  
-  // async function updateInCharge(updateInChargesList: RoomInChargeType[]) {
-  //   try {
-  //     // トランザクションを開始
-  //     await prisma.$transaction(async (prisma) => {
-  //       // 全てのレコードを削除
-  //       await prisma.roomInCharge.deleteMany();
-        
-  //       // 新しいレコードを登録
-  //       await postData("roomInCharge", updateInChargesList);
-  //     });
-  //   } catch (error) {
-  //     console.error("An error occurred during the update process:", error);
-  //   }
-  // }
-  
 
   const handleRegister = async () => {
     // roomテーブルの更新
@@ -91,19 +75,19 @@ const EditReserveList = ({ setEditing }: EditReserveListProps) => {
       <div>
         {sortedRooms.map((room: RoomType) => (
           <form key={room.id}>
-            <div className={ receptionEditCSS.outside1 }> 
-              <div className={ receptionEditCSS.outside21 }>
-                <p className={ receptionEditCSS.roomName }>{ room.name }</p>
+            <div className={ `${ receptionCSS.receptionBox } h-14 m-2`}> 
+              <div className={ `${ receptionCSS.roomCompanyBox }`}>
+                <p className="h-12 m-2 flex items-center justify-center bg-white rounded-xl">{ room.name }</p>
                 <input
                   type='text'
                   name='company'
                   defaultValue={ room.company }
                   onChange={ (e) => handleInputChange(room.id, 'company', e.target.value) }
-                  className={ `${receptionEditCSS.companyName} ${borderBlueCSS}` }
+                  className={ `h-12 m-2 col-span-2 text-center text-xl rounded-xl ${borderBlueCSS}` }
                   />
               </div>
-              <div className={ receptionEditCSS.outside22 }>
-                <div className={ receptionEditCSS.outside3 }>
+              <div className={ `${ receptionCSS.dataBox }`}>
+                <div className={ `${ receptionCSS.adultChirdrenBox }`}>
                   {/* 大人の人数 */}
                   <input
                     type='number'
@@ -120,17 +104,22 @@ const EditReserveList = ({ setEditing }: EditReserveListProps) => {
                     onChange={ (e) => handleInputChange(room.id, 'reserveChildrenCount', parseInt(e.target.value)) }
                     className={ `${receptionEditCSS.number} ${borderBlueCSS}` }
                     />
+                </div>
+                <div className={ `${ receptionCSS.timeStaffBox }`}>
                   {/* 到着予定時刻 */}
-                  <div className="h-16">
+                  <div className="mx-2">
+                    {/* TODO: select要素を変更 */}
                     <SelectReserveTime
                       roomId={ room.id }
                       handleInputChange={ handleInputChange }
                       defaultTime={ room.scheduledArrival }
                     />
                   </div>
+                  {/* 担当者 */}
+                  <div className="mx-2 col-span-2">
+                    <SelectInCharge updateInChargesList={ updateInChargesList } setUpdateInChargesList={ setUpdateInChargesList } roomId={ room.id }/>
+                  </div>
                 </div>
-                {/* 担当者 */}
-                <SelectInCharge updateInChargesList={ updateInChargesList } setUpdateInChargesList={ setUpdateInChargesList } roomId={ room.id }/>
               </div>
             </div>
           </form>

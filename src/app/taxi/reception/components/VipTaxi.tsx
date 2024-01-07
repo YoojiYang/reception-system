@@ -50,7 +50,7 @@ const VipTaxi = () => {
             台
           </p>
         </div>
-        <div className='h-full p-2 bg-white rounded-2xl'>
+        <div className='p-2'>
           <AddVipTaxi setTaxis={ setTaxis }/>
         </div>
         <div className="py-2 grid grid-cols-8">

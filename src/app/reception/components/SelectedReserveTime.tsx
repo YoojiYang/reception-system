@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { DemoItem } from '@mui/x-date-pickers/internals/demo';
 import { MultiSectionDigitalClock } from '@mui/x-date-pickers/MultiSectionDigitalClock';
 import dayjs, { Dayjs } from 'dayjs';
 import { RoomType } from '../../../../types/types';
 import { convertUTCToJST } from '@/app/utils/utils';
+import { borderBlueCSS, receptionEditCSS } from '@/app/utils/style';
 
 interface SelectReserveTimeProps {
   roomId: number;
@@ -13,6 +14,8 @@ interface SelectReserveTimeProps {
 
 export const SelectReserveTime: React.FC<SelectReserveTimeProps> = ({ roomId, handleInputChange, defaultTime }) => {
   const [value, setValue] = React.useState<Dayjs | null>(null);
+  const [isActive, setIsActive] = React.useState<boolean>(false);
+  const clockRef = useRef<HTMLDivElement>(null);
 
   const handleChange = (newValue: Dayjs | null) => {
     setValue(newValue);
@@ -23,17 +26,40 @@ export const SelectReserveTime: React.FC<SelectReserveTimeProps> = ({ roomId, ha
 
   const defaultTimeDayjs = defaultTime ? dayjs(defaultTime) : null;
 
+  const handleClockClick = (e: any) => {
+    e.stopPropagation();
+    setIsActive(true);
+  };
+
+  const handleClickOutside = (e: MouseEvent) => {
+    if (clockRef.current && !clockRef.current.contains(e.target as Node)) {
+      setIsActive(false);
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    }
+  }, []);
+
   return (
-    <div className='h-full overflow-hidden'>
-      <DemoItem>
-        <MultiSectionDigitalClock
-          defaultValue={ defaultTimeDayjs }
-          value={ value }
-          onChange={ handleChange }
-          // renderInput={ (params) => <TextField {...params} /> }
-          ampm={ false }
-        />
-      </DemoItem>
+    <div>
+      <div ref={ clockRef } onClick={ handleClockClick } className='mt-2'>
+        <DemoItem>
+          <MultiSectionDigitalClock
+            defaultValue={ defaultTimeDayjs }
+            value={ value }
+            onChange={ handleChange }
+            className={`
+              ${ receptionEditCSS.number } ${borderBlueCSS}
+              ${isActive ? "h-40 text-center z-10 bg-gray-100" : "h-12 overflow-hidden text-center" } 
+            `}
+            ampm={ false }
+            />
+        </DemoItem>
+      </div>
     </div>
   );
 };

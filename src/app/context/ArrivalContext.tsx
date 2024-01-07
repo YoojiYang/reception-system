@@ -23,7 +23,7 @@ export const ArrivalProvider: React.FC<ArrivalProviderProps> = ({ children }) =>
   useEffect(() => {
     const result: Record<number, { adultsTotal: number, childrenTotal: number }> = {};
 
-    for (const arrival of arrivals) {
+    for (const arrival of (arrivals || [])) {
         if (!result[arrival.roomId]) {
             result[arrival.roomId] = { adultsTotal: 0, childrenTotal: 0 };
         }

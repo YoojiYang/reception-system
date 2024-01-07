@@ -1,20 +1,22 @@
-import { receptionIndexCSS } from "@/app/utils/style";
+import { receptionCSS } from "@/app/utils/style";
 
 const ReserveIndex = () => {
   return (
     <div>
-      <div className={ `${receptionIndexCSS.outside1} font-bold` }>
-        <div className={ receptionIndexCSS.outside21 }>
-          <p className={receptionIndexCSS.roomName}>部屋名</p>
-          <p className={ receptionIndexCSS.companyName }>会社名</p>
+      <div className={ `${receptionCSS.receptionBox} h-16 font-bold` }>
+        <div className={ receptionCSS.roomCompanyBox }>
+          <p className={ `${ receptionCSS.font }` }>部屋名</p>
+          <p className={ `${ receptionCSS.font } col-span-2` }>会社名</p>
         </div>
-        <div className={ receptionIndexCSS.outside22 }>
-          <div className={ receptionIndexCSS.outside3 }>
-            <p className={ receptionIndexCSS.adults }>大人</p>
-            <p className={ receptionIndexCSS.children }>小人</p>
-            <p className={ receptionIndexCSS.arrivalTime }>到着時刻</p>
+        <div className={ receptionCSS.dataBox }>
+          <div className={ `${ receptionCSS.adultChirdrenBox }` }>
+            <p className={ `${ receptionCSS.font}` }>大人</p>
+            <p className={ `${ receptionCSS.font}` }>小人</p>
           </div>
-          <p className={ receptionIndexCSS.staff }>担当者</p>
+          <div className={ `${ receptionCSS.timeStaffBox } ` }>
+            <p className={ `${ receptionCSS.font}` }>到着時刻</p>
+            <p className={ `${ receptionCSS.font} col-span-2` }>担当者</p>
+          </div>
         </div>
       </div>
     </div>

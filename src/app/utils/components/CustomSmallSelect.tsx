@@ -26,7 +26,7 @@ const CustomSmallSelect: React.FC<CustomSelectProps> = ({ options, name, value, 
       name={ name }
       value={ options.find(option => option.value === value) }
       onChange={ handleChange }
-      className={ `text-center h-full w-full flex items-center justify-center z-30 ${className} cursor-pointer` }
+      className={ `text-center h-full w-full flex items-center justify-center z-20 ${className} cursor-pointer` }
       styles={ styles }
     />
   );

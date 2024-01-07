@@ -10,6 +10,7 @@ import Chip from '@mui/material/Chip';
 import { fetchInCharge } from '@/app/utils/utils';
 import { InChargeType, RoomInChargeType } from '../../../../types/types';
 import { useRooms } from '@/app/context/RoomsContext';
+import { borderBlueCSS } from '@/app/utils/style';
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -67,7 +68,6 @@ export default function SelectInCharge({ updateInChargesList, setUpdateInCharges
 
     const updatedInChargesList = [...updateInChargesList.filter(inCharge => inCharge.roomId !== roomId), ...newInChargesForRoom];
 
-    console.log("updateInChargesList", updatedInChargesList);
     setPersonName(selectedNames);
     setUpdateInChargesList(updatedInChargesList);
   };
@@ -90,9 +90,6 @@ export default function SelectInCharge({ updateInChargesList, setUpdateInCharges
         const updatedList = prev.filter(inCharge => inCharge.roomId !== roomId);
         return [...updatedList, ...roomInChargeList];
       });
-      
-      console.log("roomInChargeList: ",roomInChargeList)
-      console.log("updateInChargeList: ",updateInChargesList)
 
       // 部屋に登録されている担当者の名前を取得
       const inChargeNames = currentRoomInCharges.map(inCharge => inCharge.inCharge?.name || "");
@@ -102,12 +99,13 @@ export default function SelectInCharge({ updateInChargesList, setUpdateInCharges
 
   return (
     <div>
-      <FormControl sx={{ m: 1, width: 300 }}>
-        <InputLabel id="demo-multiple-chip-label">Chip</InputLabel>
+      <FormControl sx={{ m: 1, width: 200 }}>
+        <InputLabel id="demo-multiple-chip-label">担当者</InputLabel>
         <Select
           labelId="demo-multiple-chip-label"
           id="demo-multiple-chip"
           multiple
+          autoWidth={ true }
           defaultValue={ personName }
           value={ personName }
           onChange={ handleRoomInChargeChage(roomId) }
@@ -120,6 +118,7 @@ export default function SelectInCharge({ updateInChargesList, setUpdateInCharges
             </Box>
           )}
           MenuProps={MenuProps}
+          className="h-12"
         >
           {inChargesList.map((inCharge) => (
             <MenuItem
@@ -127,7 +126,9 @@ export default function SelectInCharge({ updateInChargesList, setUpdateInCharges
               value={ inCharge.name }
               style={ getStyles(inCharge.name, personName, theme) }
             >
-              { inCharge.name }
+              <p className='bg-white'>
+                { inCharge.name }
+              </p>
             </MenuItem>
           ))}
         </Select>

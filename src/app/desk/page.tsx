@@ -50,7 +50,16 @@ function Desk() {
                         <p className={ deskIndexCSS.children }>{ arrival.childrenCount}</p>
                         <p className={ deskIndexCSS.arrivalTime }>{ formatTimeToJTV(arrival.arrivalTime) }</p>
                       </div>
-                      <p className={ deskIndexCSS.staff }></p>
+                      <p className={ deskIndexCSS.staff }>
+                        <ul className='flex'>
+                          {arrival.room.inCharges.map((inCharge, index, array) => (
+                            <li key={ inCharge.inChargeId }>
+                              { inCharge.inCharge ? inCharge.inCharge.name : "" }
+                              { index < array.length - 1 ? "・" : ""}
+                            </li>
+                          ))}
+                        </ul>
+                      </p>
                     </div>
                   </div>
               ))}

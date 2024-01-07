@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { TaxiType } from "../../../../types/types";
 import Sidebar from "@/app/utils/components/Sidebar";
 import { bgGrayCSS, pageTitleCSS } from "@/app/utils/style";

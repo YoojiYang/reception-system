@@ -15,14 +15,10 @@ export const POST = async (req: NextRequest, res: NextResponse) => {
       }
     });
 
-    await prisma.generalTaxi.deleteMany();
-    await prisma.vipTaxi.deleteMany();
     await prisma.taxi.deleteMany();
     await prisma.arrival.deleteMany();
 
     // 2. 連番のIDをリセット (PostgreSQLの場合)
-    await prisma.$executeRaw`ALTER SEQUENCE "GeneralTaxi_id_seq" RESTART WITH 1;`;
-    await prisma.$executeRaw`ALTER SEQUENCE "VipTaxi_id_seq" RESTART WITH 1;`;
     await prisma.$executeRaw`ALTER SEQUENCE "Taxi_id_seq" RESTART WITH 1;`;
     await prisma.$executeRaw`ALTER SEQUENCE "Arrival_id_seq" RESTART WITH 1;`;
   }, "resetdatabase");

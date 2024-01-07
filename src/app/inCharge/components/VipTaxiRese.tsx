@@ -1,15 +1,14 @@
 import CustomButton from "@/app/utils/components/CustomButton";
-import { deleteData, deleteVipTaxi, formatTime, handleEditData, postData, updateData, updateTaxi } from "@/app/utils/utils";
+import { deleteData, formatTime, handleEditData, postData, updateData } from "@/app/utils/utils";
 import { useEffect, useState } from "react";
 import { VipTaxiReservationProps, TaxiType } from "../../../../types/types";
 import CustomStringSelect from "@/app/utils/components/CustomStringSelect";
-import { carCountOptions, inChargeTaxiSelectStyles, inChargeTaxiStringSelectStyles, needOrNotOptions, reservationTimeOptions, roomNameOptions } from "@/app/utils/selectOptions";
-import { bgGrayCSS, indexFontCSS, recordFontCSS } from "@/app/utils/style";
+import { carCountOptions, inChargeTaxiSelectStyles, inChargeTaxiStringSelectStyles, needOrNotOptions, reservationTimeOptions } from "@/app/utils/selectOptions";
+import { bgGrayCSS, indexFontCSS } from "@/app/utils/style";
 import CustomSmallSelect from "@/app/utils/components/CustomSmallSelect";
 import { fetchRooms, useRooms } from "@/app/context/RoomsContext";
 import Select from 'react-select';
 import { fetchTaxis, useTaxis } from "@/app/context/TaxiContext";
-import CustomSelect from "@/app/utils/components/CustomSelect";
 
 
 const VipTaxiReserve = ({ currentRoom }: VipTaxiReservationProps) => {
@@ -19,13 +18,9 @@ const VipTaxiReserve = ({ currentRoom }: VipTaxiReservationProps) => {
   const [carCount, setCarCount] = useState<number>(0);
   const [reservationTime, setReservationTime] = useState<string>("試合終了後");
   const [editingTaxiId, setEditingTaxiId] = useState<number | null>(null);
-  const [editPeopleCount, setEditPeopleCount] = useState<number>(0);
   const [editCarCount, setEditCarCount] = useState<number>(0);
   const [editReservationTime, setEditReservationTime] = useState<string>("試合終了後");
-  const [roomId, setRoomId] = useState<number>(101);
   const [memo, setMemo] = useState<string>("");
-  const [checked, setChecked] = useState<boolean>(false);
-  const [isAfterEvent, setIsAfterEvent] = useState<boolean>(false);
 
   // タクシーの予約情報をデータベースに登録する
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {

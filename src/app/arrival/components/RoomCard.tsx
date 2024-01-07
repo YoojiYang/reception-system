@@ -21,8 +21,8 @@ const RoomCard = ({ startRoomId, endRoomId }: RoomCardProps) => {
 
   const calculateArrivalCounts = (arrivals: ArrivalType[]) => {
     const arrivalRecordCounts: ArrivalRecordCounts = {};
-  
-    for (const arrival of arrivals) {
+    
+    for (const arrival of (arrivals || [])) {
       if (!arrivalRecordCounts[arrival.roomId]) {
         arrivalRecordCounts[arrival.roomId] = 0;
       }
@@ -45,7 +45,7 @@ const RoomCard = ({ startRoomId, endRoomId }: RoomCardProps) => {
 
   useEffect(() => {
     fetchArrival(setArrivals);
-  });
+  }, [setArrivals]);
 
   return (
     <div>

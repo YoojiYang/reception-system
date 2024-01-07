@@ -39,6 +39,10 @@ export function Accept({ setArrivals, lastUpdated, setLastUpdated }: AcceptProps
       console.error(error);
       return;
     }
+    
+    setSelectedRoomId(101);
+    setLocalAdultsCount(0);
+    setLocalChildrenCount(0);
   };
 
 

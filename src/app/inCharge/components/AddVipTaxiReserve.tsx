@@ -1,14 +1,13 @@
 import CustomButton from "@/app/utils/components/CustomButton";
 import { useEffect, useState } from "react";
-import CustomSelect from "@/app/utils/components/CustomSelect";
-import { carCountOptions, roomNameOptions, taxiReceptoinSelectStyles } from "@/app/utils/selectOptions";
+import { carCountOptions, taxiReceptoinSelectStyles } from "@/app/utils/selectOptions";
 import CustomSmallSelect from "@/app/utils/components/CustomSmallSelect";
-import { indexFontCSS, recordFontLgCSS } from "@/app/utils/style";
+import { indexFontCSS } from "@/app/utils/style";
 import { convertUTCToJST, postData } from "@/app/utils/utils";
 import { useRooms } from "@/app/context/RoomsContext";
 import SelectDigitalClock from "@/app/utils/components/SelectDigitalClock";
 import { Dayjs } from "dayjs";
-import { AddTaxiProps, TaxiType, VipTaxiData } from "../../../../types/types";
+import { TaxiType, VipTaxiData } from "../../../../types/types";
 import { IsAfterEventCheckBox } from "@/app/taxi/reception/components/IsAfterEventCheckBox";
 
 interface Props {

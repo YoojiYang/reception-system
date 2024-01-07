@@ -126,10 +126,6 @@ export type TaxiContextType = {
   setLastUpdated: React.Dispatch<React.SetStateAction<number>>;
 };
 
-export type VipTaxiProviderProps = {
-  children: React.ReactNode;
-};
-
 export type EditArrivalInfoProps = {
   currentRoom: RoomType;
   closeModal: () => void;

@@ -11,7 +11,7 @@ export const fetchArrival = async (setArrival: Dispatch<SetStateAction<ArrivalTy
     const fetchedArrival = await fetchAllData("arrival");
     setArrival(fetchedArrival);
   } catch (error) {
-    console.error(error);
+    console.error("データの取得に失敗しました: ", error);
   }
 };
 
